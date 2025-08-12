@@ -13,8 +13,8 @@
 		<meta content="width=device-width,initial-scale=1,maximum-scale=1,shrink-to-fit=no,user-scalable=0,viewport-fit=cover" name="viewport">
 		<style>
 			:root {
-				--bg:#FFFFFF;	--fn2:1.7vw;	--brC:#FAF9F7;
-				--mg:.7vw;	--fn1:1.2vw;	--mg2:calc(var(--fn2) / 2)
+				--bg:#FFFFFF;	--fn2:1.7vw;	--brC:#FAF9F7; 			--bghg:#0069DB;
+				--mg:.7vw;	--fn1:1.2vw;	--mg2:calc(var(--fn2) / 2);	--bgbl:#EFEEED;	--cl:#000000
 			}
 			body {background-color:var(--bg); font-family:Arial; font-size:var(--fn1)}
 			body, fieldset, form, form input {margin:0; padding:0}
@@ -23,8 +23,8 @@
 			section {position:relative; height:100vh; overflow:hidden;}
 			section:nth-child(2) {border-left:1px solid var(--brC); border-right:1px solid var(--brC)}
 			fieldset {
-				position:absolute; top:0; left:0; right:0; xbackground:magenta; z-index:1;
-				border:0; xborder-bottom:1px solid black; display:grid; grid-template-columns:50% 50%
+				position:absolute; top:0; left:0; right:0; z-index:1;
+				border:0; display:grid; grid-template-columns:50% 50%
 			}
 			fieldset div:not(:first-child) {text-align:right;}
 			fieldset > h2, fieldset > div {font-size:var(--fn2); font-weight:bolder}
@@ -48,7 +48,8 @@
 				display:block;cursor:pointer;
 				height:7vh; padding:2vh; border-radius:1vh
 			}
-			.listView input[type="radio"]:checked + label {background:#0069DB;color:#F8FBFE}
+			.listView input[type="radio"]:checked + label {background:var(--bgbl);color:var(--cl)}
+			.listView input[type="radio"]:checked:focus + label {background:var(--bghg);color:#FFFFFF}
 
 			@media screen and (max-width: 1270px) {
 				:root {--mg:1.1vw; --fn1:2vw; --fn2:2.5vw;}
@@ -180,14 +181,14 @@
 				</fieldset>
 				<div>
 					<form action="" method="post" class="listView">
-						<input id="c1" name="copy" type="radio" value="1" checked>
-						<label for="c1">1</label>
-						<input id="c2" name="copy" type="radio" value="2">
-						<label for="c2">2</label>
-						<input id="c3" name="copy" type="radio" value="3">
-						<label for="c3">3</label>
-						<input id="c4" name="copy" type="radio" value="4">
-						<label for="c4">4</label>
+						<input id="d1" name="detail" type="radio" value="1" checked>
+						<label for="d1">1</label>
+						<input id="d2" name="detail" type="radio" value="2">
+						<label for="d2">2</label>
+						<input id="d3" name="detail" type="radio" value="3">
+						<label for="d3">3</label>
+						<input id="d4" name="detail" type="radio" value="4">
+						<label for="d4">4</label>
 					</form>
 				</div>
 			</section>
@@ -202,6 +203,22 @@
 						$('#nav')[0].style.display = isBlock?"block":"none";
 					});
 				});
+			}
+			else {
+				[...$('form > input[type=radio]')].forEach(inp=>{
+					inp.addEventListener('keydown',(e)=>{
+						const keyboard = {
+							ArrowLeft:{detail:'#list',list:'#nav'},
+							ArrowRight:{nav:'#list',list:'#detail'}
+						};
+						const target = keyboard[e.key]?.[inp.name];
+						if(target) {
+							$(target + ' form > input[type=radio]:checked')[0]?.focus();
+							e.preventDefault();
+						}
+					});
+				});
+
 			}
 		</script>
 	</body>
