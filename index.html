@@ -14,7 +14,7 @@
 		<style>
 			:root {
 				--bg:#FFFFFF;	--fn2:1.7vw;	--brC:#FAF9F7; 			--bghg:#0069DB;
-				--mg:.7vw;	--fn1:1.2vw;	--mg2:calc(var(--fn2) / 2);	--bgbl:#EFEEED;	--cl:#000000
+				--mg:.7vw;	--fn1:1.1vw;	--mg2:calc(var(--fn2) / 2);	--bgbl:#EFEEED;	--cl:#000000
 			}
 			body {background-color:var(--bg); font-family:Arial; font-size:var(--fn1)}
 			body, fieldset, form, form input {margin:0; padding:0}
@@ -43,13 +43,14 @@
 			}
 			#listSide, #backDiv, #navField {display:none}
 			#detailDiv {text-align:left}
-			.listView input[type='radio'] {transform: scale(0.1);appearance: none;opacity: 0;display:block}
+			.listView input[type='radio'] {position: absolute;left: -9999px;}
 			.listView label {
 				display:block;cursor:pointer;
-				height:7vh; padding:2vh; border-radius:1vh
+				height:7vh; padding:calc(var(--fn2) / 2); border-radius:1vh
 			}
 			.listView input[type="radio"]:checked + label {background:var(--bgbl);color:var(--cl)}
 			.listView input[type="radio"]:checked:focus + label {background:var(--bghg);color:#FFFFFF}
+			form {background-color:orange;}
 
 			@media screen and (max-width: 1270px) {
 				:root {--mg:1.1vw; --fn1:2vw; --fn2:2.5vw;}
@@ -61,7 +62,7 @@
 				#nav {border-right: 1px solid var(--brC);}
 				#navField {display:grid}
 			}
-			@media screen and (max-width: 1000px) and (orientation: portrait) {
+			@media screen and (max-width: 500px) and (orientation: portrait) {
 				:root {--mg:3.2vw; --fn1:6vw; --fn2:7vw;}
 				main, #backDiv {display:block}
 				#nav, #detail, #signOutDiv {display:none}
@@ -70,7 +71,7 @@
 				#detailDiv {text-align:right}
 				#nav {border-right: none;}
 			}
-			@media screen and (max-width: 1000px) and (orientation: landscape) {
+			@media screen and (max-width: 500px) and (orientation: landscape) {
 				:root {--mg:1vw; --fn1:2vw; --fn2:2.5vw;}
 			}
 		</style>
@@ -81,21 +82,17 @@
 				<fieldset id="navField">
 					<div>
 						<svg viewbox="0 0 100 100" class="sideBut">
-							<polygon points="10,90 90,90 90,10 10,10" />
-							<polygon points="40,90 40,10" />
-							<polygon points="18,20 32,20" />
-							<polygon points="18,30 32,30" />
+							<polygon points="10,90 90,90 90,10 10,10" /><polygon points="40,90 40,10" />
+							<polygon points="18,20 32,20" /><polygon points="18,30 32,30" />
 							<polygon points="18,40 32,40" />
 						</svg>
 					</div>
 					<div>
 						<svg viewbox="0 0 100 100" id="signOut1">
-							<polygon points="10,10 10,90" />
-							<polygon points="10,90 60,90" />
-							<polygon points="60,90 60,70" />
-							<polygon points="60,30 60,10" /><polygon points="60,10 10,10" />
-							<polygon points="30,50 97,50" /><polygon points="83,35 97,50" />
-							<polygon points="83,65 97,50" />
+							<polygon points="10,10 10,90" /><polygon points="10,90 60,90" />
+							<polygon points="60,90 60,70" /><polygon points="60,30 60,10" />
+							<polygon points="60,10 10,10" /><polygon points="30,50 97,50" />
+							<polygon points="83,35 97,50" /><polygon points="83,65 97,50" />
 						</svg>
 					</div>
 				</fieldset>
@@ -117,24 +114,19 @@
 					<h2>Stock</h2>
 					<div id="listSide">
 						<svg viewbox="0 0 100 100" class="sideBut">
-							<polygon points="10,90 90,90 90,10 10,10" />
-							<polygon points="40,90 40,10" />
-							<polygon points="18,20 32,20" />
-							<polygon points="18,30 32,30" />
+							<polygon points="10,90 90,90 90,10 10,10" /><polygon points="40,90 40,10" />
+							<polygon points="18,20 32,20" /><polygon points="18,30 32,30" />
 							<polygon points="18,40 32,40" />
 						</svg>
 					</div>
 					<div>
 						<svg viewbox="0 0 100 100" id="compose">
 							<circle cx="50" cy="50" r="40" />
-							<polygon points="50,25 50,75" />
-							<polygon points="25,50 75,50" />
+							<polygon points="50,25 50,75" /><polygon points="25,50 75,50" />
 						</svg>
 						<svg viewbox="0 0 100 100" id="tiles">
-							<polygon points="10,10 40,10 40,40 10,40" />
-							<polygon points="60,10 90,10 90,40 60,40" />
-							<polygon points="10,60 40,60 40,90 10,90" />
-							<polygon points="60,60 90,60 90,90 60,90" />
+							<polygon points="10,10 40,10 40,40 10,40" /><polygon points="60,10 90,10 90,40 60,40" />
+							<polygon points="10,60 40,60 40,90 10,90" /><polygon points="60,60 90,60 90,90 60,90" />
 						</svg>
 					</div>
 				</fieldset>
@@ -155,27 +147,27 @@
 				<fieldset>
 					<div id="backDiv">
 						<svg viewbox="0 0 100 100" id="backButton">
-							<polygon points="50,10 10,50" /><polygon points="10,50 50,90" /><polygon points="10,50 90,50" />
+							<polygon points="50,10 10,50" /><polygon points="10,50 50,90" />
+							<polygon points="10,50 90,50" />
 						</svg>
 					</div>
 					<div id="detailDiv">
 						<svg viewbox="0 0 100 100" id="delButton">
-							<polygon points="33,10 68,10 68,20 33,20" />
-							<polygon points="20,20 80,20 75,90 25,90" />
-							<polygon points="10,20 90,20" /><polygon points="33,30 39,80" /><polygon points="50,30 50,80" /><polygon points="67,30 62,80" />
+							<polygon points="33,10 68,10 68,20 33,20" /><polygon points="20,20 80,20 75,90 25,90" />
+							<polygon points="10,20 90,20" /><polygon points="33,30 39,80" />
+							<polygon points="50,30 50,80" /><polygon points="67,30 62,80" />
 						</svg>
 						<svg viewbox="0 0 100 100" id="saveButton">
-							<polygon points="10,90 90,90 90,25 75,10 10,10" /><polygon points="30,10 30,35 70,35 70,10" /><polygon points="20,90 20,50 80,50 80,90" /><polygon points="59,17 62,17 62,28 59,28" />
+							<polygon points="10,90 90,90 90,25 75,10 10,10" /><polygon points="30,10 30,35 70,35 70,10" />
+							<polygon points="20,90 20,50 80,50 80,90" /><polygon points="59,17 62,17 62,28 59,28" />
 						</svg>
 					</div>
 					<div id="signOutDiv">
 						<svg viewbox="0 0 100 100" id="signOut2">
-							<polygon points="10,10 10,90" />
-							<polygon points="10,90 60,90" />
-							<polygon points="60,90 60,70" />
-							<polygon points="60,30 60,10" /><polygon points="60,10 10,10" />
-							<polygon points="30,50 97,50" /><polygon points="83,35 97,50" />
-							<polygon points="83,65 97,50" />
+							<polygon points="10,10 10,90" /><polygon points="10,90 60,90" />
+							<polygon points="60,90 60,70" /><polygon points="60,30 60,10" />
+							<polygon points="60,10 10,10" /><polygon points="30,50 97,50" />
+							<polygon points="83,35 97,50" /><polygon points="83,65 97,50" />
 						</svg>
 					</div>
 				</fieldset>
@@ -218,7 +210,6 @@
 						}
 					});
 				});
-
 			}
 		</script>
 	</body>
