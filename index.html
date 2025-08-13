@@ -185,31 +185,36 @@
 			</section>
 		</main>
 		<script>
-			const $ = selector => {return document.querySelectorAll(selector)};
-			if(window.matchMedia("(max-width: 1270px)").matches) {
-				[...$('.sideBut')].forEach(but=>{
-					but.addEventListener('click',()=>{
-						const isBlock = $('#nav')[0].style.display != "block";
-						$('#list')[0].style.display = isBlock?"none":"block";
-						$('#nav')[0].style.display = isBlock?"block":"none";
-					});
-				});
+			const $$ = s => {return document.querySelectorAll(s)};
+			const $ = s => {return document.querySelector(s)};
+			if(window.matchMedia("screen and (max-width: 1270px)").matches) {
+				const swap = (src, first, second) => {
+					const isBlock = $(src).style.display !== "block";
+					$(first).style.display = isBlock ? "none" : "block";
+					$(second).style.display = isBlock ? "block" : "none";
+				};
+				const swapNav = () => swap('#nav', '#list', '#nav');
+				$$('.sideBut').forEach(but => but.addEventListener('click', swapNav));
+				if(window.matchMedia("screen and (max-width: 500px) and (orientation: portrait)").matches) {
+					const swapDetail = () => swap('#detail', '#list', '#detail');
+					$$('#list form > label, #backDiv').forEach(lbl => lbl.addEventListener('click', swapDetail));
+				}
 			}
 			else {
-				[...$('form > input[type=radio]')].forEach(inp=>{
+				const keyboard = {
+					ArrowLeft:{detail:'#list',list:'#nav'},
+					ArrowRight:{nav:'#list',list:'#detail'}
+				};
+				[...$$('form > input[type=radio]')].forEach(inp=>{
 					inp.addEventListener('keydown',(e)=>{
-						const keyboard = {
-							ArrowLeft:{detail:'#list',list:'#nav'},
-							ArrowRight:{nav:'#list',list:'#detail'}
-						};
 						const target = keyboard[e.key]?.[inp.name];
 						if(target) {
-							$(target + ' form > input[type=radio]:checked')[0]?.focus();
+							$(target + ' form > input[type=radio]:checked')?.focus();
 							e.preventDefault();
 						}
 					});
 				});
-			}
+			}			
 		</script>
 	</body>
 </html>
