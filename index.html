@@ -13,10 +13,11 @@
 		<meta content="width=device-width,initial-scale=1,maximum-scale=1,shrink-to-fit=no,user-scalable=0,viewport-fit=cover" name="viewport">
 		<style>
 			:root {
-				--bg:#FFFFFF;	--fn2:1.7vw;	--brC:#FAF9F7; 			--bghg:#0069DB;
-				--mg:.7vw;	--fn1:1.1vw;	--mg2:calc(var(--fn2) / 2);	--bgbl:#EFEEED;	--cl:#000000
+				--bg:#FFFFFF;	--fn2:1.7vw;	--brC:#FAF9F7; 			--bghg:#0069DB;	--hgit:#C7D8EA;
+				--mg:.7vw;	--fn1:1.1vw;	--mg2:calc(var(--fn2) / 2);	--bgbl:#EFEEED;	--cl:#000000;
+				--wh:#FFFFFF;
 			}
-			body {background-color:var(--bg); font-family:Arial; font-size:var(--fn1)}
+			body {background-color:var(--bg); font-family:Arial; font-size:var(--fn1); color:var(--cl)}
 			body, fieldset, form, form input {margin:0; padding:0}
 			svg {cursor:pointer}
 			main {display:grid; grid-template-columns:22% auto 39%;}
@@ -49,9 +50,11 @@
 				height:7vh; padding:calc(var(--fn2) / 2); border-radius:1vh
 			}
 			.listView input[type="radio"]:checked + label {background:var(--bgbl);color:var(--cl)}
-			.listView input[type="radio"]:checked:focus + label {background:var(--bghg);color:#FFFFFF}
+			.listView input[type="radio"]:checked:focus + label {animation: highlight 1s forwards;color:var(--wh)}
 
-			@media screen and (max-width: 1270px) {
+			@keyframes highlight {from {background-color:var(--hgit)} to {background-color:var(--bghg)}}
+
+			@media screen and (max-width: 1175px) {
 				:root {--mg:1.1vw; --fn1:2vw; --fn2:2.5vw;}
 				main {grid-template-columns:50% 50%}
 				#nav, fieldset > h2 {display:none}
@@ -81,30 +84,22 @@
 				<fieldset id="navField">
 					<div>
 						<svg viewbox="0 0 100 100" class="sideBut">
-							<polygon points="10,90 90,90 90,10 10,10" /><polygon points="40,90 40,10" />
-							<polygon points="18,20 32,20" /><polygon points="18,30 32,30" />
-							<polygon points="18,40 32,40" />
+							<path d="M10 90 H90 V10 H10 Z M40 90 V10 M18 20 H32 M18 30 H32 M18 40 H32" />
 						</svg>
 					</div>
 					<div>
 						<svg viewbox="0 0 100 100" id="signOut1">
-							<polygon points="10,10 10,90" /><polygon points="10,90 60,90" />
-							<polygon points="60,90 60,70" /><polygon points="60,30 60,10" />
-							<polygon points="60,10 10,10" /><polygon points="30,50 97,50" />
-							<polygon points="83,35 97,50" /><polygon points="83,65 97,50" />
+							<path d="M10 10 H60 V30 M60 70 V90 H10 V7.5" />
+							<path d="M30 50 H97 M83 35 L97 50 L83 65" />
 						</svg>
 					</div>
 				</fieldset>
 				<div>
 					<form action="" method="post" class="listView">
-						<input id="n1" name="nav" type="radio" value="1" checked>
-						<label for="n1">1</label>
-						<input id="n2" name="nav" type="radio" value="2">
-						<label for="n2">2</label>
-						<input id="n3" name="nav" type="radio" value="3">
-						<label for="n3">3</label>
-						<input id="n4" name="nav" type="radio" value="4">
-						<label for="n4">4</label>
+						<input id="n1" name="nav" type="radio" value="1" checked><label for="n1">1</label>
+						<input id="n2" name="nav" type="radio" value="2"><label for="n2">2</label>
+						<input id="n3" name="nav" type="radio" value="3"><label for="n3">3</label>
+						<input id="n4" name="nav" type="radio" value="4"><label for="n4">4</label>
 					</form>
 				</div>
 			</section>
@@ -113,32 +108,24 @@
 					<h2>Stock</h2>
 					<div id="listSide">
 						<svg viewbox="0 0 100 100" class="sideBut">
-							<polygon points="10,90 90,90 90,10 10,10" /><polygon points="40,90 40,10" />
-							<polygon points="18,20 32,20" /><polygon points="18,30 32,30" />
-							<polygon points="18,40 32,40" />
+							<path d="M10 90 H90 V10 H10 Z M40 90 V10 M18 20 H32 M18 30 H32 M18 40 H32" />
 						</svg>
 					</div>
 					<div>
 						<svg viewbox="0 0 100 100" id="compose">
-							<circle cx="50" cy="50" r="40" />
-							<polygon points="50,25 50,75" /><polygon points="25,50 75,50" />
+							<path d="M50 10 A40 40 0 1 1 50 90 A40 40 0 1 1 50 10 M50 25 V75 M25 50 H75" />
 						</svg>
 						<svg viewbox="0 0 100 100" id="tiles">
-							<polygon points="10,10 40,10 40,40 10,40" /><polygon points="60,10 90,10 90,40 60,40" />
-							<polygon points="10,60 40,60 40,90 10,90" /><polygon points="60,60 90,60 90,90 60,90" />
+							<path d="M10 10 H40 V40 H10 Z M60 10 H90 V40 H60 Z M10 60 H40 V90 H10 Z M60 60 H90 V90 H60 Z" />
 						</svg>
 					</div>
 				</fieldset>
 				<div>
 					<form action="" method="post" class="listView">
-						<input id="l1" name="list" type="radio" value="1" checked autofocus>
-						<label for="l1">1</label>
-						<input id="l2" name="list" type="radio" value="2">
-						<label for="l2">2</label>
-						<input id="l3" name="list" type="radio" value="3">
-						<label for="l3">3</label>
-						<input id="l4" name="list" type="radio" value="4">
-						<label for="l4">4</label>
+						<input id="l1" name="list" type="radio" value="1" checked autofocus><label for="l1">1</label>
+						<input id="l2" name="list" type="radio" value="2"><label for="l2">2</label>
+						<input id="l3" name="list" type="radio" value="3"><label for="l3">3</label>
+						<input id="l4" name="list" type="radio" value="4"><label for="l4">4</label>
 					</form>
 				</div>
 			</section>
@@ -146,40 +133,30 @@
 				<fieldset>
 					<div id="backDiv">
 						<svg viewbox="0 0 100 100" id="backButton">
-							<polygon points="50,10 10,50" /><polygon points="10,50 50,90" />
-							<polygon points="10,50 90,50" />
+							<path d="M50,10 L10,50 L50,90 M10,50 L90,50" />
 						</svg>
 					</div>
 					<div id="detailDiv">
 						<svg viewbox="0 0 100 100" id="delButton">
-							<polygon points="33,10 68,10 68,20 33,20" /><polygon points="20,20 80,20 75,90 25,90" />
-							<polygon points="10,20 90,20" /><polygon points="33,30 39,80" />
-							<polygon points="50,30 50,80" /><polygon points="67,30 62,80" />
+							<path d="M33 10 H68 V20 H33 Z M20 20 H80 L75 90 H25 Z M10 20 H90 M33 30 L39 80 M50 30 V80 M67 30 L62 80" />
 						</svg>
 						<svg viewbox="0 0 100 100" id="saveButton">
-							<polygon points="10,90 90,90 90,25 75,10 10,10" /><polygon points="30,10 30,35 70,35 70,10" />
-							<polygon points="20,90 20,50 80,50 80,90" /><polygon points="59,17 62,17 62,28 59,28" />
+							<path d="M10,90 H90 V25 L75,10 H10Z M30,10 V35 H70 V10Z M20,90 V50 H80 V90Z M59,17 h3 v11 h-3Z" />
 						</svg>
 					</div>
 					<div id="signOutDiv">
 						<svg viewbox="0 0 100 100" id="signOut2">
-							<polygon points="10,10 10,90" /><polygon points="10,90 60,90" />
-							<polygon points="60,90 60,70" /><polygon points="60,30 60,10" />
-							<polygon points="60,10 10,10" /><polygon points="30,50 97,50" />
-							<polygon points="83,35 97,50" /><polygon points="83,65 97,50" />
+							<path d="M10 10 H60 V30 M60 70 V90 H10 V7.5" />
+							<path d="M30 50 H97 M83 35 L97 50 L83 65" />
 						</svg>
 					</div>
 				</fieldset>
 				<div>
 					<form action="" method="post" class="listView">
-						<input id="d1" name="detail" type="radio" value="1" checked>
-						<label for="d1">1</label>
-						<input id="d2" name="detail" type="radio" value="2">
-						<label for="d2">2</label>
-						<input id="d3" name="detail" type="radio" value="3">
-						<label for="d3">3</label>
-						<input id="d4" name="detail" type="radio" value="4">
-						<label for="d4">4</label>
+						<input id="d1" name="detail" type="radio" value="1" checked><label for="d1">1</label>
+						<input id="d2" name="detail" type="radio" value="2"><label for="d2">2</label>
+						<input id="d3" name="detail" type="radio" value="3"><label for="d3">3</label>
+						<input id="d4" name="detail" type="radio" value="4"><label for="d4">4</label>
 					</form>
 				</div>
 			</section>
@@ -187,34 +164,41 @@
 		<script>
 			const $$ = s => {return document.querySelectorAll(s)};
 			const $ = s => {return document.querySelector(s)};
-			if(window.matchMedia("screen and (max-width: 1270px)").matches) {
+			const selList = el => console.log(el);
+
+			if(window.matchMedia('screen and (max-width: 1175px)').matches) {
 				const swap = (src, first, second) => {
-					const isBlock = $(src).style.display !== "block";
-					$(first).style.display = isBlock ? "none" : "block";
-					$(second).style.display = isBlock ? "block" : "none";
+					const isBlock = $(src).style.display !== 'block';
+					$(first).style.display = isBlock ? 'none' : 'block';
+					$(second).style.display = isBlock ? 'block' : 'none';
 				};
 				const swapNav = () => swap('#nav', '#list', '#nav');
+				const swapDetail = () => swap('#detail', '#list', '#detail');
+
 				$$('.sideBut').forEach(but => but.addEventListener('click', swapNav));
-				if(window.matchMedia("screen and (max-width: 500px) and (orientation: portrait)").matches) {
-					const swapDetail = () => swap('#detail', '#list', '#detail');
-					$$('#list form > label, #backDiv').forEach(lbl => lbl.addEventListener('click', swapDetail));
+				if(window.matchMedia('screen and (max-width: 500px) and (orientation: portrait)').matches) {
+					$$('#list form > label, #backDiv').forEach(lbl => lbl.addEventListener('click', ()=>{
+						swapDetail();
+						if (lbl.nodeName === 'LABEL') selList(lbl.previousSibling);
+					}));
 				}
 			}
-			else {
+			if(window.matchMedia('screen and (min-width: 500px)').matches) {
 				const keyboard = {
 					ArrowLeft:{detail:'#list',list:'#nav'},
 					ArrowRight:{nav:'#list',list:'#detail'}
 				};
 				[...$$('form > input[type=radio]')].forEach(inp=>{
 					inp.addEventListener('keydown',(e)=>{
-						const target = keyboard[e.key]?.[inp.name];
-						if(target) {
-							$(target + ' form > input[type=radio]:checked')?.focus();
+						const sect = keyboard[e.key]?.[inp.name];
+						if(sect) {
+							$(sect + ' form > input[type=radio]:checked')?.focus();
 							e.preventDefault();
 						}
 					});
+					if (inp.name === 'list') inp.addEventListener('click', () => selList(inp));
 				});
-			}			
+			}
 		</script>
 	</body>
 </html>
