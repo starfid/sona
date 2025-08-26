@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>App</title>
+		<meta content="notranslate" name="google">
+		<meta content="yes" name="mobile-web-app-capable">
+		<meta content="yes" name="apple-mobile-web-app-capable">
+		<meta content="#FFFFFF" name="theme-color" media="(prefers-color-scheme: light)">
+		<meta content="#000000" name="theme-color" media="(prefers-color-scheme: dark)">
+		<meta content="width=device-width,initial-scale=1,maximum-scale=1,shrink-to-fit=no,user-scalable=0,viewport-fit=cover" name="viewport">
+		<style>
+			:root {
+				--bg:#FFFFFF;	--cl:#000000;	--fn1:1.1vw;	--fn2:1.7vw;	--brC:#FAF9F7;
+				--bhg:#0069DA;	--chg:#FFFFFF;	--bck:#EFEEED;	--mg:.7vw;	--mg2:calc(var(--fn2) / 2);	
+			}
+			html {-webkit-tap-highlight-color: transparent;}
+			body {margin:0;padding:0;font-family:arial}
+			main, section header {display:grid}
+			main{grid-template-columns:22% auto 39%}
+			section {position:relative; height:100vh; overflow:hidden;}
+			label {cursor:pointer;user-select:none;font-size:var(--fn1);}
+			#listSection {border-left:1px solid var(--brC); border-right:1px solid var(--brC);}
+			#listSection header div label h1 {margin:0;padding:0;font-size:var(--fn2);height:var(--fn2);}
+			
+			#searchFrm, #searchFrm label, section fieldset form#filters label, .rows label.checked {border-radius:1vh;}
+
+			#searchFrm {background-color:var(--bck);}
+			#searchFrm .hidden {visibility:hidden}
+			#searchFrm label {padding:calc(var(--mg) * .68) var(--mg);display: flex;}
+			#searchFrm label input {
+				border:0;outline:none;font-size:var(--fn1);background-color:var(--hbg);
+				flex:1;min-width:0;
+			}
+			
+			section header {
+				position:absolute; top:0; left:0; right:0; z-index:1;padding:var(--mg);
+				grid-template-columns:50% 50%;background-color:var(--bg);opacity:.97;
+			}
+			section header div, #filters {display:flex;}
+			section header div label {display:flex;align-items:center;}
+			section header div label svg, #searchFrm label svg {
+				width:var(--fn2); height:var(--fn2); cursor:pointer;
+				stroke-width:4; stroke:var(--cl);fill:transparent;
+			}
+			section header div label svg {margin-right:calc((var(--mg) * 3) + 1px);}
+			section header div label:first-child svg {margin-left:var(--mg);}
+			section header div:last-child label:last-child svg {margin-right:var(--mg);}
+			section header .hRight {justify-content: flex-end;}
+			section header .hidden {display:none}
+			section fieldset {
+				outline:none;border:none;scrollbar-width:none;
+				position:absolute; top:0; left:0; right:0; bottom:0; overflow-y:auto;
+				margin:0;padding:calc((2 * var(--mg)) + var(--fn2)) var(--mg) 0 var(--mg);
+			}
+			section fieldset form {margin:0 0 var(--mg) 0;padding:0}
+			section fieldset form label {
+				display:block;padding:var(--mg);
+			}
+			section fieldset form#filters label {margin-right:var(--mg)}
+			section fieldset form.rows label {height:7vh;border-bottom:solid 1px var(--brC)}
+
+			.btn input[type=checkbox], .btn [type=radio], .select input[type=checkbox], .select [type=radio]{position: absolute;left: -9999px;}
+			.checked {background-color:var(--bck)}
+			.focused {background-color:var(--bhg);color:var(--chg)}
+			.btn.checked, .btn.focused {background-color:transparent;}
+			.btn.focused svg {stroke:var(--bhg);stroke-width:8}
+			.btn.focused svg#delBtn {stroke:red;}
+			#searchFrm label.focused {background-color:transparent;color:var(--cl)}
+
+			@media screen and (max-width: 1175px){
+				:root {
+					--fn1:2vw; 	--fn2:2.5vw;	--brC:#FAF9F7;
+					--mg:1.1vw;	--mg2:calc(var(--fn2) / 2);	
+				}
+				main {grid-template-columns:50% auto}
+				
+				#searchFrm .hidden {visibility:visible}
+				#searchFrm label {padding:var(--mg);}
+				#searchFrm label input {padding:0; xborder-radius:0; appearance: none;}
+				#listSection .visible, #navSection {display:none}
+				#listSection header .hidden {display:flex}
+				#listSection {border-left:none;}
+			}
+			@media screen and (max-width: 500px) and (orientation: portrait){
+				:root {
+					--fn1:6vw; 	--fn2:7vw;
+					--mg:3.2vw;	--mg2:calc(var(--fn2) / 2);
+				}
+				main {display:block}
+				section header div label svg {margin-right:calc(var(--mg) * 2);}
+				#searchFrm label {padding:calc(var(--mg) * .92) var(--mg);}
+				#filters {width: calc(100vw - (var(--mg) * 2)); overflow: scroll; scrollbar-width:none;}
+				#listSection {border-right:none;}
+				#detailSection {display:none}
+			}
+		</style>
+	</head>
+	<body ontouchstart>
+		<main>
+			<section id="navSection">
+				<header>
+					<div class="hidden">
+						<label class="btn">
+							<input type="radio" name="iBtn">
+							<svg viewbox="0 0 100 100">
+								<path d="M10 90 H90 V10 H10 Z M40 90 V10 M18 20 H32 M18 30 H32 M18 40 H32" />
+							</svg>
+						</label>
+					</div>
+					<div class="hRight hidden">
+						<label class="btn">
+							<input type="radio" name="iBtn">
+							<svg viewbox="0 0 100 100">
+								<path d="M10 10 H60 V30 M60 70 V90 H10 V7.5" />
+								<path d="M30 50 H97 M83 35 L97 50 L83 65" />
+							</svg>
+						</label>
+					</div>
+				</header>
+				<fieldset>
+					<form class="rows">
+						<label class="select"><input type="radio" name="nav" checked>Division 1</label>
+						<label class="select"><input type="radio" name="nav">Division 2</label>
+						<label class="select"><input type="radio" name="nav">Division 3</label>
+						<label class="select"><input type="radio" name="nav">Division 4</label>
+						<label class="select"><input type="radio" name="nav">Division 5</label>
+						<label class="select"><input type="radio" name="nav">Division 6</label>
+						<label class="select"><input type="radio" name="nav">Division 7</label>
+						<label class="select"><input type="radio" name="nav">Division 8</label>
+						<label class="select"><input type="radio" name="nav">Division 9</label>
+						<label class="select"><input type="radio" name="nav">Division 10</label>
+						<label class="select"><input type="radio" name="nav">Division 11</label>
+						<label class="select"><input type="radio" name="nav">Division 12</label>
+						<label class="select"><input type="radio" name="nav">Division 13</label>
+						<label class="select"><input type="radio" name="nav">Division 14</label>
+						<label class="select"><input type="radio" name="nav">Division 15</label>
+						<label class="select"><input type="radio" name="nav">Division 16</label>
+						<label class="select"><input type="radio" name="nav">Division 17</label>
+						<label class="select"><input type="radio" name="nav">Division 18</label>
+						<label class="select"><input type="radio" name="nav">Division 19</label>
+						<label class="select"><input type="radio" name="nav">Division 20</label>
+						<label class="select"><input type="radio" name="nav">Division 21</label>
+					</form>
+				</fieldset>
+			</section>
+			<section id="listSection">
+				<header>
+					<div class="visible">
+						<label><h1>Sona</h1></label>
+					</div>
+					<div class="hidden">			
+						<label class="btn">
+							<input type="radio" name="iBtn">
+							<svg viewbox="0 0 100 100">
+								<path d="M10 90 H90 V10 H10 Z M40 90 V10 M18 20 H32 M18 30 H32 M18 40 H32" />
+							</svg>
+						</label>
+					</div>
+					<div class="hRight">
+						<label class="btn">
+							<input type="radio" name="iBtn">
+							<svg viewbox="0 0 100 100">
+								<path d="M50 10 A40 40 0 1 1 50 90 A40 40 0 1 1 50 10 M50 25 V75 M25 50 H75" />
+							</svg>
+						</label>
+						<label class="btn selIcon">
+							<input type="radio" name="iBtn">
+							<svg viewbox="0 0 100 100">
+								<path d="M10 20H80V90H10ZM20 60L35 75L70 30M20 20V10H90V80H80"/>
+							</svg>
+						</label>
+						<label class="btn">
+							<input type="radio" name="iBtn">
+							<svg viewbox="0 0 100 100">
+								<path d="M10 10 H40 V40 H10 Z M60 10 H90 V40 H60 Z M10 60 H40 V90 H10 Z M60 60 H90 V90 H60 Z" />
+							</svg>
+						</label>
+					</div>
+				</header>
+				<fieldset>					
+					<form id="searchFrm">
+						<label class="select">
+							<input type="search" name="item" placeholder="Search">
+							<svg viewbox="0 0 100 100" class="hidden">
+								<path d="M10 80H90V30H70L60 20H40L30 30H10Z M50 38a15 15 0 1 0 0 30a15 15 0 1 0 0-30z M70 40h1" />
+							</svg>
+						</label>
+					</form>
+					<form id="filters">
+						<label class="select"><input type="radio" name="filter" checked>Filter1</label>
+						<label class="select"><input type="radio" name="filter">Filter2</label>
+						<label class="select"><input type="radio" name="filter">Filter3</label>
+						<label class="select"><input type="radio" name="filter">Filter4</label>
+						<label class="select"><input type="radio" name="filter">Filter5</label>
+					</form>
+					<form class="rows">
+						<label class="select"><input type="checkbox" name="item" checked>Product 1</label>
+						<label class="select"><input type="checkbox" name="item">Product 2</label>
+						<label class="select"><input type="checkbox" name="item">Product 3</label>
+						<label class="select"><input type="checkbox" name="item">Product 4</label>
+						<label class="select"><input type="checkbox" name="item">Product 5</label>
+						<label class="select"><input type="checkbox" name="item">Product 6</label>
+						<label class="select"><input type="checkbox" name="item">Product 7</label>
+						<label class="select"><input type="checkbox" name="item">Product 8</label>
+						<label class="select"><input type="checkbox" name="item">Product 9</label>
+						<label class="select"><input type="checkbox" name="item">Product 10</label>
+						<label class="select"><input type="checkbox" name="item">Product 11</label>
+						<label class="select"><input type="checkbox" name="item">Product 12</label>
+						<label class="select"><input type="checkbox" name="item">Product 13</label>
+						<label class="select"><input type="checkbox" name="item">Product 14</label>
+						<label class="select"><input type="checkbox" name="item">Product 15</label>
+						<label class="select"><input type="checkbox" name="item">Product 16</label>
+						<label class="select"><input type="checkbox" name="item">Product 17</label>
+						<label class="select"><input type="checkbox" name="item">Product 18</label>
+						<label class="select"><input type="checkbox" name="item">Product 19</label>
+						<label class="select"><input type="checkbox" name="item">Product 20</label>
+						<label class="select"><input type="checkbox" name="item">Product 21</label>
+						
+					</form>
+				</fieldset>
+			</section>
+			<section id="detailSection">
+				<header>
+					<div class="hidden">
+						<label class="btn">
+							<input type="radio" name="iBtn">
+							<svg viewbox="0 0 100 100">
+								<path d="M 50 10 L 10 50 L 50 90 M 10 50 L 90 50" />
+							</svg>
+						</label>
+					</div>
+					<div>
+						<label class="btn">
+							<input type="radio" name="iBtn">
+							<svg viewbox="0 0 100 100" id="delBtn">
+								<path d="M33 10 H68 V20 H33 Z M20 20 H80 L75 90 H25 Z M10 20 H90 M33 30 L39 80 M50 30 V80 M67 30 L62 80" />
+							</svg>
+						</label>
+						<!--
+						<label class="btn">
+							<input type="radio" name="iBtn">
+							<svg viewbox="0 0 100 100">
+								<path d="M10,90 H90 V25 L75,10 H10Z M30,10 V35 H70 V10Z M20,90 V50 H80 V90Z M59,17 h3 v11 h-3Z" />
+							</svg>
+						</label>
+						-->
+						<label class="btn selIcon">
+							<input type="radio" name="iBtn">
+							<svg viewbox="0 0 100 100">
+								<path d="M10 20H80V90H10ZM20 60L35 75L70 30M20 20V10H90V80H80"/>
+							</svg>
+						</label>
+					</div>
+					<div class="hRight">
+						<label class="btn">
+							<input type="radio" name="iBtn">
+							<svg viewBox="0 0 100 100">
+								<path d="M10 10 H60 V30 M60 70 V90 H10 V7.5" />
+								<path d="M30 50 H97 M83 35 L97 50 L83 65" />
+								<!--<path d="M50 10 a40 40 0 1 0 0 80 a40 40 0 1 0 0-80 M50 29 a13 13 0 1 1 0 26 a13 13 0 1 1 0-26 M18 76 q32-38 64 0" />-->
+							</svg>
+						</label>
+					</div>
+				</header>
+				<fieldset>
+					<form class="rows">
+						<label class="select"><input type="checkbox" name="copy" checked>Copy 1</label>
+						<label class="select"><input type="checkbox" name="copy">Copy 2</label>
+						<label class="select"><input type="checkbox" name="copy">Copy 3</label>
+						<label class="select"><input type="checkbox" name="copy">Copy 4</label>
+						<label class="select"><input type="checkbox" name="copy">Copy 5</label>
+						<label class="select"><input type="checkbox" name="copy">Copy 6</label>
+						<label class="select"><input type="checkbox" name="copy">Copy 7</label>
+						<label class="select"><input type="checkbox" name="copy">Copy 8</label>
+						<label class="select"><input type="checkbox" name="copy">Copy 9</label>
+						<label class="select"><input type="checkbox" name="copy">Copy 10</label>
+						<label class="select"><input type="checkbox" name="copy">Copy 11</label>
+						<label class="select"><input type="checkbox" name="copy">Copy 12</label>
+						<label class="select"><input type="checkbox" name="copy">Copy 13</label>
+						<label class="select"><input type="checkbox" name="copy">Copy 14</label>
+						<label class="select"><input type="checkbox" name="copy">Copy 15</label>
+						<label class="select"><input type="checkbox" name="copy">Copy 16</label>
+						<label class="select"><input type="checkbox" name="copy">Copy 17</label>
+						<label class="select"><input type="checkbox" name="copy">Copy 18</label>
+						<label class="select"><input type="checkbox" name="copy">Copy 19</label>
+						<label class="select"><input type="checkbox" name="copy">Copy 20</label>
+						<label class="select"><input type="checkbox" name="copy">Copy 21</label>
+						
+					</form>
+				</fieldset>
+			</section>
+		</main>
+		<script>
+			const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+			const $ = (s, c = document) => c.querySelector(s);
+			const selector = 'form label > input[type=checkbox], form label > input[type=radio], #searchFrm label > input[type=search], header label > input[type=radio]';
+			function checkedFocus(el) {
+				if(!el) return;
+				el.checked = true;
+				el.focus();
+				const label = el.closest('label');
+				if(!label) return;
+				$$('input[name='+el.name+']', el.closest('form, header')).forEach(
+					radio => radio.closest('label').classList.remove('checked')
+				);
+				if(el.checked) label.classList.add('checked');
+			}
+			function handleChange(e) {
+				if(!e.target.matches(selector)) return;
+				checkedFocus(e.target);
+			}
+			function handleFocusIn(e) {
+				if(e.target.matches(selector)) {
+					e.target.closest('label')?.classList.add('focused');
+				}
+			}
+			function handleFocusOut(e) {
+				if(e.target.matches(selector)) {
+					e.target.closest('label')?.classList.remove('focused');
+				}
+			}
+			function handleKeyDown(e) {
+				const input = e.target;
+				if(!input.matches(selector)) return;
+				const parentLabel = input.closest('label');
+				const parentForm = input.closest('form');
+				const parentSection = input.closest('section');
+				switch (e.key) {
+					case 'ArrowDown':
+						e.preventDefault();
+						if(!parentForm) {
+							checkedFocus($('form input', parentSection));
+						} else {
+							const nextForm = parentForm.nextElementSibling;
+							if(nextForm) {
+								checkedFocus($('input', nextForm));
+							}
+							else if(parentLabel.classList.contains('select') && parentLabel.nextElementSibling) {
+								checkedFocus($('input',parentLabel.nextElementSibling));
+							}
+						}
+					break;
+					case 'ArrowUp':
+						if(parentForm) {
+							const isFirstChild = (input === $('input', parentForm)) || parentForm.id === 'filters';
+							if(isFirstChild) {
+								e.preventDefault();
+								const inputTarget = $('input',
+									parentForm.previousElementSibling ||
+									input.closest('fieldset').previousElementSibling
+								);
+								checkedFocus(inputTarget);
+								const isHeader = inputTarget?.closest('div');
+								if(isHeader && window.getComputedStyle(isHeader).display === 'none') {
+									checkedFocus($('input', isHeader.nextElementSibling));
+								}
+							}
+							else if(parentLabel.classList.contains('select') && parentLabel.previousElementSibling) {
+								e.preventDefault();
+								checkedFocus($('input',parentLabel.previousElementSibling));
+							}
+						}
+						else if(input.name === 'iBtn') {
+							e.preventDefault();
+						}
+					break;
+					case 'ArrowLeft':
+					case 'ArrowRight':
+						const mapLeft = { listSection: 'navSection', detailSection: 'listSection' };
+						const mapRight = { navSection: 'listSection', listSection: 'detailSection' };
+						const map = e.key === 'ArrowLeft' ? mapLeft : mapRight;
+						const atSelectable = parentForm && parentLabel.classList.contains('select') && (
+							input.type === 'checkbox' ||
+							(input.type === 'radio' && parentForm.classList.contains('rows')) ||
+							(input.type === 'search' && input.value.length < 1)
+						);
+						if(e.key === 'ArrowLeft' && parentSection.id === 'navSection' && input.type === 'radio'){
+							e.preventDefault();
+						}
+						else if(atSelectable && parentSection.id in map) {
+							e.preventDefault();
+							checkedFocus($('#' + map[parentSection.id] + ' form.rows input:first-child'));
+						}
+					break;
+				}
+			}
+			document.addEventListener('change', handleChange);
+			document.addEventListener('focusin', handleFocusIn);
+			document.addEventListener('focusout', handleFocusOut);
+			document.addEventListener('keydown', handleKeyDown);
+			$$(selector).forEach(input => {
+				if(input.checked) checkedFocus(input);
+			});
+		</script>
+	</body>
+</html>
