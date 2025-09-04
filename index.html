@@ -10,43 +10,51 @@
 		<meta content="width=device-width,initial-scale=1,maximum-scale=1,shrink-to-fit=no,user-scalable=0,viewport-fit=cover" name="viewport">
 		<style>
 			:root {
-				--bg:#FFFFFF;	--cl:#000000;	--fn1:1.1vw;	--fn2:1.7vw;	--brC:#FAF9F7;
-				--bhg:#0069DA;	--chg:#FFFFFF;	--bck:#EFEEED;	--mg:.7vw;	--mg2:calc(var(--fn2) / 2);	
+				--bg:#FFFFFF;	--cl:#000000;	--cl2:#858584;	--fn1:1.1vw;	--fn2:1.7vw;	--brC:#FAF9F7;		--nvB:#E1E0E1;
+				--bhg:#000000;	--chg:#FFFFFF;	--bck:#858584;	--mg:.7vw;	--mg2:calc(var(--fn2) / 2);		--dmy:5.2vw;
 			}
 			html {-webkit-tap-highlight-color: transparent;}
 			body {margin:0;padding:0;font-family:arial}
 			main, section header {display:grid}
 			main{grid-template-columns:22% auto 39%}
 			section {position:relative; height:100vh; overflow:hidden;}
-			label {cursor:pointer;user-select:none;font-size:var(--fn1);}
-			#listSection {border-left:1px solid var(--brC); border-right:1px solid var(--brC);}
-			#listSection header div label h1 {margin:0;padding:0;font-size:var(--fn2);height:var(--fn2);}
-			
-			#searchFrm, #searchFrm label, section fieldset form#filters label, .rows label.checked {border-radius:1vh;}
+			label, #navSection form div.head {cursor:pointer;user-select:none;font-size:var(--fn1);}
 
-			#searchFrm {background-color:var(--bck);}
-			#searchFrm .hidden {visibility:hidden}
-			#searchFrm label {padding:calc(var(--mg) * .68) var(--mg);display: flex;}
-			#searchFrm label input {
+			#navSection form.rows {display: grid;grid-template-columns:repeat(2, 1fr);gap:1vh;color:var(--cl2)}
+			#navSection form * {display: block;box-sizing:border-box;}
+			#navSection form label.select {border:solid 1px var(--nvB);}
+			#navSection form div.head {cursor:default;margin-left:var(--mg);font-weight:bolder;grid-column: 1 / -1;}
+			#navSection form div.head:not(:first-of-type) {margin-top:calc(var(--mg) * 2)}
+			#navSection form div.head:first-of-type {margin-top:calc((var(--mg) * 2) + (var(--mg) / 2))}
+
+			#listSection {border-left:1px solid var(--brC); border-right:1px solid var(--brC);}
+			#listSection form.rows label, #detailSection form.rows label {height:var(--dmy)}
+
+			.searchFrm, .searchFrm label, section fieldset form.filters label, .rows label.checked, #navSection form label.select {border-radius:1vh;}
+			.searchFrm {border:solid 1px var(--bck);}
+			.searchFrm .deskHid {visibility:hidden}
+			.searchFrm label {padding:calc(var(--mg) * .68) var(--mg);display: flex;}
+			.searchFrm label input {
 				border:0;outline:none;font-size:var(--fn1);background-color:var(--hbg);
 				flex:1;min-width:0;
 			}
-			
+
 			section header {
 				position:absolute; top:0; left:0; right:0; z-index:1;padding:var(--mg);
 				grid-template-columns:50% 50%;background-color:var(--bg);opacity:.97;
 			}
-			section header div, #filters {display:flex;}
+			section header div label h1 {margin:0 0 0 var(--mg);padding:0;font-size:var(--fn2);height:var(--fn2);line-height: calc(var(--fn2) - 1px);}
+			section header div, .filters {display:flex;}
 			section header div label {display:flex;align-items:center;}
-			section header div label svg, #searchFrm label svg {
+			section header div label svg, .searchFrm label svg {
 				width:var(--fn2); height:var(--fn2); cursor:pointer;
 				stroke-width:4; stroke:var(--cl);fill:transparent;
 			}
 			section header div label svg {margin-right:calc((var(--mg) * 3) + 1px);}
 			section header div label:first-child svg {margin-left:var(--mg);}
-			section header div:last-child label:last-child svg {margin-right:var(--mg);}
+			section header .hRight label.last svg, section header .hRight label.thirdLast svg {margin-right:var(--mg);}
 			section header .hRight {justify-content: flex-end;}
-			section header .hidden {display:none}
+			section header .deskHid, section header .tabHid {display:none}
 			section fieldset {
 				outline:none;border:none;scrollbar-width:none;
 				position:absolute; top:0; left:0; right:0; bottom:0; overflow-y:auto;
@@ -56,42 +64,56 @@
 			section fieldset form label {
 				display:block;padding:var(--mg);
 			}
-			section fieldset form#filters label {margin-right:var(--mg)}
-			section fieldset form.rows label {height:7vh;border-bottom:solid 1px var(--brC)}
+			section fieldset form.filters label {margin-right:var(--mg)}
+			section fieldset form.rows label {border-bottom:solid 1px var(--brC)}
 
 			.btn input[type=checkbox], .btn [type=radio], .select input[type=checkbox], .select [type=radio]{position: absolute;left: -9999px;}
-			.checked {background-color:var(--bck)}
+			.checked {background-color:var(--bck);color:var(--chg)}
 			.focused {background-color:var(--bhg);color:var(--chg)}
 			.btn.checked, .btn.focused {background-color:transparent;}
-			.btn.focused svg {stroke:var(--bhg);stroke-width:8}
-			.btn.focused svg#delBtn {stroke:red;}
-			#searchFrm label.focused {background-color:transparent;color:var(--cl)}
+			.btn.focused svg, .btn svg:hover, .btn.checked {stroke:var(--bhg);stroke-width:8}
+			.btn.focused svg.delBtn, .btn svg.delBtn:hover {stroke:red;stroke-width:8}
+			.btn.focused svg.delBtn {stroke:red;}
+			.searchFrm label.focused {background-color:transparent;color:var(--cl)}
 
 			@media screen and (max-width: 1175px){
 				:root {
 					--fn1:2vw; 	--fn2:2.5vw;	--brC:#FAF9F7;
-					--mg:1.1vw;	--mg2:calc(var(--fn2) / 2);	
+					--mg:1.1vw;	--mg2:calc(var(--fn2) / 2);	--dmy:7vw;
 				}
 				main {grid-template-columns:50% auto}
-				
-				#searchFrm .hidden {visibility:visible}
-				#searchFrm label {padding:var(--mg);}
-				#searchFrm label input {padding:0; xborder-radius:0; appearance: none;}
+				.searchFrm .deskHid {visibility:visible}
+				.searchFrm label {padding:var(--mg);}
+				.searchFrm label input {padding:0; appearance: none;}
+				#navSection {border-right:1px solid var(--brC);}
+				#listSection header div:last-child label:not(.deskHid):not(.tabHid).last svg,
+				#listSection header .hRight label.thirdLast svg {margin-right:calc((var(--mg) * 3) + 1px);}
 				#listSection .visible, #navSection {display:none}
-				#listSection header .hidden {display:flex}
+				#listSection header .deskHid, #navSection header .deskHid {display:flex}
 				#listSection {border-left:none;}
+				section header .hRight label.secondLast svg {margin-right: var(--mg);}
 			}
 			@media screen and (max-width: 500px) and (orientation: portrait){
 				:root {
-					--fn1:6vw; 	--fn2:7vw;
+					--fn1:6vw; 	--fn2:7vw;	--dmy:25vw;
 					--mg:3.2vw;	--mg2:calc(var(--fn2) / 2);
 				}
 				main {display:block}
+				#listSection header div:last-child label:not(.deskHid):not(.tabHid).last svg
 				section header div label svg {margin-right:calc(var(--mg) * 2);}
-				#searchFrm label {padding:calc(var(--mg) * .92) var(--mg);}
-				#filters {width: calc(100vw - (var(--mg) * 2)); overflow: scroll; scrollbar-width:none;}
-				#listSection {border-right:none;}
+				section header .hRight label.secondLast svg {margin-right: calc(var(--mg) * 2);}
+				.searchFrm label {padding:calc(var(--mg) * .92) var(--mg);}
+				.filters {width: calc(100vw - (var(--mg) * 2)); overflow: scroll; scrollbar-width:none;}
+				#navSection, #listSection {border-right:none;}
+				#detailSection div:first-child {display:none}
+				#detailSection div:nth-child(2) {display:flex}
+				#detailSection div.hRight label.last {display:none}
+				#detailSection div.hRight label.secondLast svg {margin-right:var(--mg)}
+				#navSection form div.head:first-of-type {margin-top:calc((var(--mg) * 2) + (var(--mg) / 2))}
 				#detailSection {display:none}
+				#listSection {display:block}
+				.mobHid {display:none}
+				section header .tabHid {display:flex}
 			}
 		</style>
 	</head>
@@ -99,94 +121,100 @@
 		<main>
 			<section id="navSection">
 				<header>
-					<div class="hidden">
-						<label class="btn">
-							<input type="radio" name="iBtn">
+					<div>
+						<label class="deskHid"><h1>Starfid</h1></label>
+					</div>
+					<div class="hRight">
+						<label class="btn deskHid secondLast">
+							<input type="radio" name="iBtn" data-btn="side">
 							<svg viewbox="0 0 100 100">
 								<path d="M10 90 H90 V10 H10 Z M40 90 V10 M18 20 H32 M18 30 H32 M18 40 H32" />
 							</svg>
 						</label>
-					</div>
-					<div class="hRight hidden">
-						<label class="btn">
-							<input type="radio" name="iBtn">
+						<label class="btn tabHid last">
+							<input type="radio" name="iBtn" data-btn="dots">
 							<svg viewbox="0 0 100 100">
-								<path d="M10 10 H60 V30 M60 70 V90 H10 V7.5" />
-								<path d="M30 50 H97 M83 35 L97 50 L83 65" />
+								<path d="M49 10 A40 40 0 1 1 48.9 10 M30 47 a3 3 0 1 0 0.1 0 M50 47 a3 3 0 1 0 0.1 0 M70 47 a3 3 0 1 0 0.1 0"/>
 							</svg>
 						</label>
 					</div>
 				</header>
 				<fieldset>
 					<form class="rows">
-						<label class="select"><input type="radio" name="nav" checked>Division 1</label>
-						<label class="select"><input type="radio" name="nav">Division 2</label>
-						<label class="select"><input type="radio" name="nav">Division 3</label>
-						<label class="select"><input type="radio" name="nav">Division 4</label>
-						<label class="select"><input type="radio" name="nav">Division 5</label>
-						<label class="select"><input type="radio" name="nav">Division 6</label>
-						<label class="select"><input type="radio" name="nav">Division 7</label>
-						<label class="select"><input type="radio" name="nav">Division 8</label>
-						<label class="select"><input type="radio" name="nav">Division 9</label>
-						<label class="select"><input type="radio" name="nav">Division 10</label>
-						<label class="select"><input type="radio" name="nav">Division 11</label>
-						<label class="select"><input type="radio" name="nav">Division 12</label>
-						<label class="select"><input type="radio" name="nav">Division 13</label>
-						<label class="select"><input type="radio" name="nav">Division 14</label>
-						<label class="select"><input type="radio" name="nav">Division 15</label>
-						<label class="select"><input type="radio" name="nav">Division 16</label>
-						<label class="select"><input type="radio" name="nav">Division 17</label>
-						<label class="select"><input type="radio" name="nav">Division 18</label>
-						<label class="select"><input type="radio" name="nav">Division 19</label>
-						<label class="select"><input type="radio" name="nav">Division 20</label>
-						<label class="select"><input type="radio" name="nav">Division 21</label>
+						<div class="head">Division 1</div>
+							<label class="select"><input type="radio" name="nav" checked>Task 1</label>
+						<div class="head">Division 2</div>
+							<label class="select"><input type="radio" name="nav">Task 1</label>
+							<label class="select"><input type="radio" name="nav">Task 2</label>
+						<div class="head">Division 3</div>
+							<label class="select"><input type="radio" name="nav">Task 1</label>
+							<label class="select"><input type="radio" name="nav">Task 2</label>
+							<label class="select"><input type="radio" name="nav">Task 3</label>
+							<label class="select"><input type="radio" name="nav">Task 4</label>
+						<div class="head">Division 4</div>
+							<label class="select"><input type="radio" name="nav">Task 1</label>
+							<label class="select"><input type="radio" name="nav">Task 2</label>
+							<label class="select"><input type="radio" name="nav">Task 3</label>
+							<label class="select"><input type="radio" name="nav">Task 4</label>
+						<div class="head">Division 5</div>
+							<label class="select"><input type="radio" name="nav">Task 1</label>
 					</form>
 				</fieldset>
 			</section>
 			<section id="listSection">
 				<header>
-					<div class="visible">
-						<label><h1>Sona</h1></label>
-					</div>
-					<div class="hidden">			
-						<label class="btn">
-							<input type="radio" name="iBtn">
-							<svg viewbox="0 0 100 100">
-								<path d="M10 90 H90 V10 H10 Z M40 90 V10 M18 20 H32 M18 30 H32 M18 40 H32" />
-							</svg>
-						</label>
+					<div>
+						<label><h1>Starfid</h1></label>
 					</div>
 					<div class="hRight">
-						<label class="btn">
-							<input type="radio" name="iBtn">
+						<label class="btn mobHid">
+							<input type="radio" name="iBtn" data-btn="compose">
 							<svg viewbox="0 0 100 100">
 								<path d="M50 10 A40 40 0 1 1 50 90 A40 40 0 1 1 50 10 M50 25 V75 M25 50 H75" />
 							</svg>
 						</label>
-						<label class="btn selIcon">
-							<input type="radio" name="iBtn">
+						<label class="btn selIcon mobHid">
+							<input type="radio" name="iBtn" data-btn="multi">
 							<svg viewbox="0 0 100 100">
 								<path d="M10 20H80V90H10ZM20 60L35 75L70 30M20 20V10H90V80H80"/>
 							</svg>
 						</label>
-						<label class="btn">
-							<input type="radio" name="iBtn">
+						<label class="btn mobHid">
+							<input type="radio" name="iBtn" data-btn="delete">
+							<svg viewbox="0 0 100 100" class="delBtn">
+								<path d="M33 10 H68 V20 H33 Z M20 20 H80 L75 90 H25 Z M10 20 H90 M33 30 L39 80 M50 30 V80 M67 30 L62 80" />
+							</svg>
+						</label>
+						<label class="btn mobHid thirdLast">
+							<input type="radio" name="iBtn" data-btn="tiles">
 							<svg viewbox="0 0 100 100">
 								<path d="M10 10 H40 V40 H10 Z M60 10 H90 V40 H60 Z M10 60 H40 V90 H10 Z M60 60 H90 V90 H60 Z" />
+							</svg>
+						</label>
+						<label class="btn deskHid secondLast">
+							<input type="radio" name="iBtn" data-btn="side">
+							<svg viewbox="0 0 100 100">
+								<path d="M10 90 H90 V10 H10 Z M40 90 V10 M18 20 H32 M18 30 H32 M18 40 H32" />
+							</svg>
+						</label>
+						<label class="btn tabHid last">
+							<input type="radio" name="iBtn" data-btn="dots">
+							<svg viewbox="0 0 100 100">
+								<path d="M49 10 A40 40 0 1 1 48.9 10 M30 47 a3 3 0 1 0 0.1 0 M50 47 a3 3 0 1 0 0.1 0 M70 47 a3 3 0 1 0 0.1 0"/>
 							</svg>
 						</label>
 					</div>
 				</header>
 				<fieldset>					
-					<form id="searchFrm">
+					<form class="searchFrm">
 						<label class="select">
 							<input type="search" name="item" placeholder="Search">
-							<svg viewbox="0 0 100 100" class="hidden">
+							<svg viewbox="0 0 100 100" class="deskHid">
 								<path d="M10 80H90V30H70L60 20H40L30 30H10Z M50 38a15 15 0 1 0 0 30a15 15 0 1 0 0-30z M70 40h1" />
 							</svg>
 						</label>
 					</form>
-					<form id="filters">
+					<form class="filters">
 						<label class="select"><input type="radio" name="filter" checked>Filter1</label>
 						<label class="select"><input type="radio" name="filter">Filter2</label>
 						<label class="select"><input type="radio" name="filter">Filter3</label>
@@ -221,48 +249,68 @@
 			</section>
 			<section id="detailSection">
 				<header>
-					<div class="hidden">
+					<div>
+						<label><h1></h1></label>
+					</div>
+					<div class="deskHid">
 						<label class="btn">
-							<input type="radio" name="iBtn">
+							<input type="radio" name="iBtn" data-btn="back">
 							<svg viewbox="0 0 100 100">
 								<path d="M 50 10 L 10 50 L 50 90 M 10 50 L 90 50" />
 							</svg>
 						</label>
 					</div>
-					<div>
-						<label class="btn">
-							<input type="radio" name="iBtn">
-							<svg viewbox="0 0 100 100" id="delBtn">
-								<path d="M33 10 H68 V20 H33 Z M20 20 H80 L75 90 H25 Z M10 20 H90 M33 30 L39 80 M50 30 V80 M67 30 L62 80" />
-							</svg>
-						</label>
-						<!--
-						<label class="btn">
-							<input type="radio" name="iBtn">
+					<div class="hRight">
+						<label class="btn mobHid">
+							<input type="radio" name="iBtn" data-btn="save">
 							<svg viewbox="0 0 100 100">
 								<path d="M10,90 H90 V25 L75,10 H10Z M30,10 V35 H70 V10Z M20,90 V50 H80 V90Z M59,17 h3 v11 h-3Z" />
 							</svg>
-						</label>
-						-->
-						<label class="btn selIcon">
-							<input type="radio" name="iBtn">
+						</label>						
+						
+						<label class="btn selIcon mobHid">
+							<input type="radio" name="iBtn" data-btn="multi">
 							<svg viewbox="0 0 100 100">
 								<path d="M10 20H80V90H10ZM20 60L35 75L70 30M20 20V10H90V80H80"/>
 							</svg>
 						</label>
-					</div>
-					<div class="hRight">
-						<label class="btn">
-							<input type="radio" name="iBtn">
+						<label class="btn mobHid">
+							<input type="radio" name="iBtn" data-btn="delete">
+							<svg viewbox="0 0 100 100" class="delBtn">
+								<path d="M33 10 H68 V20 H33 Z M20 20 H80 L75 90 H25 Z M10 20 H90 M33 30 L39 80 M50 30 V80 M67 30 L62 80" />
+							</svg>
+						</label>
+						<label class="btn tabHid secondLast">
+							<input type="radio" name="iBtn" data-btn="dots">
+							<svg viewbox="0 0 100 100">
+								<path d="M49 10 A40 40 0 1 1 48.9 10 M30 47 a3 3 0 1 0 0.1 0 M50 47 a3 3 0 1 0 0.1 0 M70 47 a3 3 0 1 0 0.1 0"/>
+							</svg>
+						</label>
+						<label class="btn last">
+							<input type="radio" name="iBtn" data-btn="signout">
 							<svg viewBox="0 0 100 100">
 								<path d="M10 10 H60 V30 M60 70 V90 H10 V7.5" />
 								<path d="M30 50 H97 M83 35 L97 50 L83 65" />
-								<!--<path d="M50 10 a40 40 0 1 0 0 80 a40 40 0 1 0 0-80 M50 29 a13 13 0 1 1 0 26 a13 13 0 1 1 0-26 M18 76 q32-38 64 0" />-->
 							</svg>
 						</label>
 					</div>
 				</header>
 				<fieldset>
+					<form class="searchFrm">
+						<label class="select">
+							<input type="search" name="item" placeholder="Search">
+							<svg viewbox="0 0 100 100" class="deskHid">
+								<path d="M10 80H90V30H70L60 20H40L30 30H10Z M50 38a15 15 0 1 0 0 30a15 15 0 1 0 0-30z M70 40h1" />
+							</svg>
+						</label>
+					</form>
+					<form class="filters">
+						<label class="select"><input type="radio" name="filter" checked>Filter1</label>
+						<label class="select"><input type="radio" name="filter">Filter2</label>
+						<label class="select"><input type="radio" name="filter">Filter3</label>
+						<label class="select"><input type="radio" name="filter">Filter4</label>
+						<label class="select"><input type="radio" name="filter">Filter5</label>
+					</form>
 					<form class="rows">
 						<label class="select"><input type="checkbox" name="copy" checked>Copy 1</label>
 						<label class="select"><input type="checkbox" name="copy">Copy 2</label>
@@ -293,29 +341,90 @@
 		<script>
 			const $$ = (s, c = document) => [...c.querySelectorAll(s)];
 			const $ = (s, c = document) => c.querySelector(s);
-			const selector = 'form label > input[type=checkbox], form label > input[type=radio], #searchFrm label > input[type=search], header label > input[type=radio]';
+			const selector = 'form label > input[type=checkbox], form label > input[type=radio], .searchFrm label > input[type=search], header label > input[type=radio]';
+			const rowsCheck = '.rows label > input[type=checkbox]';
+			let multiSelect = false;
+			let selDown = true;
+			let lastSection = null;
 			function checkedFocus(el) {
 				if(!el) return;
 				el.checked = true;
 				el.focus();
-				const label = el.closest('label');
-				if(!label) return;
+				const parentLabel = el.closest('label');
+				const notSearch = el.closest('form') && !el.closest('form').classList.contains('searchFrm');
+				if(!parentLabel) return;
+
+				/*
+				const selection = $$('.rows .checked',section);
+				const totSelection = selection.length;
+				if(totSelection>1 && input.closest('.rows')){
+
+				}
+				else {
+				
+				}
+				*/
 				$$('input[name='+el.name+']', el.closest('form, header')).forEach(
-					radio => radio.closest('label').classList.remove('checked')
+					el => el.closest('label').classList.remove('checked')
 				);
-				if(el.checked) label.classList.add('checked');
+				if(el.checked && notSearch)parentLabel.classList.add('checked');
+			}
+			function clearbyArrow(section) {
+				const selection = $$('.rows .focused',section);
+				const totSelection = selection.length;
+				if(totSelection>1){
+					selection.forEach((label,index)=>{
+						if ((index < totSelection - 1 && selDown) || (index > 0 && !selDown)) {
+							label.classList.remove('focused','checked');
+							$('input', label).checked = false;
+						}
+					});
+					selDown = true; lastSection = null; clearing(section);
+				}
+			}
+			function clearbyClick(section, input){
+				const selection = $$('.rows .checked',section);
+				const totSelection = selection.length;
+				if(totSelection>1 && input.closest('.rows')){
+					selection.forEach(label=>{
+						label.classList.remove('focused','checked');
+						$('input', label).checked = false;
+					});
+					selDown = true; lastSection = null;
+					input.closest('label').classList.add('focused','checked');
+					clearing(section);
+				}
+			}
+			function selecting(section) {
+				const totSelection = $$('.rows .checked',section).length;
+				if(totSelection>1){
+					$('h1',section).innerText = totSelection + ' Selected';
+				}
+			}
+			function clearing(section) {
+				const defText = section.id == 'listSection'?'Starfid':'';
+				if($('h1',section)){
+					$('h1',section).innerText = defText;
+				}
 			}
 			function handleChange(e) {
 				if(!e.target.matches(selector)) return;
-				checkedFocus(e.target);
+				const input = e.target;
+				if(input.matches(rowsCheck) && lastSection) {
+					clearbyClick(lastSection,input);
+					clearing(lastSection);
+				}
+				else {
+					checkedFocus(e.target);
+				}
 			}
 			function handleFocusIn(e) {
-				if(e.target.matches(selector)) {
+				if(e.target.matches(selector)){
 					e.target.closest('label')?.classList.add('focused');
 				}
 			}
 			function handleFocusOut(e) {
-				if(e.target.matches(selector)) {
+				if(e.target.matches(selector) && !multiSelect){
 					e.target.closest('label')?.classList.remove('focused');
 				}
 			}
@@ -325,24 +434,37 @@
 				const parentLabel = input.closest('label');
 				const parentForm = input.closest('form');
 				const parentSection = input.closest('section');
+				const holding = parentForm && (parentForm.classList.contains('rows') && input.type !== 'radio' && multiSelect);
+				
 				switch (e.key) {
 					case 'ArrowDown':
-						e.preventDefault();
+						e.preventDefault();						
 						if(!parentForm) {
 							checkedFocus($('form input', parentSection));
-						} else {
+						}
+						else if(holding){
+							const nextInput = $('input',parentLabel.nextElementSibling);
+							nextInput.checked = true; lastSection = parentSection;
+							nextInput.focus();
+							parentLabel.classList.add('focused');
+							parentLabel.nextElementSibling.classList.add('checked');
+							selecting(parentSection);
+						}
+						else {
 							const nextForm = parentForm.nextElementSibling;
 							if(nextForm) {
 								checkedFocus($('input', nextForm));
 							}
 							else if(parentLabel.classList.contains('select') && parentLabel.nextElementSibling) {
 								checkedFocus($('input',parentLabel.nextElementSibling));
+								clearbyArrow(parentSection);
+								clearing(parentSection);
 							}
 						}
 					break;
 					case 'ArrowUp':
 						if(parentForm) {
-							const isFirstChild = (input === $('input', parentForm)) || parentForm.id === 'filters';
+							const isFirstChild = (input === $('input', parentForm)) || parentForm.classList.contains('filters');
 							if(isFirstChild) {
 								e.preventDefault();
 								const inputTarget = $('input',
@@ -351,12 +473,24 @@
 								);
 								checkedFocus(inputTarget);
 								const isHeader = inputTarget?.closest('div');
+								
 								if(isHeader && window.getComputedStyle(isHeader).display === 'none') {
 									checkedFocus($('input', isHeader.nextElementSibling));
 								}
 							}
+							else if(holding){
+								const prevInput = $('input',parentLabel.previousElementSibling);
+								prevInput.checked = true;
+								prevInput.focus();
+								parentLabel.classList.add('focused');
+								parentLabel.previousElementSibling.classList.add('checked');
+								selDown = false; lastSection = parentSection;
+								selecting(parentSection);
+							}
 							else if(parentLabel.classList.contains('select') && parentLabel.previousElementSibling) {
 								e.preventDefault();
+								clearbyArrow(parentSection);
+								clearing(parentSection);
 								checkedFocus($('input',parentLabel.previousElementSibling));
 							}
 						}
@@ -364,6 +498,7 @@
 							e.preventDefault();
 						}
 					break;
+
 					case 'ArrowLeft':
 					case 'ArrowRight':
 						const mapLeft = { listSection: 'navSection', detailSection: 'listSection' };
@@ -377,18 +512,82 @@
 						if(e.key === 'ArrowLeft' && parentSection.id === 'navSection' && input.type === 'radio'){
 							e.preventDefault();
 						}
+						else if(e.key === 'ArrowRight' && parentSection.id === 'navSection' && input.type === 'radio'){
+							e.preventDefault();
+						}
 						else if(atSelectable && parentSection.id in map) {
 							e.preventDefault();
+							clearbyArrow(parentSection);
 							checkedFocus($('#' + map[parentSection.id] + ' form.rows input:first-child'));
+						}
+					break;
+					case 'Shift':
+					case 'Control':
+						multiSelect = true;
+					break;
+					case 'Delete':
+						if(confirm('Delete this')){
+							console.log(lastSection);
 						}
 					break;
 				}
 			}
+			function handleKeyUp(e) {
+				const input = e.target;
+				if(!input.matches(selector)) return;
+				switch (e.key) {
+					case 'Shift':
+					case 'Control':
+						multiSelect = false;
+					break;
+				}
+			}
+			function handleClick(e) {
+				const input = e.target;
+				if(!input.matches(selector)) return;
+				const section = input.closest('section');
+				lastSection !== null && clearbyClick(lastSection,input);
+				
+				if(input.closest('label') && input.closest('label').classList.contains('btn')){
+					const btn = input.dataset.btn;
+					if(btn=='back'){
+						$('#listSection').style.display = 'block';
+						$('#detailSection').style.display = 'none';
+					}
+					else if(btn=='side'){
+						if(section.id === 'navSection'){
+							$('#navSection').style.display = 'none';
+							$('#listSection').style.display = 'block';
+						}
+						else {
+							$('#navSection').style.display = 'block';
+							$('#listSection').style.display = 'none';
+						}
+					}
+				}
+				else if(
+					$('#detailSection') && window.getComputedStyle($('#detailSection')).display === 'none' &&
+					input.closest('form') && input.closest('form').classList.contains('rows') &&
+					section.id === 'listSection'
+					
+				){
+					$('#listSection').style.display = 'none';
+					$('#detailSection').style.display = 'block';
+				}
+				
+			}
+			
 			document.addEventListener('change', handleChange);
 			document.addEventListener('focusin', handleFocusIn);
 			document.addEventListener('focusout', handleFocusOut);
 			document.addEventListener('keydown', handleKeyDown);
-			$$(selector).forEach(input => {
+			document.addEventListener('keyup', handleKeyUp);
+			document.addEventListener('click', handleClick);
+			document.addEventListener('visibilitychange', () => {
+				if (document.deskHid) multiSelect = false;
+			});
+
+			$$(selector.split(',').map(s => s.trim()).map(s => /checkbox|radio/.test(s) ? s + ':checked' : s).join(', ')).forEach(input => {
 				if(input.checked) checkedFocus(input);
 			});
 		</script>
