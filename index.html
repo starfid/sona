@@ -10,20 +10,20 @@
 		<meta content="width=device-width,initial-scale=1,maximum-scale=1,shrink-to-fit=no,user-scalable=0,viewport-fit=cover" name="viewport">
 		<style>
 			:root {
-				--bg:#FFFFFF;	--cl:#000000;	--cl2:#858584;	--fn1:1.1vw;	--fn2:1.7vw;	--brC:#FAF9F7;		--nvB:#E1E0E1;
-				--bhg:#000000;	--chg:#FFFFFF;	--bck:#858584;	--mg:.7vw;	--mg2:calc(var(--fn2) / 2);		--dmy:5.2vw;
+				--bg:#FAFAF9;	--cl:#000000;	--cl2:#858584;	--fn1:1.1vw;	--fn2:1.7vw;	--brC:#FAF9F7;		--nvB:#E1E0E1;
+				--bhg:#0063E2;	--chg:#FFFFFF;	--cck:#000000;	--bck:#EEEDEB;	--mg:.7vw;	--mg2:calc(var(--fn2) / 2);		--dmy:5.2vw;
 			}
 			html {-webkit-tap-highlight-color: transparent;}
-			body {margin:0;padding:0;font-family:arial}
+			body {margin:0;padding:0;font-family:arial;color:var(--cl);background:var(--bg)}
 			main, section header {display:grid}
 			main{grid-template-columns:22% auto 39%}
-			section {position:relative; height:100vh; overflow:hidden;}
+			section {position:relative; height:100vh; overflow:hidden;background:var(--bg)}
 			label, #navSection form div.head {cursor:pointer;user-select:none;font-size:var(--fn1);}
 
 			#navSection form.rows {display: grid;grid-template-columns:repeat(2, 1fr);gap:1vh;color:var(--cl2)}
 			#navSection form * {display: block;box-sizing:border-box;}
 			#navSection form label.select {border:solid 1px var(--nvB);}
-			#navSection form div.head {cursor:default;margin-left:var(--mg);font-weight:bolder;grid-column: 1 / -1;}
+			#navSection form div.head {color:var(--cl2);cursor:default;margin-left:var(--mg);font-weight:bolder;grid-column: 1 / -1;}
 			#navSection form div.head:not(:first-of-type) {margin-top:calc(var(--mg) * 2)}
 			#navSection form div.head:first-of-type {margin-top:calc((var(--mg) * 2) + (var(--mg) / 2))}
 
@@ -31,19 +31,19 @@
 			#listSection form.rows label, #detailSection form.rows label {height:var(--dmy)}
 
 			.searchFrm, .searchFrm label, section fieldset form.filters label, .rows label.checked, #navSection form label.select {border-radius:1vh;}
-			.searchFrm {border:solid 1px var(--bck);}
+			.searchFrm {border:solid 1px var(--nvB);}
 			.searchFrm .deskHid {visibility:hidden}
 			.searchFrm label {padding:calc(var(--mg) * .68) var(--mg);display: flex;}
 			.searchFrm label input {
 				border:0;outline:none;font-size:var(--fn1);background-color:var(--hbg);
-				flex:1;min-width:0;
+				flex:1;min-width:0;color:var(--cl)
 			}
 
 			section header {
 				position:absolute; top:0; left:0; right:0; z-index:1;padding:var(--mg);
 				grid-template-columns:50% 50%;background-color:var(--bg);opacity:.97;
 			}
-			section header div label h1 {margin:0 0 0 var(--mg);padding:0;font-size:var(--fn2);height:var(--fn2);line-height: calc(var(--fn2) - 1px);}
+			section header div label h1 {color:var(--cl2);margin:0 0 0 var(--mg);padding:0;font-size:var(--fn2);height:var(--fn2);line-height: calc(var(--fn2) - 1px);}
 			section header div, .filters {display:flex;}
 			section header div label {display:flex;align-items:center;}
 			section header div label svg, .searchFrm label svg {
@@ -68,7 +68,7 @@
 			section fieldset form.rows label {border-bottom:solid 1px var(--brC)}
 
 			.btn input[type=checkbox], .btn [type=radio], .select input[type=checkbox], .select [type=radio]{position: absolute;left: -9999px;}
-			.checked {background-color:var(--bck);color:var(--chg)}
+			.checked {background-color:var(--bck);color:var(--cck)}
 			.focused {background-color:var(--bhg);color:var(--chg)}
 			.btn.checked, .btn.focused {background-color:transparent;}
 			.btn.focused svg, .btn svg:hover, .btn.checked {stroke:var(--bhg);stroke-width:8}
@@ -114,6 +114,12 @@
 				#listSection {display:block}
 				.mobHid {display:none}
 				section header .tabHid {display:flex}
+			}
+			@media (prefers-color-scheme: dark) {
+				:root {
+					--bg:#000000;	--cl:#afafaf;	--cl2:#3b3b3b;	--brC:#0a0a0a;		--nvB:#141414;
+					--bhg:#0063E2;	--chg:#FFFFFF;	--cck:#929293;	--bck:#232324;
+				}
 			}
 		</style>
 	</head>
@@ -353,21 +359,10 @@
 				const parentLabel = el.closest('label');
 				const notSearch = el.closest('form') && !el.closest('form').classList.contains('searchFrm');
 				if(!parentLabel) return;
-
-				/*
-				const selection = $$('.rows .checked',section);
-				const totSelection = selection.length;
-				if(totSelection>1 && input.closest('.rows')){
-
-				}
-				else {
-				
-				}
-				*/
 				$$('input[name='+el.name+']', el.closest('form, header')).forEach(
 					el => el.closest('label').classList.remove('checked')
 				);
-				if(el.checked && notSearch)parentLabel.classList.add('checked');
+				if(el.checked && notSearch) parentLabel.classList.add('checked');
 			}
 			function clearbyArrow(section) {
 				const selection = $$('.rows .focused',section);
@@ -407,6 +402,9 @@
 					$('h1',section).innerText = defText;
 				}
 			}
+			function display(el) {
+				return getComputedStyle(el).display;
+			}
 			function handleChange(e) {
 				if(!e.target.matches(selector)) return;
 				const input = e.target;
@@ -416,11 +414,20 @@
 				}
 				else {
 					checkedFocus(e.target);
+					if(input.name=='iBtn'){
+						e.preventDefault();
+					}
 				}
 			}
 			function handleFocusIn(e) {
+				if(!e.target.matches(selector)) return;
+				const input = e.target;
+
 				if(e.target.matches(selector)){
 					e.target.closest('label')?.classList.add('focused');
+					if(input.name=='iBtn'){
+						e.preventDefault();
+					}
 				}
 			}
 			function handleFocusOut(e) {
@@ -431,16 +438,26 @@
 			function handleKeyDown(e) {
 				const input = e.target;
 				if(!input.matches(selector)) return;
+				if(input.type === 'radio') multiSelect = false;
 				const parentLabel = input.closest('label');
 				const parentForm = input.closest('form');
 				const parentSection = input.closest('section');
 				const holding = parentForm && (parentForm.classList.contains('rows') && input.type !== 'radio' && multiSelect);
-				
+					
 				switch (e.key) {
-					case 'ArrowDown':
-						e.preventDefault();						
+					case 'ArrowDown':										
 						if(!parentForm) {
 							checkedFocus($('form input', parentSection));
+						}
+						else if(parentSection.id === 'navSection'){
+							e.preventDefault();
+							const next = parentLabel.nextElementSibling;
+							if (next?.nodeName === 'DIV') {
+								next.nextElementSibling && checkedFocus($('input', next.nextElementSibling));
+							}
+							else if (next) {
+								checkedFocus($('input', next));
+							}
 						}
 						else if(holding){
 							const nextInput = $('input',parentLabel.nextElementSibling);
@@ -449,8 +466,9 @@
 							parentLabel.classList.add('focused');
 							parentLabel.nextElementSibling.classList.add('checked');
 							selecting(parentSection);
-						}
+						}						
 						else {
+							e.preventDefault();
 							const nextForm = parentForm.nextElementSibling;
 							if(nextForm) {
 								checkedFocus($('input', nextForm));
@@ -467,15 +485,25 @@
 							const isFirstChild = (input === $('input', parentForm)) || parentForm.classList.contains('filters');
 							if(isFirstChild) {
 								e.preventDefault();
+								multiSelect = false;
 								const inputTarget = $('input',
 									parentForm.previousElementSibling ||
 									input.closest('fieldset').previousElementSibling
 								);
 								checkedFocus(inputTarget);
-								const isHeader = inputTarget?.closest('div');
-								
-								if(isHeader && window.getComputedStyle(isHeader).display === 'none') {
+								const isHeader = inputTarget?.closest('div');								
+								if(isHeader && display(isHeader) === 'none') {
 									checkedFocus($('input', isHeader.nextElementSibling));
+								}
+							}
+							else if(parentSection.id === 'navSection'){
+								e.preventDefault();
+								const prev = parentLabel.previousElementSibling;
+								if (prev?.nodeName === 'DIV') {
+									prev.previousElementSibling && checkedFocus($('input', prev.previousElementSibling));
+								}
+								else if (prev) {
+									checkedFocus($('input', prev));
 								}
 							}
 							else if(holding){
@@ -498,7 +526,6 @@
 							e.preventDefault();
 						}
 					break;
-
 					case 'ArrowLeft':
 					case 'ArrowRight':
 						const mapLeft = { listSection: 'navSection', detailSection: 'listSection' };
@@ -509,14 +536,34 @@
 							(input.type === 'radio' && parentForm.classList.contains('rows')) ||
 							(input.type === 'search' && input.value.length < 1)
 						);
-						if(e.key === 'ArrowLeft' && parentSection.id === 'navSection' && input.type === 'radio'){
-							e.preventDefault();
+						if(holding){
+							multiSelect = false;
+							clearbyArrow(parentSection);
 						}
-						else if(e.key === 'ArrowRight' && parentSection.id === 'navSection' && input.type === 'radio'){
+						else if(input.name === 'nav'){
 							e.preventDefault();
+							if(e.key === 'ArrowLeft'){
+								const prev = parentLabel.previousElementSibling;
+								if (prev?.nodeName === 'DIV') {
+									prev.previousElementSibling && checkedFocus($('input', prev.previousElementSibling));
+								}
+								else if (prev) {
+									checkedFocus($('input', prev));
+								}
+							}
+							else if(e.key === 'ArrowRight'){								
+								const labels = [...parentForm.querySelectorAll('label.select')];
+								const idx = labels.indexOf(parentLabel);
+								if (idx % 2 === 0) {
+									checkedFocus($('#' + map[parentSection.id] + ' form.rows input:first-child'));
+								} else {
+									parentLabel.nextElementSibling && checkedFocus($('input', parentLabel.nextElementSibling));
+								}
+							}
 						}
 						else if(atSelectable && parentSection.id in map) {
 							e.preventDefault();
+							multiSelect = false;
 							clearbyArrow(parentSection);
 							checkedFocus($('#' + map[parentSection.id] + ' form.rows input:first-child'));
 						}
@@ -525,9 +572,15 @@
 					case 'Control':
 						multiSelect = true;
 					break;
+					case 'Enter':
+						if(input.name=='iBtn'){
+							console.log(input.dataset.btn);
+						}
+					break;
 					case 'Delete':
-						if(confirm('Delete this')){
-							console.log(lastSection);
+						const totSelection = $$('.rows .checked',parentSection).length;
+						if(parentSection.id !== 'navSection' && confirm('Delete ' + totSelection + ' selection in ' + parentSection.id)){
+							console.log(parentSection.id);
 						}
 					break;
 				}
@@ -545,35 +598,46 @@
 			function handleClick(e) {
 				const input = e.target;
 				if(!input.matches(selector)) return;
-				const section = input.closest('section');
+				const section = input.closest('section').id;
+				const label = input.closest('label');
+				const list = $('#listSection');
+				const detail = $('#detailSection');
+				const nav = $('#navSection');
 				lastSection !== null && clearbyClick(lastSection,input);
 				
-				if(input.closest('label') && input.closest('label').classList.contains('btn')){
-					const btn = input.dataset.btn;
-					if(btn=='back'){
-						$('#listSection').style.display = 'block';
-						$('#detailSection').style.display = 'none';
+				if (label?.classList.contains('btn')) {
+					const {btn} = input.dataset;
+					if (btn === 'back') {
+						list.style.display = 'block';
+						detail.style.display = 'none';
 					}
-					else if(btn=='side'){
-						if(section.id === 'navSection'){
-							$('#navSection').style.display = 'none';
-							$('#listSection').style.display = 'block';
-						}
-						else {
-							$('#navSection').style.display = 'block';
-							$('#listSection').style.display = 'none';
-						}
+					else if (btn === 'side') {
+						const showList = section === 'navSection';
+						nav.style.display = showList ? 'none' : 'block';
+						list.style.display = showList ? 'block' : 'none';
+					}
+					else if (btn === 'delete') {
+						console.log('delete');
+					}
+					else if (btn === 'multi') {
+						console.log('multi');
+						input.checked = true;
+					}
+					else if (btn === 'compose') {
+						console.log('compose');
 					}
 				}
-				else if(
-					$('#detailSection') && window.getComputedStyle($('#detailSection')).display === 'none' &&
-					input.closest('form') && input.closest('form').classList.contains('rows') &&
-					section.id === 'listSection'
-					
-				){
-					$('#listSection').style.display = 'none';
-					$('#detailSection').style.display = 'block';
+				else if(input.closest('form.rows')){
+					if (section === 'navSection' && display(list) === 'none') {
+						list.style.display = 'block';
+						nav.style.display = 'none';					
+					}
+					else if (detail && display(detail) === 'none' && section === 'listSection') {
+						list.style.display = 'none';
+						detail.style.display = 'block';
+					}
 				}
+
 				
 			}
 			
@@ -584,7 +648,7 @@
 			document.addEventListener('keyup', handleKeyUp);
 			document.addEventListener('click', handleClick);
 			document.addEventListener('visibilitychange', () => {
-				if (document.deskHid) multiSelect = false;
+				if (document.hidden) multiSelect = false;
 			});
 
 			$$(selector.split(',').map(s => s.trim()).map(s => /checkbox|radio/.test(s) ? s + ':checked' : s).join(', ')).forEach(input => {
