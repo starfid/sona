@@ -11,7 +11,7 @@
 		<style>
 			:root {
 				--bg:#FAFAF9;	--cl:#000000;	--cl2:#858584;	--fn1:1.1vw;	--fn2:1.7vw;	--brC:#FAF9F7;		--nvB:#E1E0E1;
-				--bhg:#0063E2;	--chg:#FFFFFF;	--cck:#000000;	--bck:#EEEDEB;	--mg:.7vw;	--mg2:calc(var(--fn2) / 2);		--dmy:5.2vw;
+				--bhg:#0063E2;	--chg:#FFFFFF;	--cck:#000000;	--bck:#e7e7e5;	--mg:.7vw;	--mg2:calc(var(--fn2) / 2);		--dmy:5.2vw;
 			}
 			html {-webkit-tap-highlight-color: transparent;}
 			body {margin:0;padding:0;font-family:arial;color:var(--cl);background:var(--bg)}
@@ -78,9 +78,10 @@
 
 			@media screen and (max-width: 1175px){
 				:root {
-					--fn1:2vw; 	--fn2:2.5vw;	--brC:#FAF9F7;
+					--fn1:2vw; 	--fn2:2.5vw;	--brC:#FAF9F7;	--bg:#FFFFFF;
 					--mg:1.1vw;	--mg2:calc(var(--fn2) / 2);	--dmy:7vw;
 				}
+
 				main {grid-template-columns:50% auto}
 				.searchFrm .deskHid {visibility:visible}
 				.searchFrm label {padding:var(--mg);}
@@ -88,7 +89,7 @@
 				#navSection {border-right:1px solid var(--brC);}
 				#listSection header div:last-child label:not(.deskHid):not(.tabHid).last svg,
 				#listSection header .hRight label.thirdLast svg {margin-right:calc((var(--mg) * 3) + 1px);}
-				#listSection .visible, #navSection {display:none}
+				#listSection .visible, #navSection, .h1Hid {display:none}
 				#listSection header .deskHid, #navSection header .deskHid {display:flex}
 				#listSection {border-left:none;}
 				section header .hRight label.secondLast svg {margin-right: var(--mg);}
@@ -117,8 +118,11 @@
 			}
 			@media (prefers-color-scheme: dark) {
 				:root {
-					--bg:#000000;	--cl:#afafaf;	--cl2:#3b3b3b;	--brC:#0a0a0a;		--nvB:#141414;
-					--bhg:#0063E2;	--chg:#FFFFFF;	--cck:#929293;	--bck:#232324;
+					--bg:#1E1E1E;	--cl:#afafaf;	--cl2:#3b3b3b;	--brC:#191919;		--nvB:#141414;
+					--bhg:#0063E2;	--chg:#FFFFFF;	--cck:#929293;	--bck:#29292a;
+				}
+				@media screen and (max-width: 1175px){
+					:root {	--bg:#000000;	--brC:#0a0a0a;	--bck:#232324; }
 				}
 			}
 		</style>
@@ -127,20 +131,20 @@
 		<main>
 			<section id="navSection">
 				<header>
-					<div>
-						<label class="deskHid"><h1>Starfid</h1></label>
-					</div>
-					<div class="hRight">
-						<label class="btn deskHid secondLast">
+					<div class="deskHid">
+						<label class="btn">
 							<input type="radio" name="iBtn" data-btn="side">
 							<svg viewbox="0 0 100 100">
 								<path d="M10 90 H90 V10 H10 Z M40 90 V10 M18 20 H32 M18 30 H32 M18 40 H32" />
 							</svg>
 						</label>
+					</div>
+					<div class="hRight">
 						<label class="btn tabHid last">
-							<input type="radio" name="iBtn" data-btn="dots">
-							<svg viewbox="0 0 100 100">
-								<path d="M49 10 A40 40 0 1 1 48.9 10 M30 47 a3 3 0 1 0 0.1 0 M50 47 a3 3 0 1 0 0.1 0 M70 47 a3 3 0 1 0 0.1 0"/>
+							<input type="radio" name="iBtn" data-btn="signout">
+							<svg viewBox="0 0 100 100">
+								<path d="M10 10 H60 V30 M60 70 V90 H10 V7.5" />
+								<path d="M30 50 H97 M83 35 L97 50 L83 65" />
 							</svg>
 						</label>
 					</div>
@@ -169,8 +173,16 @@
 			</section>
 			<section id="listSection">
 				<header>
-					<div>
-						<label><h1>Starfid</h1></label>
+					<div class="h1Hid">
+						<label><h1>Starfid</h1></label>						
+					</div>
+					<div class="deskHid">
+						<label class="btn">
+							<input type="radio" name="iBtn" data-btn="side">
+							<svg viewbox="0 0 100 100">
+								<path d="M10 90 H90 V10 H10 Z M40 90 V10 M18 20 H32 M18 30 H32 M18 40 H32" />
+							</svg>
+						</label>
 					</div>
 					<div class="hRight">
 						<label class="btn mobHid">
@@ -191,16 +203,10 @@
 								<path d="M33 10 H68 V20 H33 Z M20 20 H80 L75 90 H25 Z M10 20 H90 M33 30 L39 80 M50 30 V80 M67 30 L62 80" />
 							</svg>
 						</label>
-						<label class="btn mobHid thirdLast">
+						<label class="btn mobHid secondLast">
 							<input type="radio" name="iBtn" data-btn="tiles">
 							<svg viewbox="0 0 100 100">
 								<path d="M10 10 H40 V40 H10 Z M60 10 H90 V40 H60 Z M10 60 H40 V90 H10 Z M60 60 H90 V90 H60 Z" />
-							</svg>
-						</label>
-						<label class="btn deskHid secondLast">
-							<input type="radio" name="iBtn" data-btn="side">
-							<svg viewbox="0 0 100 100">
-								<path d="M10 90 H90 V10 H10 Z M40 90 V10 M18 20 H32 M18 30 H32 M18 40 H32" />
 							</svg>
 						</label>
 						<label class="btn tabHid last">
@@ -392,18 +398,24 @@
 			}
 			function selecting(section) {
 				const totSelection = $$('.rows .checked',section).length;
-				if(totSelection>1){
+				if(totSelection>1 && display($('#navSection'))!=='none'){
 					$('h1',section).innerText = totSelection + ' Selected';
 				}
 			}
 			function clearing(section) {
 				const defText = section.id == 'listSection'?'Starfid':'';
-				if($('h1',section)){
+				if($('h1',section) && display($('#navSection'))!=='none'){
 					$('h1',section).innerText = defText;
 				}
 			}
 			function display(el) {
 				return getComputedStyle(el).display;
+			}
+			function sideToggle(section) {
+				const showNav = section === 'navSection';
+				$('#navSection').style.display = showNav ? 'none' : 'block';
+				$('#listSection').style.display = showNav ? 'block' : 'none';
+				checkedFocus($('#' + (showNav ? 'listSection' : 'navSection') + ' header input'));
 			}
 			function handleChange(e) {
 				if(!e.target.matches(selector)) return;
@@ -445,8 +457,9 @@
 				const holding = parentForm && (parentForm.classList.contains('rows') && input.type !== 'radio' && multiSelect);
 					
 				switch (e.key) {
-					case 'ArrowDown':										
+					case 'ArrowDown':
 						if(!parentForm) {
+							e.preventDefault();
 							checkedFocus($('form input', parentSection));
 						}
 						else if(parentSection.id === 'navSection'){
@@ -528,8 +541,9 @@
 					break;
 					case 'ArrowLeft':
 					case 'ArrowRight':
-						const mapLeft = { listSection: 'navSection', detailSection: 'listSection' };
-						const mapRight = { navSection: 'listSection', listSection: 'detailSection' };
+						const listHidden = display($('#listSection')) === 'none';
+						const mapLeft = { listSection: 'navSection', detailSection: listHidden?'navSection':'listSection' };
+						const mapRight = { navSection: listHidden?'detailSection':'listSection', listSection: 'detailSection' };
 						const map = e.key === 'ArrowLeft' ? mapLeft : mapRight;
 						const atSelectable = parentForm && parentLabel.classList.contains('select') && (
 							input.type === 'checkbox' ||
@@ -574,7 +588,10 @@
 					break;
 					case 'Enter':
 						if(input.name=='iBtn'){
-							console.log(input.dataset.btn);
+							const btn = input.dataset.btn;
+							if(btn==='side'){
+								sideToggle(parentSection.id);
+							}
 						}
 					break;
 					case 'Delete':
@@ -598,6 +615,7 @@
 			function handleClick(e) {
 				const input = e.target;
 				if(!input.matches(selector)) return;
+				if (input.name === "iBtn" && (e.detail === 0 || e.pointerType === "")) return;
 				const section = input.closest('section').id;
 				const label = input.closest('label');
 				const list = $('#listSection');
@@ -612,12 +630,13 @@
 						detail.style.display = 'none';
 					}
 					else if (btn === 'side') {
-						const showList = section === 'navSection';
-						nav.style.display = showList ? 'none' : 'block';
-						list.style.display = showList ? 'block' : 'none';
+						sideToggle(section);
 					}
 					else if (btn === 'delete') {
 						console.log('delete');
+					}
+					else if (btn === 'tiles') {
+						console.log('tiles');
 					}
 					else if (btn === 'multi') {
 						console.log('multi');
