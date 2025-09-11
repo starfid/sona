@@ -174,7 +174,7 @@
 			<section id="listSection">
 				<header>
 					<div class="h1Hid">
-						<label><h1>Starfid</h1></label>						
+						<label><h1>UIN Antasari</h1></label>						
 					</div>
 					<div class="deskHid">
 						<label class="btn">
@@ -355,6 +355,7 @@
 			const $ = (s, c = document) => c.querySelector(s);
 			const selector = 'form label > input[type=checkbox], form label > input[type=radio], .searchFrm label > input[type=search], header label > input[type=radio]';
 			const rowsCheck = '.rows label > input[type=checkbox]';
+			const h1Txt = $('#listSection header div h1').innerText;
 			let multiSelect = false;
 			let selDown = true;
 			let lastSection = null;
@@ -403,19 +404,21 @@
 				}
 			}
 			function clearing(section) {
-				const defText = section.id == 'listSection'?'Starfid':'';
+				const defText = section.id == 'listSection'?h1Txt:'';
 				if($('h1',section) && display($('#navSection'))!=='none'){
 					$('h1',section).innerText = defText;
 				}
 			}
 			function display(el) {
-				return getComputedStyle(el).display;
+				return window.getComputedStyle(el).display;
 			}
-			function sideToggle(section) {
-				const showNav = section === 'navSection';
-				$('#navSection').style.display = showNav ? 'none' : 'block';
-				$('#listSection').style.display = showNav ? 'block' : 'none';
-				checkedFocus($('#' + (showNav ? 'listSection' : 'navSection') + ' header input'));
+			function sideToggle() {
+				const nav = $('#navSection');
+				const list = $('#listSection');
+				const showNav = display(nav) !== 'block';
+				nav.style.display = showNav ? 'block' : 'none';
+				list.style.display = showNav ? 'none' : 'block';
+				checkedFocus($(`${showNav ? '#navSection' : '#listSection'} header input`));
 			}
 			function handleChange(e) {
 				if(!e.target.matches(selector)) return;
@@ -583,15 +586,34 @@
 						}
 					break;
 					case 'Shift':
-					case 'Control':
+					//case 'Control':
 						multiSelect = true;
 					break;
 					case 'Enter':
-						if(input.name=='iBtn'){
+						const name = input.name;
+						const nav = $('#navSection');
+						const list = $('#listSection');
+						const detail = $('#detailSection');
+						if(name=='iBtn'){
 							const btn = input.dataset.btn;
-							if(btn==='side'){
+							if(btn === 'side'){
 								sideToggle(parentSection.id);
 							}
+							else if (btn === 'back') {
+								list.style.display = 'block';
+								detail.style.display = 'none';
+								checkedFocus($('#listSection .rows input'));
+							}
+						}
+						else if(name === 'item' && display(detail)==='none') {
+							list.style.display = 'none';
+							detail.style.display = 'block';
+							checkedFocus($('#detailSection .rows input'));
+						}
+						else if(name === 'nav' && display(list)==='none') {
+							nav.style.display = 'none';
+							list.style.display = 'block';
+							checkedFocus($('#listSection .rows input'));
 						}
 					break;
 					case 'Delete':
@@ -607,7 +629,7 @@
 				if(!input.matches(selector)) return;
 				switch (e.key) {
 					case 'Shift':
-					case 'Control':
+					//case 'Control':
 						multiSelect = false;
 					break;
 				}
@@ -615,7 +637,7 @@
 			function handleClick(e) {
 				const input = e.target;
 				if(!input.matches(selector)) return;
-				if (input.name === "iBtn" && (e.detail === 0 || e.pointerType === "")) return;
+				if (e.clientX === 0 && e.clientY === 0) return;
 				const section = input.closest('section').id;
 				const label = input.closest('label');
 				const list = $('#listSection');
@@ -624,6 +646,7 @@
 				lastSection !== null && clearbyClick(lastSection,input);
 				
 				if (label?.classList.contains('btn')) {
+					e.preventDefault();
 					const {btn} = input.dataset;
 					if (btn === 'back') {
 						list.style.display = 'block';
@@ -655,9 +678,7 @@
 						list.style.display = 'none';
 						detail.style.display = 'block';
 					}
-				}
-
-				
+				}				
 			}
 			
 			document.addEventListener('change', handleChange);
