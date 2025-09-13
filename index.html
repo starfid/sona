@@ -9,9 +9,10 @@
 		<meta content="#000000" name="theme-color" media="(prefers-color-scheme: dark)">
 		<meta content="width=device-width,initial-scale=1,maximum-scale=1,shrink-to-fit=no,user-scalable=0,viewport-fit=cover" name="viewport">
 		<style>
+			:root {--bhg:#0063E2;}
 			:root {
 				--bg:#FAFAF9;	--cl:#000000;	--cl2:#858584;	--fn1:1.1vw;	--fn2:1.7vw;	--brC:#FAF9F7;		--nvB:#E1E0E1;
-				--bhg:#0063E2;	--chg:#FFFFFF;	--cck:#000000;	--bck:#e7e7e5;	--mg:.7vw;	--mg2:calc(var(--fn2) / 2);		--dmy:5.2vw;
+				--chg:#FFFFFF;	--cck:#000000;	--bck:#e7e7e5;	--mg:.7vw;	--mg2:calc(var(--fn2) / 2);		--dmy:5.2vw;
 			}
 			html {-webkit-tap-highlight-color: transparent;}
 			body {margin:0;padding:0;font-family:arial;color:var(--cl);background:var(--bg)}
@@ -19,6 +20,12 @@
 			main{grid-template-columns:22% auto 39%}
 			section {position:relative; height:100vh; overflow:hidden;background:var(--bg)}
 			label, #navSection form div.head {cursor:pointer;user-select:none;font-size:var(--fn1);}
+
+			section fieldset {
+				outline:none;border:none;scrollbar-width:none;margin:0;
+				position:absolute; top:0; left:0; right:0; bottom:0; overflow-y:auto;
+				padding:calc((2 * var(--mg)) + var(--fn2)) 0 0 0;
+			}
 
 			#navSection form.rows {display: grid;grid-template-columns:repeat(2, 1fr);gap:1vh;color:var(--cl2)}
 			#navSection form * {display: block;box-sizing:border-box;}
@@ -29,16 +36,6 @@
 
 			#listSection {border-left:1px solid var(--brC); border-right:1px solid var(--brC);}
 			#listSection form.rows label, #detailSection form.rows label {height:var(--dmy)}
-
-			.searchFrm, .searchFrm label, section fieldset form.filters label, .rows label.checked, 
-				.rows label.focused, #navSection form label.select {border-radius:1vh;}
-			.searchFrm {border:solid 1px var(--nvB);}
-			.searchFrm .deskHid {visibility:hidden}
-			.searchFrm label {padding:calc(var(--mg) * .68) var(--mg);display: flex;}
-			.searchFrm label input {
-				border:0;outline:none;font-size:var(--fn1);background-color:var(--hbg);
-				flex:1;min-width:0;color:var(--cl);max-width:79vw;
-			}
 
 			section header {
 				position:absolute; top:0; left:0; right:0; z-index:1;padding:var(--mg);
@@ -54,18 +51,29 @@
 			section header div label svg {margin-right:calc((var(--mg) * 3) + 1px);}
 			section header div label:first-child svg {margin-left:var(--mg);}
 			section header .hRight label.last svg, section header .hRight label.thirdLast svg {margin-right:var(--mg);}
+			section header .hRight label.secondLast svg {margin-right: var(--mg);}	
 			section header .hRight {justify-content: flex-end;}
 			section header .deskHid, section header .tabHid {display:none}
-			section fieldset {
-				outline:none;border:none;scrollbar-width:none;
-				position:absolute; top:0; left:0; right:0; bottom:0; overflow-y:auto;
-				margin:0;padding:calc((2 * var(--mg)) + var(--fn2)) var(--mg) 0 var(--mg);
+
+			.searchFrm, .searchFrm label, section fieldset form.filters label, .rows label.checked, 
+				.rows label.focused, #navSection form label.select {border-radius:1vh;}
+			.searchFrm {border:solid 1px var(--nvB);}
+			.searchFrm .deskHid {visibility:hidden}
+			.searchFrm label {padding:calc(var(--mg) * .68) var(--mg);display: flex;justify-content: space-between;}
+			.searchFrm label input {
+				border:0;outline:none;font-size:var(--fn1);background-color:var(--hbg);
+				flex:1;min-width:0;color:var(--cl);max-width:78vw;
 			}
-			section fieldset form {margin:0 0 var(--mg) 0;padding:0}
-			section fieldset form label {
-				display:block;padding:var(--mg);
-			}
+			.searchFrm label input::-webkit-search-cancel-button {display: none;}
+
+			section fieldset form {margin:0 var(--mg) var(--mg) var(--mg);padding:0}
+			section fieldset form label {display:block;padding:var(--mg);}
+			section fieldset form.filters {margin-left:0;margin-right:0;}
 			section fieldset form.filters label {margin-right:var(--mg)}
+			
+			section fieldset form.filters label:first-child {margin-left:var(--mg)}
+			section fieldset form.filters label:last-child {margin-right:var(--mg)}
+			
 			section fieldset form.rows label {border-bottom:solid 1px var(--brC)}
 
 			.btn input[type=checkbox], .btn [type=radio], .select input[type=checkbox], .select [type=radio]{position: absolute;left: -9999px;}
@@ -82,7 +90,6 @@
 					--fn1:2vw; 	--fn2:2.5vw;	--brC:#FAF9F7;	--bg:#FFFFFF;
 					--mg:1.1vw;	--mg2:calc(var(--fn2) / 2);	--dmy:7vw;
 				}
-
 				main {grid-template-columns:50% auto}
 				.searchFrm .deskHid {visibility:visible}
 				.searchFrm label {padding:var(--mg);}
@@ -93,7 +100,6 @@
 				#listSection .visible, #navSection, .h1Hid {display:none}
 				#listSection header .deskHid, #navSection header .deskHid {display:flex}
 				#listSection {border-left:none;}
-				section header .hRight label.secondLast svg {margin-right: var(--mg);}				
 			}
 			@media screen and (max-width: 500px) and (orientation: portrait){
 				:root {
@@ -105,7 +111,7 @@
 				section header div label svg {margin-right:calc(var(--mg) * 2);}
 				section header .hRight label.secondLast svg {margin-right: calc(var(--mg) * 2);}
 				.searchFrm label {padding:calc(var(--mg) * .92) var(--mg);}
-				.filters {width: calc(100vw - (var(--mg) * 2)); overflow: scroll; scrollbar-width:none;}
+				.filters {width:100vw;overflow: scroll; scrollbar-width:none;}
 				#navSection, #listSection {border-right:none;}
 				#detailSection div:first-child {display:none}
 				#detailSection div:nth-child(2) {display:flex}
@@ -119,9 +125,10 @@
 				#dots {position:absolute;z-index:1;top:100px;left:100px;background-color:red;}
 			}
 			@media (prefers-color-scheme: dark) {
+				/*:root {--bhg:#38474d}*/
 				:root {
-					--bg:#1E1E1E;	--cl:#afafaf;	--cl2:#3b3b3b;	--brC:#191919;		--nvB:#141414;
-					--bhg:#0063E2;	--chg:#FFFFFF;	--cck:#929293;	--bck:#29292a;
+					--bg:#1E1E1E;	--cl:#afafaf;	--cl2:#575858;	--brC:#191919;		--nvB:#141414;
+					--chg:#FFFFFF;	--cck:#929293;	--bck:#29292a;
 				}
 				@media screen and (max-width: 1175px){
 					:root {	--bg:#000000;	--brC:#0a0a0a;	--bck:#232324; }
