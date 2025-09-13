@@ -17,7 +17,6 @@
 			html {-webkit-tap-highlight-color: transparent;}
 			body {margin:0;padding:0;font-family:arial;color:var(--cl);background:var(--bg)}
 			main, section header {display:grid}
-			/*main{grid-template-columns:22% auto 39%}*/
 			main{grid-template-columns:23.5% auto 38.2%}
 			section {position:relative; height:100vh; overflow:hidden;background:var(--bg)}
 			label, #navSection form div.head {cursor:pointer;user-select:none;font-size:var(--fn1);}
@@ -417,7 +416,7 @@
 				}
 			}
 			function totTextSel(section) {
-				const totSelection = $$('.rows .checked',section).length;
+				const totSelection = $$('.rows .focused',section).length;
 				if(totSelection>1 && display($('#navSection'))!=='none'){
 					$('h1',section).innerText = totSelection + ' Selected';
 				}
