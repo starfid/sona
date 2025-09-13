@@ -30,13 +30,14 @@
 			#listSection {border-left:1px solid var(--brC); border-right:1px solid var(--brC);}
 			#listSection form.rows label, #detailSection form.rows label {height:var(--dmy)}
 
-			.searchFrm, .searchFrm label, section fieldset form.filters label, .rows label.checked, #navSection form label.select {border-radius:1vh;}
+			.searchFrm, .searchFrm label, section fieldset form.filters label, .rows label.checked, 
+				.rows label.focused, #navSection form label.select {border-radius:1vh;}
 			.searchFrm {border:solid 1px var(--nvB);}
 			.searchFrm .deskHid {visibility:hidden}
 			.searchFrm label {padding:calc(var(--mg) * .68) var(--mg);display: flex;}
 			.searchFrm label input {
 				border:0;outline:none;font-size:var(--fn1);background-color:var(--hbg);
-				flex:1;min-width:0;color:var(--cl)
+				flex:1;min-width:0;color:var(--cl);max-width:79vw;
 			}
 
 			section header {
@@ -71,7 +72,7 @@
 			.checked {background-color:var(--bck);color:var(--cck)}
 			.focused {background-color:var(--bhg);color:var(--chg)}
 			.btn.checked, .btn.focused {background-color:transparent;}
-			.btn.focused svg, .btn svg:hover, .btn.checked {stroke:var(--bhg);stroke-width:8}
+			.btn.focused svg, .btn svg:hover, .btn.checked, .btn.checked, .iconOn {stroke:var(--bhg);stroke-width:8}
 			.btn.focused svg.delBtn, .btn svg.delBtn:hover {stroke:red;stroke-width:8}
 			.btn.focused svg.delBtn {stroke:red;}
 			.searchFrm label.focused {background-color:transparent;color:var(--cl)}
@@ -92,7 +93,7 @@
 				#listSection .visible, #navSection, .h1Hid {display:none}
 				#listSection header .deskHid, #navSection header .deskHid {display:flex}
 				#listSection {border-left:none;}
-				section header .hRight label.secondLast svg {margin-right: var(--mg);}
+				section header .hRight label.secondLast svg {margin-right: var(--mg);}				
 			}
 			@media screen and (max-width: 500px) and (orientation: portrait){
 				:root {
@@ -115,6 +116,7 @@
 				#listSection {display:block}
 				.mobHid {display:none}
 				section header .tabHid {display:flex}
+				#dots {position:absolute;z-index:1;top:100px;left:100px;background-color:red;}
 			}
 			@media (prefers-color-scheme: dark) {
 				:root {
@@ -174,7 +176,7 @@
 			<section id="listSection">
 				<header>
 					<div class="h1Hid">
-						<label><h1>UIN Antasari</h1></label>						
+						<label><h1>Starfid</h1></label>						
 					</div>
 					<div class="deskHid">
 						<label class="btn">
@@ -220,7 +222,7 @@
 				<fieldset>					
 					<form class="searchFrm">
 						<label class="select">
-							<input type="search" name="item" placeholder="Search">
+							<input type="search" name="item" placeholder="Search" ondblclick="this.value=''" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off">
 							<svg viewbox="0 0 100 100" class="deskHid">
 								<path d="M10 80H90V30H70L60 20H40L30 30H10Z M50 38a15 15 0 1 0 0 30a15 15 0 1 0 0-30z M70 40h1" />
 							</svg>
@@ -310,7 +312,7 @@
 				<fieldset>
 					<form class="searchFrm">
 						<label class="select">
-							<input type="search" name="item" placeholder="Search">
+							<input type="search" name="item" placeholder="Search" ondblclick="this.value=''" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off">
 							<svg viewbox="0 0 100 100" class="deskHid">
 								<path d="M10 80H90V30H70L60 20H40L30 30H10Z M50 38a15 15 0 1 0 0 30a15 15 0 1 0 0-30z M70 40h1" />
 							</svg>
@@ -381,11 +383,11 @@
 							$('input', label).checked = false;
 						}
 					});
-					selDown = true; lastSection = null; clearing(section);
+					selDown = true; lastSection = null; clrTextSel(section);
 				}
 			}
 			function clearbyClick(section, input){
-				const selection = $$('.rows .checked',section);
+				const selection = $$('.rows .focused',section);
 				const totSelection = selection.length;
 				if(totSelection>1 && input.closest('.rows')){
 					selection.forEach(label=>{
@@ -394,16 +396,16 @@
 					});
 					selDown = true; lastSection = null;
 					input.closest('label').classList.add('focused','checked');
-					clearing(section);
+					clrTextSel(section);
 				}
 			}
-			function selecting(section) {
+			function totTextSel(section) {
 				const totSelection = $$('.rows .checked',section).length;
 				if(totSelection>1 && display($('#navSection'))!=='none'){
 					$('h1',section).innerText = totSelection + ' Selected';
 				}
 			}
-			function clearing(section) {
+			function clrTextSel(section) {
 				const defText = section.id == 'listSection'?h1Txt:'';
 				if($('h1',section) && display($('#navSection'))!=='none'){
 					$('h1',section).innerText = defText;
@@ -425,7 +427,7 @@
 				const input = e.target;
 				if(input.matches(rowsCheck) && lastSection) {
 					clearbyClick(lastSection,input);
-					clearing(lastSection);
+					clrTextSel(lastSection);
 				}
 				else {
 					checkedFocus(e.target);
@@ -437,9 +439,24 @@
 			function handleFocusIn(e) {
 				if(!e.target.matches(selector)) return;
 				const input = e.target;
-
-				if(e.target.matches(selector)){
-					e.target.closest('label')?.classList.add('focused');
+				const iconSec = [];
+				if(input.matches(selector)){
+					const itemCopy = ['item','copy'].includes(input.name);
+					if (multiSelect && itemCopy) {
+						$$('.iconOn').forEach(m=>{
+							iconSec.push(m.closest('section').id);
+						});
+						if(input.closest('label').classList.contains('focused')){
+							input.closest('label').classList.remove('checked','focused');
+						}
+						else if(iconSec.includes(input.closest('section').id)) {
+							input.closest('label')?.classList.add('checked','focused');
+						}
+						totTextSel(input.closest('section'));
+					}
+					else if(!(multiSelect && !itemCopy)){
+						input.closest('label')?.classList.add('focused');
+					}
 					if(input.name=='iBtn'){
 						e.preventDefault();
 					}
@@ -481,7 +498,7 @@
 							nextInput.focus();
 							parentLabel.classList.add('focused');
 							parentLabel.nextElementSibling.classList.add('checked');
-							selecting(parentSection);
+							totTextSel(parentSection);
 						}						
 						else {
 							e.preventDefault();
@@ -492,7 +509,7 @@
 							else if(parentLabel.classList.contains('select') && parentLabel.nextElementSibling) {
 								checkedFocus($('input',parentLabel.nextElementSibling));
 								clearbyArrow(parentSection);
-								clearing(parentSection);
+								clrTextSel(parentSection);
 							}
 						}
 					break;
@@ -529,12 +546,12 @@
 								parentLabel.classList.add('focused');
 								parentLabel.previousElementSibling.classList.add('checked');
 								selDown = false; lastSection = parentSection;
-								selecting(parentSection);
+								totTextSel(parentSection);
 							}
 							else if(parentLabel.classList.contains('select') && parentLabel.previousElementSibling) {
 								e.preventDefault();
 								clearbyArrow(parentSection);
-								clearing(parentSection);
+								clrTextSel(parentSection);
 								checkedFocus($('input',parentLabel.previousElementSibling));
 							}
 						}
@@ -587,7 +604,11 @@
 					break;
 					case 'Shift':
 					//case 'Control':
-						multiSelect = true;
+						if(input.type==='checkbox') {
+							multiSelect = true;
+							const svg = $('header .selIcon svg',parentSection);
+							svg.classList.toggle('iconOn');
+						}
 					break;
 					case 'Enter':
 						const name = input.name;
@@ -630,7 +651,11 @@
 				switch (e.key) {
 					case 'Shift':
 					//case 'Control':
-						multiSelect = false;
+						if(input.type==='checkbox') {
+							multiSelect = false;
+							const svg = $('header .selIcon svg',input.closest('section'));
+							svg.classList.toggle('iconOn');
+						}
 					break;
 				}
 			}
@@ -661,9 +686,24 @@
 					else if (btn === 'tiles') {
 						console.log('tiles');
 					}
+					else if (btn === 'dots') {
+						console.log('dots');
+					}
 					else if (btn === 'multi') {
-						console.log('multi');
-						input.checked = true;
+						e.preventDefault();
+						const svg = input.nextElementSibling;
+						svg.classList.toggle('iconOn');
+						if(svg.classList.contains('iconOn')){
+							multiSelect = true;
+						}
+						else {
+							multiSelect = false;
+							label.classList.remove('selIcon','focused');
+							const sc = input.closest('section');
+							const lastInp = $('.rows .focused input',sc);
+							clearbyClick(sc,lastInp);
+							checkedFocus(lastInp);
+						}
 					}
 					else if (btn === 'compose') {
 						console.log('compose');
