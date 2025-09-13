@@ -17,7 +17,8 @@
 			html {-webkit-tap-highlight-color: transparent;}
 			body {margin:0;padding:0;font-family:arial;color:var(--cl);background:var(--bg)}
 			main, section header {display:grid}
-			main{grid-template-columns:22% auto 39%}
+			/*main{grid-template-columns:22% auto 39%}*/
+			main{grid-template-columns:23% auto 38.2%}
 			section {position:relative; height:100vh; overflow:hidden;background:var(--bg)}
 			label, #navSection form div.head {cursor:pointer;user-select:none;font-size:var(--fn1);}
 
@@ -84,6 +85,15 @@
 			.btn.focused svg.delBtn, .btn svg.delBtn:hover {stroke:red;stroke-width:8}
 			.btn.focused svg.delBtn {stroke:red;}
 			.searchFrm label.focused {background-color:transparent;color:var(--cl)}
+
+			/*
+			#listSection fieldset .rows, #detailSection fieldset .rows {
+				display: grid;grid-template-columns:repeat(2, 1fr);gap:1vh;
+			}
+			#listSection fieldset .rows label, #detailSection fieldset .rows label {
+				height: calc(var(--dmy) * 2.5);
+			}
+			*/
 
 			@media screen and (max-width: 1175px){
 				:root {
