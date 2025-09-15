@@ -736,6 +736,19 @@
 					}
 				}				
 			}
+			function handleResize() {
+				if(window.innerWidth>1175){
+					$('#navSection').style.display = $('#listSection').style.display = $('#detailSection').style.display = 'block';
+				}
+				else if(window.innerWidth<1175 && window.innerWidth>500){
+					$('#listSection').style.display = $('#detailSection').style.display = 'block';
+					$('#navSection').style.display = 'none';
+				}
+				else if(window.innerWidth<500){
+					$('#navSection').style.display = $('#detailSection').style.display = 'none';
+					$('#listSection').style.display = 'block';
+				}
+			}
 			
 			document.addEventListener('change', handleChange);
 			document.addEventListener('focusin', handleFocusIn);
@@ -746,6 +759,7 @@
 			document.addEventListener('visibilitychange', () => {
 				if (document.hidden) multiSelect = false;
 			});
+			window.addEventListener('resize', handleResize);
 
 			$$(selector.split(',').map(s => s.trim()).map(s => /checkbox|radio/.test(s) ? s + ':checked' : s).join(', ')).forEach(input => {
 				if(input.checked) checkedFocus(input);
