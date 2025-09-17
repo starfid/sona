@@ -377,6 +377,7 @@
 			let multiSelect = false;
 			let selDown = true;
 			let lastSection = null;
+
 			function checkedFocus(el) {
 				if(!el) return;
 				el.checked = true;
@@ -419,12 +420,18 @@
 				const totSelection = $$('.rows .focused',section).length;
 				if(totSelection>1 && display($('#navSection'))!=='none'){
 					$('h1',section).innerText = totSelection + ' Selected';
+					if(section.id==='listSection'){
+						//$('#detailSection header .hRight').style.visibility = 'hidden';
+					}
 				}
 			}
 			function clrTextSel(section) {
 				const defText = section.id == 'listSection'?h1Txt:'';
 				if($('h1',section) && display($('#navSection'))!=='none'){
 					$('h1',section).innerText = defText;
+					if(section.id==='listSection'){
+						//$('#detailSection header .hRight').style.visibility = 'visible';
+					}
 				}
 			}
 			function display(el) {
@@ -457,20 +464,21 @@
 				const input = e.target;
 				const iconSec = [];
 				if(input.matches(selector)){
-					const itemCopy = ['item','copy'].includes(input.name);
-					if (multiSelect && itemCopy) {
+					const rows = ['item','copy'].includes(input.name);
+					const sid = input.closest('section').id;
+					if (multiSelect && rows) {
 						$$('.iconOn').forEach(m=>{
 							iconSec.push(m.closest('section').id);
 						});
 						if(input.closest('label').classList.contains('focused')){
 							input.closest('label').classList.remove('checked','focused');
 						}
-						else if(iconSec.includes(input.closest('section').id)) {
+						else if(iconSec.includes(sid)) {
 							input.closest('label')?.classList.add('checked','focused');
 						}
 						totTextSel(input.closest('section'));
 					}
-					else if(!(multiSelect && !itemCopy)){
+					else if(!(multiSelect && !rows)){
 						input.closest('label')?.classList.add('focused');
 					}
 					if(input.name=='iBtn'){
@@ -491,10 +499,14 @@
 				const parentForm = input.closest('form');
 				const parentSection = input.closest('section');
 				const holding = parentForm && (parentForm.classList.contains('rows') && input.type !== 'radio' && multiSelect);
+				const toggleMulti = () => $('header .selIcon svg',parentSection).classList.toggle('iconOn');
 					
 				switch (e.key) {
 					case 'ArrowDown':
 						if(!parentForm) {
+							if(!holding && !multiSelect && $$('.iconOn',parentSection).length > 0){
+								toggleMulti();
+							}
 							e.preventDefault();
 							checkedFocus($('form input', parentSection));
 						}
@@ -532,7 +544,11 @@
 					case 'ArrowUp':
 						if(parentForm) {
 							const isFirstChild = (input === $('input', parentForm)) || parentForm.classList.contains('filters');
-							if(isFirstChild) {
+							if(isFirstChild && $$('.rows .select.focused',parentSection).length > 1) {
+								multiSelect = false;
+								clearbyClick(parentSection,$('.rows .select',parentSection));
+							}
+							else if(isFirstChild) {
 								e.preventDefault();
 								multiSelect = false;
 								const inputTarget = $('input',
@@ -586,9 +602,13 @@
 							(input.type === 'radio' && parentForm.classList.contains('rows')) ||
 							(input.type === 'search' && input.value.length < 1)
 						);
+						
 						if(holding){
 							multiSelect = false;
 							clearbyArrow(parentSection);
+						}
+						else if(!holding && !multiSelect && $$('.iconOn',parentSection).length > 0){
+							toggleMulti();
 						}
 						else if(input.name === 'nav'){
 							e.preventDefault();
@@ -622,8 +642,7 @@
 					//case 'Control':
 						if(input.type==='checkbox') {
 							multiSelect = true;
-							const svg = $('header .selIcon svg',parentSection);
-							svg.classList.toggle('iconOn');
+							toggleMulti();
 						}
 					break;
 					case 'Enter':
@@ -635,6 +654,9 @@
 							const btn = input.dataset.btn;
 							if(btn === 'side'){
 								sideToggle(parentSection.id);
+							}
+							else if(btn === 'multi'){
+								alert('Click only');
 							}
 							else if (btn === 'back') {
 								list.style.display = 'block';
@@ -656,7 +678,7 @@
 					case 'Delete':
 						const totSelection = $$('.rows .checked',parentSection).length;
 						if(parentSection.id !== 'navSection' && confirm('Delete ' + totSelection + ' selection in ' + parentSection.id)){
-							console.log(parentSection.id);
+							//console.log(parentSection.id);
 						}
 					break;
 				}
@@ -667,11 +689,9 @@
 				switch (e.key) {
 					case 'Shift':
 					//case 'Control':
-						if(input.type==='checkbox') {
-							multiSelect = false;
-							const svg = $('header .selIcon svg',input.closest('section'));
-							svg.classList.toggle('iconOn');
-						}
+						multiSelect = false;
+						const svg = $('header .selIcon svg',input.closest('section'));
+						if(svg) svg.classList.remove('iconOn');
 					break;
 				}
 			}
@@ -697,32 +717,33 @@
 						sideToggle(section);
 					}
 					else if (btn === 'delete') {
-						console.log('delete');
+						//console.log('delete');
 					}
 					else if (btn === 'tiles') {
-						console.log('tiles');
+						//console.log('tiles');
 					}
 					else if (btn === 'dots') {
-						console.log('dots');
+						//console.log('dots');
 					}
 					else if (btn === 'multi') {
 						e.preventDefault();
 						const svg = input.nextElementSibling;
 						svg.classList.toggle('iconOn');
-						if(svg.classList.contains('iconOn')){
-							multiSelect = true;
-						}
-						else {
+						if(!svg.classList.contains('iconOn') || $$('.rows .select.focused ',input.closest('section')).length > 1){
 							multiSelect = false;
-							label.classList.remove('selIcon','focused');
+							svg.classList.remove('iconOn');
+							label.classList.remove('focused');
 							const sc = input.closest('section');
 							const lastInp = $('.rows .focused input',sc);
 							clearbyClick(sc,lastInp);
 							checkedFocus(lastInp);
 						}
+						else {
+							multiSelect = true;
+						}
 					}
 					else if (btn === 'compose') {
-						console.log('compose');
+						//console.log('compose');
 					}
 				}
 				else if(input.closest('form.rows')){
