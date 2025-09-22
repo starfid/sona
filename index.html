@@ -44,7 +44,7 @@
 			section header div label h1 {color:var(--cl2);margin:0 0 0 var(--mg);padding:0;font-size:var(--fn2);height:var(--fn2);line-height: calc(var(--fn2) - 1px);}
 			section header div, .filters {display:flex;}
 			section header div label {display:flex;align-items:center;}
-			section header div label svg, .searchFrm label svg {
+			label svg {
 				width:var(--fn2); height:var(--fn2); cursor:pointer;
 				stroke-width:4; stroke:var(--cl);fill:transparent;
 			}
@@ -56,7 +56,7 @@
 			section header .deskHid, section header .tabHid {display:none}
 
 			.searchFrm, .searchFrm label, section fieldset form.filters label, .rows label.checked, 
-				.rows label.focused, #navSection form label.select {border-radius:1vh;}
+				.rows label.focused, #navSection form label.select, #pop {border-radius:1vh;}
 			.searchFrm {border:solid 1px var(--nvB);}
 			.searchFrm .deskHid {visibility:hidden}
 			.searchFrm label {padding:calc(var(--mg) * .68) var(--mg);display: flex;justify-content: space-between;}
@@ -76,7 +76,7 @@
 			
 			section fieldset form.rows label {border-bottom:solid 1px var(--brC)}
 
-			.btn input[type=checkbox], .btn [type=radio], .select input[type=checkbox], .select [type=radio]{position: absolute;left: -9999px;}
+			.btn input[type=checkbox], .btn [type=radio], .select input[type=checkbox], .select input[type=radio]{position: absolute;left: -9999px;}
 			.checked {background-color:var(--bck);color:var(--cck)}
 			.focused {background-color:var(--bhg);color:var(--chg)}
 			.btn.checked, .btn.focused {background-color:transparent;}
@@ -87,13 +87,22 @@
 
 			/*
 			#listSection fieldset .rows, #detailSection fieldset .rows {
-				display: grid;grid-template-columns:repeat(2, 1fr);gap:1vh;
+				display:grid;grid-template-columns:repeat(2, 1fr);gap:1vh;
 			}
 			#listSection fieldset .rows label, #detailSection fieldset .rows label {
 				height: calc(var(--dmy) * 2.5);
 			}
 			*/
+			.layerToggle {display:block!important}
+			#layer {position:absolute;z-index:1;left:0;top:0;width:100%;height:100%;background-color: rgba(0,0,0,0.6);display:none;}
+			#pop {
+				position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);animation:zoominIn .2s forwards;
+				background-color:var(--bg);width:38.2vw;height:80vh;box-sizing:border-box;
+			}
+			#pop .focused {background-color:var(--bg);color:var(--cl);font-weight:bolder}
 
+			@keyframes zoominIn { from {top:51%;} to {top:50%;} }
+			
 			@media screen and (max-width: 1175px){
 				:root {
 					--fn1:2vw; 	--fn2:2.5vw;	--brC:#FAF9F7;	--bg:#FFFFFF;
@@ -109,6 +118,7 @@
 				#listSection .visible, #navSection, .h1Hid {display:none}
 				#listSection header .deskHid, #navSection header .deskHid {display:flex}
 				#listSection {border-left:none;}
+				#pop {width:50vw}
 			}
 			@media screen and (max-width: 500px) and (orientation: portrait){
 				:root {
@@ -132,6 +142,14 @@
 				.mobHid {display:none}
 				section header .tabHid {display:flex}
 				#dots {position:absolute;z-index:1;top:100px;left:100px;background-color:red;}
+				#pop {
+					position:absolute;bottom:0;min-width:auto;transform:none;top:auto;left:auto;
+                			background-color:white;width:100%;left:0;border-radius:2vh;border-width:0;
+					border-bottom-left-radius:0;border-bottom-right-radius:0;
+				}
+				body {background-color:black}
+				.zoomIn {transform: scale(.94);border-radius:var(--mg)}
+				@keyframes zoominIn { from {height:25%;} to {height:30%;} }
 			}
 			@media (prefers-color-scheme: dark) {
 				:root {--bhg:#38474d}
@@ -142,6 +160,11 @@
 				@media screen and (max-width: 1175px){
 					:root {	--bg:#000000;	--brC:#0a0a0a;	--bck:#232324; }
 				}
+				.btn.focused svg, .btn svg:hover, .btn.checked, .btn.checked, .iconOn {stroke:var(--chg);}
+				#layer {background-color: rgba(0,0,0,0.7);}
+				#pop, #pop header {background-color:var(--bck)}
+				#pop .focused {background-color:var(--bck);}
+				
 			}
 		</style>
 	</head>
@@ -175,15 +198,11 @@
 							<label class="select"><input type="radio" name="nav">Task 1</label>
 							<label class="select"><input type="radio" name="nav">Task 2</label>
 						<div class="head">Division 3</div>
-							<label class="select"><input type="radio" name="nav">Task 1</label>
-							<label class="select"><input type="radio" name="nav">Task 2</label>
-							<label class="select"><input type="radio" name="nav">Task 3</label>
-							<label class="select"><input type="radio" name="nav">Task 4</label>
+							<label class="select"><input type="radio" name="nav">Task 1</label><label class="select"><input type="radio" name="nav">Task 2</label>
+							<label class="select"><input type="radio" name="nav">Task 3</label><label class="select"><input type="radio" name="nav">Task 4</label>
 						<div class="head">Division 4</div>
-							<label class="select"><input type="radio" name="nav">Task 1</label>
-							<label class="select"><input type="radio" name="nav">Task 2</label>
-							<label class="select"><input type="radio" name="nav">Task 3</label>
-							<label class="select"><input type="radio" name="nav">Task 4</label>
+							<label class="select"><input type="radio" name="nav">Task 1</label><label class="select"><input type="radio" name="nav">Task 2</label>
+							<label class="select"><input type="radio" name="nav">Task 3</label><label class="select"><input type="radio" name="nav">Task 4</label>
 						<div class="head">Division 5</div>
 							<label class="select"><input type="radio" name="nav">Task 1</label>
 					</form>
@@ -225,6 +244,7 @@
 							<input type="radio" name="iBtn" data-btn="tiles">
 							<svg viewbox="0 0 100 100">
 								<path d="M10 10 H40 V40 H10 Z M60 10 H90 V40 H60 Z M10 60 H40 V90 H10 Z M60 60 H90 V90 H60 Z" />
+								<!--<path d="M10 10h80v18H10zM10 41h80v18H10zM10 72h80v18H10z"/>-->
 							</svg>
 						</label>
 						<label class="btn tabHid last">
@@ -245,33 +265,21 @@
 						</label>
 					</form>
 					<form class="filters">
-						<label class="select"><input type="radio" name="filter" checked>Filter1</label>
-						<label class="select"><input type="radio" name="filter">Filter2</label>
-						<label class="select"><input type="radio" name="filter">Filter3</label>
-						<label class="select"><input type="radio" name="filter">Filter4</label>
+						<label class="select"><input type="radio" name="filter" checked>Filter1</label><label class="select"><input type="radio" name="filter">Filter2</label>
+						<label class="select"><input type="radio" name="filter">Filter3</label><label class="select"><input type="radio" name="filter">Filter4</label>
 						<label class="select"><input type="radio" name="filter">Filter5</label>
 					</form>
 					<form class="rows">
-						<label class="select"><input type="checkbox" name="item" checked>Product 1</label>
-						<label class="select"><input type="checkbox" name="item">Product 2</label>
-						<label class="select"><input type="checkbox" name="item">Product 3</label>
-						<label class="select"><input type="checkbox" name="item">Product 4</label>
-						<label class="select"><input type="checkbox" name="item">Product 5</label>
-						<label class="select"><input type="checkbox" name="item">Product 6</label>
-						<label class="select"><input type="checkbox" name="item">Product 7</label>
-						<label class="select"><input type="checkbox" name="item">Product 8</label>
-						<label class="select"><input type="checkbox" name="item">Product 9</label>
-						<label class="select"><input type="checkbox" name="item">Product 10</label>
-						<label class="select"><input type="checkbox" name="item">Product 11</label>
-						<label class="select"><input type="checkbox" name="item">Product 12</label>
-						<label class="select"><input type="checkbox" name="item">Product 13</label>
-						<label class="select"><input type="checkbox" name="item">Product 14</label>
-						<label class="select"><input type="checkbox" name="item">Product 15</label>
-						<label class="select"><input type="checkbox" name="item">Product 16</label>
-						<label class="select"><input type="checkbox" name="item">Product 17</label>
-						<label class="select"><input type="checkbox" name="item">Product 18</label>
-						<label class="select"><input type="checkbox" name="item">Product 19</label>
-						<label class="select"><input type="checkbox" name="item">Product 20</label>
+						<label class="select"><input type="checkbox" name="item" checked>Product 1</label><label class="select"><input type="checkbox" name="item">Product 2</label>
+						<label class="select"><input type="checkbox" name="item">Product 3</label><label class="select"><input type="checkbox" name="item">Product 4</label>
+						<label class="select"><input type="checkbox" name="item">Product 5</label><label class="select"><input type="checkbox" name="item">Product 6</label>
+						<label class="select"><input type="checkbox" name="item">Product 7</label><label class="select"><input type="checkbox" name="item">Product 8</label>
+						<label class="select"><input type="checkbox" name="item">Product 9</label><label class="select"><input type="checkbox" name="item">Product 10</label>
+						<label class="select"><input type="checkbox" name="item">Product 11</label><label class="select"><input type="checkbox" name="item">Product 12</label>
+						<label class="select"><input type="checkbox" name="item">Product 13</label><label class="select"><input type="checkbox" name="item">Product 14</label>
+						<label class="select"><input type="checkbox" name="item">Product 15</label><label class="select"><input type="checkbox" name="item">Product 16</label>
+						<label class="select"><input type="checkbox" name="item">Product 17</label><label class="select"><input type="checkbox" name="item">Product 18</label>
+						<label class="select"><input type="checkbox" name="item">Product 19</label><label class="select"><input type="checkbox" name="item">Product 20</label>
 						<label class="select"><input type="checkbox" name="item">Product 21</label>
 						
 					</form>
@@ -296,8 +304,7 @@
 							<svg viewbox="0 0 100 100">
 								<path d="M10,90 H90 V25 L75,10 H10Z M30,10 V35 H70 V10Z M20,90 V50 H80 V90Z M59,17 h3 v11 h-3Z" />
 							</svg>
-						</label>						
-						
+						</label>
 						<label class="btn selIcon mobHid">
 							<input type="radio" name="iBtn" data-btn="multi">
 							<svg viewbox="0 0 100 100">
@@ -335,45 +342,51 @@
 						</label>
 					</form>
 					<form class="filters">
-						<label class="select"><input type="radio" name="filter" checked>Filter1</label>
-						<label class="select"><input type="radio" name="filter">Filter2</label>
-						<label class="select"><input type="radio" name="filter">Filter3</label>
-						<label class="select"><input type="radio" name="filter">Filter4</label>
+						<label class="select"><input type="radio" name="filter">Filter1</label><label class="select"><input type="radio" name="filter">Filter2</label>
+						<label class="select"><input type="radio" name="filter">Filter3</label><label class="select"><input type="radio" name="filter">Filter4</label>
 						<label class="select"><input type="radio" name="filter">Filter5</label>
 					</form>
 					<form class="rows">
-						<label class="select"><input type="checkbox" name="copy" checked>Copy 1</label>
-						<label class="select"><input type="checkbox" name="copy">Copy 2</label>
-						<label class="select"><input type="checkbox" name="copy">Copy 3</label>
-						<label class="select"><input type="checkbox" name="copy">Copy 4</label>
-						<label class="select"><input type="checkbox" name="copy">Copy 5</label>
-						<label class="select"><input type="checkbox" name="copy">Copy 6</label>
-						<label class="select"><input type="checkbox" name="copy">Copy 7</label>
-						<label class="select"><input type="checkbox" name="copy">Copy 8</label>
-						<label class="select"><input type="checkbox" name="copy">Copy 9</label>
-						<label class="select"><input type="checkbox" name="copy">Copy 10</label>
-						<label class="select"><input type="checkbox" name="copy">Copy 11</label>
-						<label class="select"><input type="checkbox" name="copy">Copy 12</label>
-						<label class="select"><input type="checkbox" name="copy">Copy 13</label>
-						<label class="select"><input type="checkbox" name="copy">Copy 14</label>
-						<label class="select"><input type="checkbox" name="copy">Copy 15</label>
-						<label class="select"><input type="checkbox" name="copy">Copy 16</label>
-						<label class="select"><input type="checkbox" name="copy">Copy 17</label>
-						<label class="select"><input type="checkbox" name="copy">Copy 18</label>
-						<label class="select"><input type="checkbox" name="copy">Copy 19</label>
-						<label class="select"><input type="checkbox" name="copy">Copy 20</label>
+						<label class="select"><input type="checkbox" name="copy">Copy 1</label><label class="select"><input type="checkbox" name="copy">Copy 2</label>
+						<label class="select"><input type="checkbox" name="copy">Copy 3</label><label class="select"><input type="checkbox" name="copy">Copy 4</label>
+						<label class="select"><input type="checkbox" name="copy">Copy 5</label><label class="select"><input type="checkbox" name="copy">Copy 6</label>
+						<label class="select"><input type="checkbox" name="copy">Copy 7</label><label class="select"><input type="checkbox" name="copy">Copy 8</label>
+						<label class="select"><input type="checkbox" name="copy">Copy 9</label><label class="select"><input type="checkbox" name="copy">Copy 10</label>
+						<label class="select"><input type="checkbox" name="copy">Copy 11</label><label class="select"><input type="checkbox" name="copy">Copy 12</label>
+						<label class="select"><input type="checkbox" name="copy">Copy 13</label><label class="select"><input type="checkbox" name="copy">Copy 14</label>
+						<label class="select"><input type="checkbox" name="copy">Copy 15</label><label class="select"><input type="checkbox" name="copy">Copy 16</label>
+						<label class="select"><input type="checkbox" name="copy">Copy 17</label><label class="select"><input type="checkbox" name="copy">Copy 18</label>
+						<label class="select"><input type="checkbox" name="copy">Copy 19</label><label class="select"><input type="checkbox" name="copy">Copy 20</label>
 						<label class="select"><input type="checkbox" name="copy">Copy 21</label>
-						
 					</form>
 				</fieldset>
 			</section>
 		</main>
+		<div id="layer">
+			<section id="pop">
+				<header>
+					<div>
+						<label class="btn select">
+							<input type="radio" name="iBtn" data-btn="popCancel">
+							Cancel
+						</label>
+					</div>
+					<div class="hRight">
+						<label class="btn select">
+							<input type="radio" name="iBtn" data-btn="popSend">
+							Send
+						</label>
+					</div>
+				</header>
+			</section>
+		</div>
 		<script>
 			const $$ = (s, c = document) => [...c.querySelectorAll(s)];
 			const $ = (s, c = document) => c.querySelector(s);
 			const selector = 'form label > input[type=checkbox], form label > input[type=radio], .searchFrm label > input[type=search], header label > input[type=radio]';
 			const rowsCheck = '.rows label > input[type=checkbox]';
 			const h1Txt = $('#listSection header div h1').innerText;
+			const handleLayer = () => $('#layer').classList.toggle('layerToggle');
 			let multiSelect = false;
 			let selDown = true;
 			let lastSection = null;
@@ -638,6 +651,11 @@
 							checkedFocus($('#' + map[parentSection.id] + ' form.rows input:first-child'));
 						}
 					break;
+					case 'Escape':
+						$('#layer.layerToggle') && handleLayer();
+						checkedFocus($('#listSection .rows input'));
+						$('#listSection').classList.remove('zoomIn');
+					break;
 					case 'Shift':
 					//case 'Control':
 						if(input.type==='checkbox') {
@@ -655,8 +673,21 @@
 							if(btn === 'side'){
 								sideToggle(parentSection.id);
 							}
-							else if(btn === 'multi'){
-								alert('Click only');
+							else if(btn === 'compose'){
+								$('#pop header .hRight label').style.visibility = 'visible';
+								handleLayer();
+								checkedFocus($('#pop input'));
+							}
+							else if(btn === 'dots'){
+								$('#pop header .hRight label').style.visibility = 'hidden';
+								handleLayer();
+								checkedFocus($('#pop input'));																
+								$('#listSection').classList.add('zoomIn');
+							}
+							else if(btn === 'popCancel'||btn === 'popSend'){
+								handleLayer();
+								checkedFocus($('#listSection .rows input'));
+								$('#listSection').classList.remove('zoomIn');
 							}
 							else if (btn === 'back') {
 								list.style.display = 'block';
@@ -691,12 +722,16 @@
 					//case 'Control':
 						multiSelect = false;
 						const svg = $('header .selIcon svg',input.closest('section'));
-						if(svg) svg.classList.remove('iconOn');
+						if(svg && svg !== input.nextElementSibling){
+							svg.classList.remove('iconOn');
+							svg.closest('label').classList.remove('focused');
+						}
 					break;
 				}
 			}
 			function handleClick(e) {
 				const input = e.target;
+				//if($('.layerToggle')) handleLayer();
 				if(!input.matches(selector)) return;
 				if (e.clientX === 0 && e.clientY === 0) return;
 				const section = input.closest('section').id;
@@ -705,25 +740,52 @@
 				const detail = $('#detailSection');
 				const nav = $('#navSection');
 				lastSection !== null && clearbyClick(lastSection,input);
+
+				function cancelMulti() {
+					const lbl = $('.selIcon',input.closest('section'));
+					$('svg',lbl).classList.remove('iconOn');
+					multiSelect = false;
+					lbl.classList.remove('focused');
+				}
 				
 				if (label?.classList.contains('btn')) {
 					e.preventDefault();
 					const {btn} = input.dataset;
+					
 					if (btn === 'back') {
 						list.style.display = 'block';
 						detail.style.display = 'none';
 					}
+					else if (btn === 'compose') {
+						cancelMulti();
+						$('#pop header .hRight label').style.visibility = 'visible';
+						handleLayer();
+						checkedFocus($('#pop input'));
+					}
 					else if (btn === 'side') {
 						sideToggle(section);
 					}
-					else if (btn === 'delete') {
-						//console.log('delete');
-					}
 					else if (btn === 'tiles') {
-						//console.log('tiles');
+						cancelMulti();
+					}
+					else if (btn === 'delete') {
+						cancelMulti();
+						const totSelection = $$('.rows .checked',input.closest('section')).length;
+						if(section !== 'navSection' && confirm('Delete ' + totSelection + ' selection in ' + section)){
+							//console.log(parentSection.id);
+						}
+					}
+					else if(btn === 'popCancel'||btn === 'popSend'){						
+						handleLayer();
+						checkedFocus($('#listSection .rows input'));
+						$('#listSection').classList.remove('zoomIn');
 					}
 					else if (btn === 'dots') {
-						//console.log('dots');
+						$('#pop header .hRight label').style.visibility = 'hidden';
+						//$('#pop').style.height = '30%';
+						handleLayer();
+						$('#listSection').classList.add('zoomIn');
+						checkedFocus($('#pop input'));
 					}
 					else if (btn === 'multi') {
 						e.preventDefault();
@@ -741,9 +803,6 @@
 						else {
 							multiSelect = true;
 						}
-					}
-					else if (btn === 'compose') {
-						//console.log('compose');
 					}
 				}
 				else if(input.closest('form.rows')){
