@@ -32,7 +32,7 @@
 			#navSection form label.select {border:solid 1px var(--nvB);}
 			#navSection form div.head {color:var(--cl2);cursor:default;margin-left:var(--mg);font-weight:bolder;grid-column: 1 / -1;}
 			#navSection form div.head:not(:first-of-type) {margin-top:calc(var(--mg) * 2)}
-			#navSection form div.head:first-of-type {margin-top:calc((var(--mg) * 2) + (var(--mg) / 2))}
+			#navSection form div.head:first-of-type {margin-top:calc((var(--mg) * 2) + (var(--mg) / 2));animation:navToggle .2s forwards}
 
 			#listSection {border-left:1px solid var(--brC); border-right:1px solid var(--brC);}
 			#listSection form.rows label, #detailSection form.rows label {height:var(--dmy)}
@@ -96,12 +96,12 @@
 			.layerToggle {display:block!important}
 			#layer {position:absolute;z-index:1;left:0;top:0;width:100%;height:100%;background-color: rgba(0,0,0,0.6);display:none;}
 			#pop {
-				position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);animation:zoominIn .2s forwards;
+				position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);animation:popRising .3s forwards;
 				background-color:var(--bg);width:38.2vw;height:80vh;box-sizing:border-box;
 			}
 			#pop .focused {background-color:var(--bg);color:var(--cl);font-weight:bolder}
 
-			@keyframes zoominIn { from {top:51%;} to {top:50%;} }
+			@keyframes popRising { from {top:51%;} to {top:50%;} }
 			
 			@media screen and (max-width: 1175px){
 				:root {
@@ -119,6 +119,10 @@
 				#listSection header .deskHid, #navSection header .deskHid {display:flex}
 				#listSection {border-left:none;}
 				#pop {width:50vw}
+				@keyframes navToggle {
+					from {margin-top:calc(var(--mg) * 2)}
+					to {margin-top:calc((var(--mg) * 2) + (var(--mg) / 2));}
+				}
 			}
 			@media screen and (max-width: 500px) and (orientation: portrait){
 				:root {
@@ -147,9 +151,9 @@
                 			background-color:white;width:100%;left:0;border-radius:2vh;border-width:0;
 					border-bottom-left-radius:0;border-bottom-right-radius:0;
 				}
-				body {background-color:black}
-				.zoomIn {transform: scale(.94);border-radius:var(--mg)}
-				@keyframes zoominIn { from {height:25%;} to {height:30%;} }
+				.sectionZoom {height:80vh;border-radius:var(--mg);animation:zooming .3s forwards}
+				@keyframes zooming { from {transform:scale(1);} to {transform:scale(.94);} }
+				@keyframes popRising { from {height:25%;} to {height:30%;} }
 			}
 			@media (prefers-color-scheme: dark) {
 				:root {--bhg:#38474d}
@@ -386,7 +390,8 @@
 			const selector = 'form label > input[type=checkbox], form label > input[type=radio], .searchFrm label > input[type=search], header label > input[type=radio]';
 			const rowsCheck = '.rows label > input[type=checkbox]';
 			const h1Txt = $('#listSection header div h1').innerText;
-			const handleLayer = () => $('#layer').classList.toggle('layerToggle');
+			const toggleLayer = () => $('#layer').classList.toggle('layerToggle');
+			const bgCol = getComputedStyle(document.documentElement).getPropertyValue('--bg');
 			let multiSelect = false;
 			let selDown = true;
 			let lastSection = null;
@@ -419,7 +424,8 @@
 			function clearbyClick(section, input){
 				const selection = $$('.rows .focused',section);
 				const totSelection = selection.length;
-				if(totSelection>1 && input.closest('.rows')){
+				//if(totSelection>1 && input.closest('.rows')){
+				if(totSelection>1){					
 					selection.forEach(label=>{
 						label.classList.remove('focused','checked');
 						$('input', label).checked = false;
@@ -652,9 +658,9 @@
 						}
 					break;
 					case 'Escape':
-						$('#layer.layerToggle') && handleLayer();
+						$('#layer.layerToggle') && toggleLayer();
 						checkedFocus($('#listSection .rows input'));
-						$('#listSection').classList.remove('zoomIn');
+						lastSection.classList.remove('sectionZoom');
 					break;
 					case 'Shift':
 					//case 'Control':
@@ -675,19 +681,24 @@
 							}
 							else if(btn === 'compose'){
 								$('#pop header .hRight label').style.visibility = 'visible';
-								handleLayer();
+								toggleLayer();
 								checkedFocus($('#pop input'));
 							}
 							else if(btn === 'dots'){
 								$('#pop header .hRight label').style.visibility = 'hidden';
-								handleLayer();
+								$('main').style.backgroundColor = '#000000';
+								$('meta[name="theme-color"]').setAttribute('content','#000000');
+								lastSection = parentSection; 
+								toggleLayer();
 								checkedFocus($('#pop input'));																
-								$('#listSection').classList.add('zoomIn');
+								parentSection.classList.add('sectionZoom');
 							}
 							else if(btn === 'popCancel'||btn === 'popSend'){
-								handleLayer();
-								checkedFocus($('#listSection .rows input'));
-								$('#listSection').classList.remove('zoomIn');
+								toggleLayer();								
+								$('main').style.backgroundColor = bgCol;
+								$('meta[name="theme-color"]').setAttribute('content',bgCol);																														
+								lastSection.classList.remove('sectionZoom');
+								checkedFocus($('.rows input',lastSection));
 							}
 							else if (btn === 'back') {
 								list.style.display = 'block';
@@ -731,7 +742,6 @@
 			}
 			function handleClick(e) {
 				const input = e.target;
-				//if($('.layerToggle')) handleLayer();
 				if(!input.matches(selector)) return;
 				if (e.clientX === 0 && e.clientY === 0) return;
 				const section = input.closest('section').id;
@@ -746,6 +756,7 @@
 					$('svg',lbl).classList.remove('iconOn');
 					multiSelect = false;
 					lbl.classList.remove('focused');
+					clearbyClick(input.closest('section'),input);
 				}
 				
 				if (label?.classList.contains('btn')) {
@@ -759,7 +770,7 @@
 					else if (btn === 'compose') {
 						cancelMulti();
 						$('#pop header .hRight label').style.visibility = 'visible';
-						handleLayer();
+						toggleLayer();
 						checkedFocus($('#pop input'));
 					}
 					else if (btn === 'side') {
@@ -775,16 +786,20 @@
 							//console.log(parentSection.id);
 						}
 					}
-					else if(btn === 'popCancel'||btn === 'popSend'){						
-						handleLayer();
+					else if (btn === 'popCancel'||btn === 'popSend'){						
+						toggleLayer();
+						$('main').style.backgroundColor = bgCol;
+						$('meta[name="theme-color"]').setAttribute('content',bgCol);
 						checkedFocus($('#listSection .rows input'));
-						$('#listSection').classList.remove('zoomIn');
+						lastSection.classList.remove('sectionZoom');
 					}
 					else if (btn === 'dots') {
 						$('#pop header .hRight label').style.visibility = 'hidden';
-						//$('#pop').style.height = '30%';
-						handleLayer();
-						$('#listSection').classList.add('zoomIn');
+						$('main').style.backgroundColor = '#000000';
+						$('meta[name="theme-color"]').setAttribute('content','#000000');
+						lastSection = input.closest('section');
+						toggleLayer();
+						lastSection.classList.add('sectionZoom');
 						checkedFocus($('#pop input'));
 					}
 					else if (btn === 'multi') {
@@ -805,7 +820,7 @@
 						}
 					}
 				}
-				else if(input.closest('form.rows')){
+				else if (input.closest('form.rows')){
 					if (section === 'navSection' && display(list) === 'none') {
 						list.style.display = 'block';
 						nav.style.display = 'none';					
@@ -814,7 +829,7 @@
 						list.style.display = 'none';
 						detail.style.display = 'block';
 					}
-				}				
+				}	
 			}
 			function handleResize() {
 				if(window.innerWidth>1175){
