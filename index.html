@@ -94,7 +94,7 @@
 			}
 			*/
 			.layerToggle {display:block!important}
-			#layer {position:absolute;z-index:1;left:0;top:0;width:100%;height:100%;background-color: rgba(0,0,0,0.6);display:none;}
+			#layer {position:absolute;z-index:1;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,0.6);display:none;}
 			#pop {
 				position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);animation:popRising .3s forwards;
 				background-color:var(--bg);width:38.2vw;height:80vh;box-sizing:border-box;
@@ -467,6 +467,7 @@
 			function handleChange(e) {
 				if(!e.target.matches(selector)) return;
 				const input = e.target;
+				//alert(lastSection.id);
 				if(input.matches(rowsCheck) && lastSection) {
 					clearbyClick(lastSection,input);
 					clrTextSel(lastSection);
@@ -718,7 +719,7 @@
 						}
 					break;
 					case 'Delete':
-						const totSelection = $$('.rows .checked',parentSection).length;
+						const totSelection = $$('.rows .focused',parentSection).length;
 						if(parentSection.id !== 'navSection' && confirm('Delete ' + totSelection + ' selection in ' + parentSection.id)){
 							//console.log(parentSection.id);
 						}
@@ -771,6 +772,7 @@
 						cancelMulti();
 						$('#pop header .hRight label').style.visibility = 'visible';
 						toggleLayer();
+						lastSection = input.closest('section');
 						checkedFocus($('#pop input'));
 					}
 					else if (btn === 'side') {
@@ -780,24 +782,24 @@
 						cancelMulti();
 					}
 					else if (btn === 'delete') {
-						cancelMulti();
-						const totSelection = $$('.rows .checked',input.closest('section')).length;
+						const totSelection = $$('.rows .focused',input.closest('section')).length;
 						if(section !== 'navSection' && confirm('Delete ' + totSelection + ' selection in ' + section)){
 							//console.log(parentSection.id);
 						}
+						cancelMulti();
 					}
-					else if (btn === 'popCancel'||btn === 'popSend'){						
+					else if (btn === 'popCancel'||btn === 'popSend'){
 						toggleLayer();
 						$('main').style.backgroundColor = bgCol;
 						$('meta[name="theme-color"]').setAttribute('content',bgCol);
-						checkedFocus($('#listSection .rows input'));
 						lastSection.classList.remove('sectionZoom');
+						checkedFocus($('#listSection .rows input'));
 					}
 					else if (btn === 'dots') {
 						$('#pop header .hRight label').style.visibility = 'hidden';
 						$('main').style.backgroundColor = '#000000';
 						$('meta[name="theme-color"]').setAttribute('content','#000000');
-						lastSection = input.closest('section');
+						//lastSection = input.closest('section');
 						toggleLayer();
 						lastSection.classList.add('sectionZoom');
 						checkedFocus($('#pop input'));
