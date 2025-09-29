@@ -411,7 +411,7 @@
 			function clearbyArrow(section) {
 				const selection = $$('.rows .focused',section);
 				const totSelection = selection.length;
-				if(totSelection>1){
+				//if(totSelection>1){
 					selection.forEach((label,index)=>{
 						if ((index < totSelection - 1 && selDown) || (index > 0 && !selDown)) {
 							label.classList.remove('focused','checked');
@@ -419,13 +419,13 @@
 						}
 					});
 					selDown = true; lastSection = null; clrTextSel(section);
-				}
+				//}
 			}
 			function clearbyClick(section, input){
 				const selection = $$('.rows .focused',section);
 				const totSelection = selection.length;
 				//if(totSelection>1 && input.closest('.rows')){
-				if(totSelection>1){					
+				//if(totSelection>1){					
 					selection.forEach(label=>{
 						label.classList.remove('focused','checked');
 						$('input', label).checked = false;
@@ -433,7 +433,7 @@
 					selDown = true; lastSection = null;
 					input.closest('label').classList.add('focused','checked');
 					clrTextSel(section);
-				}
+				//}
 			}
 			function totTextSel(section) {
 				const totSelection = $$('.rows .focused',section).length;
@@ -445,6 +445,7 @@
 				}
 			}
 			function clrTextSel(section) {
+				if(!section) return;
 				const defText = section.id == 'listSection'?h1Txt:'';
 				if($('h1',section) && display($('#navSection'))!=='none'){
 					$('h1',section).innerText = defText;
@@ -463,6 +464,13 @@
 				nav.style.display = showNav ? 'block' : 'none';
 				list.style.display = showNav ? 'none' : 'block';
 				checkedFocus($(`${showNav ? '#navSection' : '#listSection'} header input`));
+			}
+			function cancelMulti(input) {
+				const lbl = $('.selIcon',input.closest('section'));
+				$('svg',lbl).classList.remove('iconOn');
+				multiSelect = false;
+				lbl.classList.remove('focused');
+				clearbyClick(input.closest('section'),input);
 			}
 			function handleChange(e) {
 				if(!e.target.matches(selector)) return;
@@ -675,17 +683,28 @@
 						const nav = $('#navSection');
 						const list = $('#listSection');
 						const detail = $('#detailSection');
+
+
+						
 						if(name=='iBtn'){
 							const btn = input.dataset.btn;
 							if(btn === 'side'){
 								sideToggle(parentSection.id);
 							}
 							else if(btn === 'compose'){
+								/*
 								$('#pop header .hRight label').style.visibility = 'visible';
 								toggleLayer();
 								checkedFocus($('#pop input'));
+								*/
+								cancelMulti(input);
+								$('#pop header .hRight label').style.visibility = 'visible';
+								toggleLayer();
+								lastSection = input.closest('section');
+								checkedFocus($('#pop input'));
 							}
 							else if(btn === 'dots'){
+								/*
 								$('#pop header .hRight label').style.visibility = 'hidden';
 								$('main').style.backgroundColor = '#000000';
 								$('meta[name="theme-color"]').setAttribute('content','#000000');
@@ -693,18 +712,46 @@
 								toggleLayer();
 								checkedFocus($('#pop input'));																
 								parentSection.classList.add('sectionZoom');
+								*/
+								$('#pop header .hRight label').style.visibility = 'hidden';
+								$('main').style.backgroundColor = '#000000';
+								$('meta[name="theme-color"]').setAttribute('content','#000000');
+								toggleLayer();
+								if(display(list)==='block'){
+									list.classList.add('sectionZoom');
+								}
+								else {
+									detail.classList.add('sectionZoom');
+								}
+								checkedFocus($('#pop input'));
 							}
 							else if(btn === 'popCancel'||btn === 'popSend'){
+								/*
 								toggleLayer();								
 								$('main').style.backgroundColor = bgCol;
 								$('meta[name="theme-color"]').setAttribute('content',bgCol);																														
 								lastSection.classList.remove('sectionZoom');
 								checkedFocus($('.rows input',lastSection));
+								*/
+								toggleLayer();
+								$('main').style.backgroundColor = bgCol;
+								$('meta[name="theme-color"]').setAttribute('content',bgCol);
+								if(display(nav)==='none'){
+									if(display(list)==='block'){
+										list.classList.remove('sectionZoom');
+									}
+									else {
+										detail.classList.remove('sectionZoom');
+									}
+								}
+								else {
+									lastSection && lastSection.classList.remove('sectionZoom');
+								}
 							}
 							else if (btn === 'back') {
 								list.style.display = 'block';
 								detail.style.display = 'none';
-								checkedFocus($('#listSection .rows input'));
+								//checkedFocus($('#listSection .rows input'));
 							}
 						}
 						else if(name === 'item' && display(detail)==='none') {
@@ -752,14 +799,6 @@
 				const nav = $('#navSection');
 				lastSection !== null && clearbyClick(lastSection,input);
 
-				function cancelMulti() {
-					const lbl = $('.selIcon',input.closest('section'));
-					$('svg',lbl).classList.remove('iconOn');
-					multiSelect = false;
-					lbl.classList.remove('focused');
-					clearbyClick(input.closest('section'),input);
-				}
-				
 				if (label?.classList.contains('btn')) {
 					e.preventDefault();
 					const {btn} = input.dataset;
@@ -767,41 +806,54 @@
 					if (btn === 'back') {
 						list.style.display = 'block';
 						detail.style.display = 'none';
-					}
-					else if (btn === 'compose') {
-						cancelMulti();
-						$('#pop header .hRight label').style.visibility = 'visible';
-						toggleLayer();
-						lastSection = input.closest('section');
-						checkedFocus($('#pop input'));
-					}
+					}					
 					else if (btn === 'side') {
 						sideToggle(section);
 					}
 					else if (btn === 'tiles') {
-						cancelMulti();
+						cancelMulti(input);
 					}
 					else if (btn === 'delete') {
 						const totSelection = $$('.rows .focused',input.closest('section')).length;
 						if(section !== 'navSection' && confirm('Delete ' + totSelection + ' selection in ' + section)){
 							//console.log(parentSection.id);
 						}
-						cancelMulti();
+						cancelMulti(input);
+					}
+					else if (btn === 'compose') {
+						cancelMulti(input);
+						$('#pop header .hRight label').style.visibility = 'visible';
+						toggleLayer();
+						lastSection = input.closest('section');
+						checkedFocus($('#pop input'));
 					}
 					else if (btn === 'popCancel'||btn === 'popSend'){
 						toggleLayer();
 						$('main').style.backgroundColor = bgCol;
 						$('meta[name="theme-color"]').setAttribute('content',bgCol);
-						lastSection.classList.remove('sectionZoom');
-						checkedFocus($('#listSection .rows input'));
+						if(display(nav)==='none'){
+							if(display(list)==='block'){
+								list.classList.remove('sectionZoom');
+							}
+							else {
+								detail.classList.remove('sectionZoom');
+							}
+						}
+						else {
+							lastSection && lastSection.classList.remove('sectionZoom');
+						}
 					}
 					else if (btn === 'dots') {
 						$('#pop header .hRight label').style.visibility = 'hidden';
 						$('main').style.backgroundColor = '#000000';
 						$('meta[name="theme-color"]').setAttribute('content','#000000');
-						//lastSection = input.closest('section');
 						toggleLayer();
-						lastSection.classList.add('sectionZoom');
+						if(display(list)==='block'){
+							list.classList.add('sectionZoom');
+						}
+						else {
+							detail.classList.add('sectionZoom');
+						}
 						checkedFocus($('#pop input'));
 					}
 					else if (btn === 'multi') {
@@ -825,7 +877,7 @@
 				else if (input.closest('form.rows')){
 					if (section === 'navSection' && display(list) === 'none') {
 						list.style.display = 'block';
-						nav.style.display = 'none';					
+						nav.style.display = 'none';
 					}
 					else if (detail && display(detail) === 'none' && section === 'listSection') {
 						list.style.display = 'none';
