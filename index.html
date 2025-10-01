@@ -419,19 +419,29 @@
 					target = lastSection;
 				}
 				if(target) target.classList.remove('sectionZoom');
+				const inputDots = $('header input[data-btn=dots]',target);
+				if(display(inputDots.closest('label')) === 'flex'){
+					checkedFocus(inputDots);
+				}
+				else {
+					checkedFocus($('header input[data-btn=compose]',target));
+				}
 			}
 
 			function buttonBack(){
 				listSec.style.display = 'block';
 				detSec.style.display = 'none';
+				checkedFocus($('header input[data-btn=side]',listSec));
 			}
-			function buttonDelete(input){
-				const section = input.closest('section');
-				const totSelection = $$('.rows .focused',section).length || 1;
-				if(section !== 'navSection' && confirm('Delete ' + totSelection + ' selection in ' + section.id)){
-					//console.log(parentSection.id);
-				}
-				cancelMulti(input);
+			function buttonDelete(input){			
+				setTimeout(()=>{
+					const section = input.closest('section');
+					const totSelection = $$('.rows .focused',section).length || 1;
+					if(section !== 'navSection' && confirm('Delete ' + totSelection + ' selection in ' + section.id)){
+						//console.log(parentSection.id);
+					}
+					cancelMulti(input);
+				},200);
 			}
 			function buttonDots(){
 				$('#pop header .hRight label').style.visibility = 'hidden';
@@ -486,29 +496,24 @@
 			function clearbyArrow(section) {
 				const selection = $$('.rows .focused',section);
 				const totSelection = selection.length;
-				//if(totSelection>1){
-					selection.forEach((label,index)=>{
-						if ((index < totSelection - 1 && selDown) || (index > 0 && !selDown)) {
-							label.classList.remove('focused','checked');
-							$('input', label).checked = false;
-						}
-					});
-					selDown = true; lastSection = null; clrTextSel(section);
-				//}
+				selection.forEach((label,index)=>{
+					if ((index < totSelection - 1 && selDown) || (index > 0 && !selDown)) {
+						label.classList.remove('focused','checked');
+						$('input', label).checked = false;
+					}
+				});
+				selDown = true; lastSection = null; clrTextSel(section);
 			}
 			function clearbyClick(section, input){
 				const selection = $$('.rows .focused',section);
-				const totSelection = selection.length;
-				//if(totSelection>1 && input.closest('.rows')){
-				//if(totSelection>1){					
-					selection.forEach(label=>{
-						label.classList.remove('focused','checked');
-						$('input', label).checked = false;
-					});
-					selDown = true; lastSection = null;
-					input.closest('label').classList.add('focused','checked');
-					clrTextSel(section);
-				//}
+				const totSelection = selection.length;	
+				selection.forEach(label=>{
+					label.classList.remove('focused','checked');
+					$('input', label).checked = false;
+				});
+				selDown = true; lastSection = null;
+				input.closest('label').classList.add('focused','checked');
+				clrTextSel(section);
 			}
 			function totTextSel(section) {
 				const totSelection = $$('.rows .focused',section).length;
@@ -696,7 +701,6 @@
 							(input.type === 'radio' && parentForm.classList.contains('rows')) ||
 							(input.type === 'search' && input.value.length < 1)
 						);
-						
 						if(holding){
 							multiSelect = false;
 							clearbyArrow(parentSection);
@@ -754,15 +758,16 @@
 								case 'popSend':	buttonCancel(input); break;
 							}
 						}
-						else if(name === 'item' && display(detSec)==='none') {
+						else if(input.name === 'item' && display(detSec)==='none') {
 							listSec.style.display = 'none';
 							detSec.style.display = 'block';
 							checkedFocus($('.rows input',detSec));
 						}
-						else if(name === 'nav' && display(listSec)==='none') {
+						else if(input.name === 'nav' && display(listSec)==='none') {
 							navSec.style.display = 'none';
 							listSec.style.display = 'block';
-							checkedFocus($('.rows input'.listSec));
+							//console.log(1);
+							checkedFocus($('.rows input',listSec));
 						}
 					break;
 					case 'Delete':
@@ -811,8 +816,8 @@
 				}
 				else if (input.closest('form.rows')){
 					if (section === 'navSection' && display(listSec) === 'none') {
-						listSec.style.display = 'block';
 						navSec.style.display = 'none';
+						listSec.style.display = 'block';
 					}
 					else if (detSec && display(detSec) === 'none' && section === 'listSection') {
 						listSec.style.display = 'none';
