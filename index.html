@@ -77,14 +77,14 @@
 			section fieldset form.rows label {border-bottom:solid 1px var(--brC)}
 
 			.btn input[type=checkbox], .btn [type=radio], .select input[type=checkbox], .select input[type=radio]{position: absolute;left: -9999px;}
-			.checked {background-color:var(--bck);color:var(--cck)}
-			.focused {background-color:var(--bhg);color:var(--chg)}
+			.checked {background-color:var(--bck);color:var(--cck);}
+			.focused {background-color:var(--bhg);color:var(--chg);}
 			.btn.checked, .btn.focused {background-color:transparent;}
 			.btn.focused svg, .btn svg:hover, .btn.checked, .btn.checked, .iconOn {stroke:var(--bhg);stroke-width:8}
 			.btn.focused svg.delBtn, .btn svg.delBtn:hover {stroke:red;stroke-width:8}
 			.btn.focused svg.delBtn {stroke:red;}
 			.searchFrm label.focused {background-color:transparent;color:var(--cl)}
-
+			.rows label.focused {animation:focusing .4s forwards}
 			/*
 			#listSection fieldset .rows, #detailSection fieldset .rows {
 				display:grid;grid-template-columns:repeat(2, 1fr);gap:1vh;
@@ -102,6 +102,7 @@
 			#pop .focused {background-color:var(--bg);color:var(--cl);font-weight:bolder}
 
 			@keyframes popRising { from {top:51%;} to {top:50%;} }
+			@keyframes focusing { from {background-color:var(--bck);} to {background-color:var(--bhg);} }
 			
 			@media screen and (max-width: 1175px){
 				:root {
@@ -388,14 +389,88 @@
 			const $$ = (s, c = document) => [...c.querySelectorAll(s)];
 			const $ = (s, c = document) => c.querySelector(s);
 			const selector = 'form label > input[type=checkbox], form label > input[type=radio], .searchFrm label > input[type=search], header label > input[type=radio]';
+			const navSec = $('#navSection');
+			const listSec = $('#listSection');
+			const detSec = $('#detailSection');
 			const rowsCheck = '.rows label > input[type=checkbox]';
-			const h1Txt = $('#listSection header div h1').innerText;
+			const h1Txt = $('header div h1',listSec).innerText;
 			const toggleLayer = () => $('#layer').classList.toggle('layerToggle');
 			const bgCol = getComputedStyle(document.documentElement).getPropertyValue('--bg');
 			let multiSelect = false;
 			let selDown = true;
 			let lastSection = null;
 
+			function buttonCompose(input){
+				cancelMulti(input);
+				$('#pop header .hRight label').style.visibility = 'visible';
+				toggleLayer();
+				lastSection = input.closest('section');
+				checkedFocus($('#pop input'));
+			}
+			function buttonCancel(input) {
+				toggleLayer();
+				$('main').style.backgroundColor = bgCol;
+				const metaTheme = document.querySelector('meta[name="theme-color"]');
+				if (metaTheme) metaTheme.setAttribute('content', bgCol);
+				let target = null;
+				if (display(navSec) === 'none') {
+					target = (display(listSec) === 'block') ? listSec : detSec;
+				} else {
+					target = lastSection;
+				}
+				if(target) target.classList.remove('sectionZoom');
+			}
+
+			function buttonBack(){
+				listSec.style.display = 'block';
+				detSec.style.display = 'none';
+			}
+			function buttonDelete(input){
+				const section = input.closest('section');
+				const totSelection = $$('.rows .focused',section).length || 1;
+				if(section !== 'navSection' && confirm('Delete ' + totSelection + ' selection in ' + section.id)){
+					//console.log(parentSection.id);
+				}
+				cancelMulti(input);
+			}
+			function buttonDots(){
+				$('#pop header .hRight label').style.visibility = 'hidden';
+				$('main').style.backgroundColor = '#000000';
+				$('meta[name="theme-color"]').setAttribute('content','#000000');
+				toggleLayer();
+				if(display(listSec)==='block'){
+					listSec.classList.add('sectionZoom');
+				}
+				else {
+					detSec.classList.add('sectionZoom');
+				}
+				checkedFocus($('#pop input'));
+			}
+			function buttonSide() {
+				const showNav = display(navSec) !== 'block';
+				navSec.style.display = showNav ? 'block' : 'none';
+				listSec.style.display = showNav ? 'none' : 'block';
+				checkedFocus($(`${showNav ? '#navSection' : '#listSection'} header input`));
+			}
+			function buttonMulti(e){
+				e.preventDefault();
+				const input = e.target;
+				const label = input.closest('label');
+				const svg = input.nextElementSibling;
+				const section = input.closest('section');
+				svg.classList.toggle('iconOn');
+				if(!svg.classList.contains('iconOn') || $$('.rows .select.focused ',section).length > 1){
+					multiSelect = false;
+					svg.classList.remove('iconOn');
+					label.classList.remove('focused');					
+					const lastInp = $('.rows .focused input,.rows .checked input',section);
+					clearbyClick(section,lastInp);
+					checkedFocus(lastInp);
+				}
+				else {
+					multiSelect = true;
+				}
+			}
 			function checkedFocus(el) {
 				if(!el) return;
 				el.checked = true;
@@ -437,7 +512,7 @@
 			}
 			function totTextSel(section) {
 				const totSelection = $$('.rows .focused',section).length;
-				if(totSelection>1 && display($('#navSection'))!=='none'){
+				if(totSelection>1 && display(navSec)!=='none'){
 					$('h1',section).innerText = totSelection + ' Selected';
 					if(section.id==='listSection'){
 						//$('#detailSection header .hRight').style.visibility = 'hidden';
@@ -447,7 +522,7 @@
 			function clrTextSel(section) {
 				if(!section) return;
 				const defText = section.id == 'listSection'?h1Txt:'';
-				if($('h1',section) && display($('#navSection'))!=='none'){
+				if($('h1',section) && display(navSec)!=='none'){
 					$('h1',section).innerText = defText;
 					if(section.id==='listSection'){
 						//$('#detailSection header .hRight').style.visibility = 'visible';
@@ -456,14 +531,6 @@
 			}
 			function display(el) {
 				return window.getComputedStyle(el).display;
-			}
-			function sideToggle() {
-				const nav = $('#navSection');
-				const list = $('#listSection');
-				const showNav = display(nav) !== 'block';
-				nav.style.display = showNav ? 'block' : 'none';
-				list.style.display = showNav ? 'none' : 'block';
-				checkedFocus($(`${showNav ? '#navSection' : '#listSection'} header input`));
 			}
 			function cancelMulti(input) {
 				const lbl = $('.selIcon',input.closest('section'));
@@ -475,7 +542,6 @@
 			function handleChange(e) {
 				if(!e.target.matches(selector)) return;
 				const input = e.target;
-				//alert(lastSection.id);
 				if(input.matches(rowsCheck) && lastSection) {
 					clearbyClick(lastSection,input);
 					clrTextSel(lastSection);
@@ -621,7 +687,7 @@
 					break;
 					case 'ArrowLeft':
 					case 'ArrowRight':
-						const listHidden = display($('#listSection')) === 'none';
+						const listHidden = display(listSec) === 'none';
 						const mapLeft = { listSection: 'navSection', detailSection: listHidden?'navSection':'listSection' };
 						const mapRight = { navSection: listHidden?'detailSection':'listSection', listSection: 'detailSection' };
 						const map = e.key === 'ArrowLeft' ? mapLeft : mapRight;
@@ -667,9 +733,7 @@
 						}
 					break;
 					case 'Escape':
-						$('#layer.layerToggle') && toggleLayer();
-						checkedFocus($('#listSection .rows input'));
-						lastSection.classList.remove('sectionZoom');
+						buttonCancel(input);
 					break;
 					case 'Shift':
 					//case 'Control':
@@ -679,97 +743,30 @@
 						}
 					break;
 					case 'Enter':
-						const name = input.name;
-						const nav = $('#navSection');
-						const list = $('#listSection');
-						const detail = $('#detailSection');
-
-
-						
-						if(name=='iBtn'){
-							const btn = input.dataset.btn;
-							if(btn === 'side'){
-								sideToggle(parentSection.id);
-							}
-							else if(btn === 'compose'){
-								/*
-								$('#pop header .hRight label').style.visibility = 'visible';
-								toggleLayer();
-								checkedFocus($('#pop input'));
-								*/
-								cancelMulti(input);
-								$('#pop header .hRight label').style.visibility = 'visible';
-								toggleLayer();
-								lastSection = input.closest('section');
-								checkedFocus($('#pop input'));
-							}
-							else if(btn === 'dots'){
-								/*
-								$('#pop header .hRight label').style.visibility = 'hidden';
-								$('main').style.backgroundColor = '#000000';
-								$('meta[name="theme-color"]').setAttribute('content','#000000');
-								lastSection = parentSection; 
-								toggleLayer();
-								checkedFocus($('#pop input'));																
-								parentSection.classList.add('sectionZoom');
-								*/
-								$('#pop header .hRight label').style.visibility = 'hidden';
-								$('main').style.backgroundColor = '#000000';
-								$('meta[name="theme-color"]').setAttribute('content','#000000');
-								toggleLayer();
-								if(display(list)==='block'){
-									list.classList.add('sectionZoom');
-								}
-								else {
-									detail.classList.add('sectionZoom');
-								}
-								checkedFocus($('#pop input'));
-							}
-							else if(btn === 'popCancel'||btn === 'popSend'){
-								/*
-								toggleLayer();								
-								$('main').style.backgroundColor = bgCol;
-								$('meta[name="theme-color"]').setAttribute('content',bgCol);																														
-								lastSection.classList.remove('sectionZoom');
-								checkedFocus($('.rows input',lastSection));
-								*/
-								toggleLayer();
-								$('main').style.backgroundColor = bgCol;
-								$('meta[name="theme-color"]').setAttribute('content',bgCol);
-								if(display(nav)==='none'){
-									if(display(list)==='block'){
-										list.classList.remove('sectionZoom');
-									}
-									else {
-										detail.classList.remove('sectionZoom');
-									}
-								}
-								else {
-									lastSection && lastSection.classList.remove('sectionZoom');
-								}
-							}
-							else if (btn === 'back') {
-								list.style.display = 'block';
-								detail.style.display = 'none';
-								//checkedFocus($('#listSection .rows input'));
+						if (input.name === 'iBtn') {
+							const { btn } = input.dataset;
+							switch (btn) {
+								case 'side':	buttonSide(); break;
+								case 'compose':	buttonCompose(input); break;
+								case 'dots':	buttonDots(); break;
+								case 'back':	buttonBack(); break;
+								case 'popCancel':
+								case 'popSend':	buttonCancel(input); break;
 							}
 						}
-						else if(name === 'item' && display(detail)==='none') {
-							list.style.display = 'none';
-							detail.style.display = 'block';
-							checkedFocus($('#detailSection .rows input'));
+						else if(name === 'item' && display(detSec)==='none') {
+							listSec.style.display = 'none';
+							detSec.style.display = 'block';
+							checkedFocus($('.rows input',detSec));
 						}
-						else if(name === 'nav' && display(list)==='none') {
-							nav.style.display = 'none';
-							list.style.display = 'block';
-							checkedFocus($('#listSection .rows input'));
+						else if(name === 'nav' && display(listSec)==='none') {
+							navSec.style.display = 'none';
+							listSec.style.display = 'block';
+							checkedFocus($('.rows input'.listSec));
 						}
 					break;
 					case 'Delete':
-						const totSelection = $$('.rows .focused',parentSection).length;
-						if(parentSection.id !== 'navSection' && confirm('Delete ' + totSelection + ' selection in ' + parentSection.id)){
-							//console.log(parentSection.id);
-						}
+						buttonDelete(input);
 					break;
 				}
 			}
@@ -794,108 +791,46 @@
 				if (e.clientX === 0 && e.clientY === 0) return;
 				const section = input.closest('section').id;
 				const label = input.closest('label');
-				const list = $('#listSection');
-				const detail = $('#detailSection');
-				const nav = $('#navSection');
 				lastSection !== null && clearbyClick(lastSection,input);
 
 				if (label?.classList.contains('btn')) {
 					e.preventDefault();
-					const {btn} = input.dataset;
-					
-					if (btn === 'back') {
-						list.style.display = 'block';
-						detail.style.display = 'none';
-					}					
-					else if (btn === 'side') {
-						sideToggle(section);
+					const { btn } = input.dataset;
+					switch (btn) {
+						case 'back':	buttonBack(); break;
+						case 'side':	buttonSide(); break;
+						case 'tiles':	cancelMulti(input); break;
+						case 'delete':	buttonDelete(input); break;
+						case 'compose':	buttonCompose(input); break;
+						case 'dots':	buttonDots(); break;
+						case 'multi':	buttonMulti(e); break;
+						case 'popCancel':
+						case 'popSend':	buttonCancel(input); break;
 					}
-					else if (btn === 'tiles') {
-						cancelMulti(input);
-					}
-					else if (btn === 'delete') {
-						const totSelection = $$('.rows .focused',input.closest('section')).length;
-						if(section !== 'navSection' && confirm('Delete ' + totSelection + ' selection in ' + section)){
-							//console.log(parentSection.id);
-						}
-						cancelMulti(input);
-					}
-					else if (btn === 'compose') {
-						cancelMulti(input);
-						$('#pop header .hRight label').style.visibility = 'visible';
-						toggleLayer();
-						lastSection = input.closest('section');
-						checkedFocus($('#pop input'));
-					}
-					else if (btn === 'popCancel'||btn === 'popSend'){
-						toggleLayer();
-						$('main').style.backgroundColor = bgCol;
-						$('meta[name="theme-color"]').setAttribute('content',bgCol);
-						if(display(nav)==='none'){
-							if(display(list)==='block'){
-								list.classList.remove('sectionZoom');
-							}
-							else {
-								detail.classList.remove('sectionZoom');
-							}
-						}
-						else {
-							lastSection && lastSection.classList.remove('sectionZoom');
-						}
-					}
-					else if (btn === 'dots') {
-						$('#pop header .hRight label').style.visibility = 'hidden';
-						$('main').style.backgroundColor = '#000000';
-						$('meta[name="theme-color"]').setAttribute('content','#000000');
-						toggleLayer();
-						if(display(list)==='block'){
-							list.classList.add('sectionZoom');
-						}
-						else {
-							detail.classList.add('sectionZoom');
-						}
-						checkedFocus($('#pop input'));
-					}
-					else if (btn === 'multi') {
-						e.preventDefault();
-						const svg = input.nextElementSibling;
-						svg.classList.toggle('iconOn');
-						if(!svg.classList.contains('iconOn') || $$('.rows .select.focused ',input.closest('section')).length > 1){
-							multiSelect = false;
-							svg.classList.remove('iconOn');
-							label.classList.remove('focused');
-							const sc = input.closest('section');
-							const lastInp = $('.rows .focused input',sc);
-							clearbyClick(sc,lastInp);
-							checkedFocus(lastInp);
-						}
-						else {
-							multiSelect = true;
-						}
-					}
+
 				}
 				else if (input.closest('form.rows')){
-					if (section === 'navSection' && display(list) === 'none') {
-						list.style.display = 'block';
-						nav.style.display = 'none';
+					if (section === 'navSection' && display(listSec) === 'none') {
+						listSec.style.display = 'block';
+						navSec.style.display = 'none';
 					}
-					else if (detail && display(detail) === 'none' && section === 'listSection') {
-						list.style.display = 'none';
-						detail.style.display = 'block';
+					else if (detSec && display(detSec) === 'none' && section === 'listSection') {
+						listSec.style.display = 'none';
+						detSec.style.display = 'block';
 					}
 				}	
 			}
 			function handleResize() {
 				if(window.innerWidth>1175){
-					$('#navSection').style.display = $('#listSection').style.display = $('#detailSection').style.display = 'block';
+					navSec.style.display = listSec.style.display = detSec.style.display = 'block';
 				}
 				else if(window.innerWidth<1175 && window.innerWidth>500){
-					$('#listSection').style.display = $('#detailSection').style.display = 'block';
-					$('#navSection').style.display = 'none';
+					listSec.style.display = detSec.style.display = 'block';
+					navSec.style.display = 'none';
 				}
 				else if(window.innerWidth<500){
-					$('#navSection').style.display = $('#detailSection').style.display = 'none';
-					$('#listSection').style.display = 'block';
+					navSec.style.display = detSec.style.display = 'none';
+					listSec.style.display = 'block';
 				}
 			}
 			
