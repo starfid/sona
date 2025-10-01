@@ -394,8 +394,10 @@
 			const detSec = $('#detailSection');
 			const rowsCheck = '.rows label > input[type=checkbox]';
 			const h1Txt = $('header div h1',listSec).innerText;
-			const toggleLayer = () => $('#layer').classList.toggle('layerToggle');
 			const bgCol = getComputedStyle(document.documentElement).getPropertyValue('--bg');
+			const toggleLayer = () => $('#layer').classList.toggle('layerToggle');
+			const display = (el) => {return window.getComputedStyle(el).display;}
+			
 			let multiSelect = false;
 			let selDown = true;
 			let lastSection = null;
@@ -511,9 +513,14 @@
 					label.classList.remove('focused','checked');
 					$('input', label).checked = false;
 				});
-				selDown = true; lastSection = null;
-				input.closest('label').classList.add('focused','checked');
 				clrTextSel(section);
+				selDown = true; lastSection = null;
+				if(input.name == 'iBtn'){
+					checkedFocus($('.rows input',section));
+				}
+				else {
+					input.closest('label').classList.add('focused','checked');
+				}
 			}
 			function totTextSel(section) {
 				const totSelection = $$('.rows .focused',section).length;
@@ -533,9 +540,6 @@
 						//$('#detailSection header .hRight').style.visibility = 'visible';
 					}
 				}
-			}
-			function display(el) {
-				return window.getComputedStyle(el).display;
 			}
 			function cancelMulti(input) {
 				const lbl = $('.selIcon',input.closest('section'));
@@ -766,7 +770,6 @@
 						else if(input.name === 'nav' && display(listSec)==='none') {
 							navSec.style.display = 'none';
 							listSec.style.display = 'block';
-							//console.log(1);
 							checkedFocus($('.rows input',listSec));
 						}
 					break;
@@ -797,7 +800,6 @@
 				const section = input.closest('section').id;
 				const label = input.closest('label');
 				lastSection !== null && clearbyClick(lastSection,input);
-
 				if (label?.classList.contains('btn')) {
 					e.preventDefault();
 					const { btn } = input.dataset;
