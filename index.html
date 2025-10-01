@@ -8,6 +8,7 @@
 		<meta content="#FFFFFF" name="theme-color" media="(prefers-color-scheme: light)">
 		<meta content="#000000" name="theme-color" media="(prefers-color-scheme: dark)">
 		<meta content="width=device-width,initial-scale=1,maximum-scale=1,shrink-to-fit=no,user-scalable=0,viewport-fit=cover" name="viewport">
+		<link rel="icon" href="data:,">
 		<style>
 			/*:root {--bhg:#0063E2;}*/:root {--bhg:#000000;}
 			:root {
@@ -263,7 +264,7 @@
 				<fieldset>					
 					<form class="searchFrm">
 						<label class="select">
-							<input type="search" name="item" placeholder="Search" ondblclick="this.value=''" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off">
+							<input type="search" name="q" placeholder="Search" ondblclick="this.value=''" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off">
 							<svg viewbox="0 0 100 100" class="deskHid">
 								<path d="M10 80H90V30H70L60 20H40L30 30H10Z M50 38a15 15 0 1 0 0 30a15 15 0 1 0 0-30z M70 40h1" />
 							</svg>
@@ -340,7 +341,7 @@
 				<fieldset>
 					<form class="searchFrm">
 						<label class="select">
-							<input type="search" name="item" placeholder="Search" ondblclick="this.value=''" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off">
+							<input type="search" name="q" placeholder="Search" ondblclick="this.value=''" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off">
 							<svg viewbox="0 0 100 100" class="deskHid">
 								<path d="M10 80H90V30H70L60 20H40L30 30H10Z M50 38a15 15 0 1 0 0 30a15 15 0 1 0 0-30z M70 40h1" />
 							</svg>
@@ -417,30 +418,35 @@
 				let target = null;
 				if (display(navSec) === 'none') {
 					target = (display(listSec) === 'block') ? listSec : detSec;
-				} else {
-					target = lastSection;
-				}
-				if(target) target.classList.remove('sectionZoom');
-				const inputDots = $('header input[data-btn=dots]',target);
-				if(display(inputDots.closest('label')) === 'flex'){
-					checkedFocus(inputDots);
 				}
 				else {
-					checkedFocus($('header input[data-btn=compose]',target));
+					target = lastSection;
+				}
+				if(target) {
+					target.classList.remove('sectionZoom');
+					const inputDots = $('header input[data-btn=dots]',target);
+					if($('header input[data-btn=dots]',target) && display(inputDots.closest('label')) === 'flex'){
+						checkedFocus(inputDots);
+					}
+					else {
+						checkedFocus($('header input[data-btn=compose]',target));
+					}
 				}
 			}
-
 			function buttonBack(){
 				listSec.style.display = 'block';
 				detSec.style.display = 'none';
 				checkedFocus($('header input[data-btn=side]',listSec));
 			}
-			function buttonDelete(input){			
-				setTimeout(()=>{
+			function buttonDelete(input){
+				if(input.name === 'item') setTimeout(()=>{
 					const section = input.closest('section');
-					const totSelection = $$('.rows .focused',section).length || 1;
+					const selection = $$('.rows .focused',section);
+					const totSelection = selection.length || 1;
 					if(section !== 'navSection' && confirm('Delete ' + totSelection + ' selection in ' + section.id)){
-						//console.log(parentSection.id);
+						selection.forEach(label=>{
+							label.parentNode.removeChild(label);
+						});
 					}
 					cancelMulti(input);
 				},200);
@@ -542,11 +548,16 @@
 				}
 			}
 			function cancelMulti(input) {
-				const lbl = $('.selIcon',input.closest('section'));
-				$('svg',lbl).classList.remove('iconOn');
-				multiSelect = false;
-				lbl.classList.remove('focused');
-				clearbyClick(input.closest('section'),input);
+				if(input.closest('section')) {					
+					const lbl = $('.selIcon',input.closest('section'));
+					$('svg',lbl).classList.remove('iconOn');
+					multiSelect = false;
+					lbl.classList.remove('focused');
+					clearbyClick(input.closest('section'),input);
+				}
+				else {
+					checkedFocus($((lastSection?'#'+lastSection.id:'#listSection') + ' .rows input'));
+				}
 			}
 			function handleChange(e) {
 				if(!e.target.matches(selector)) return;
