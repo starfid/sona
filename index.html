@@ -146,7 +146,7 @@
 				#detailSection {display:none;position:absolute;z-index:1;top:0;width:100vw;}
 				#listSection {display:block}
 				.showDetail {animation:showDetail .3s forwards}
-				.detailShowList {animation:detailShowList .5s forwards}
+				.detailShowList {animation:detailShowList .35s forwards}
 				.listShowDetail {animation:listShowDetail 1.5s forwards}
 				.listShowList {animation:listShowList .3s forwards}
 				.mobHid {display:none}
@@ -421,7 +421,7 @@
 			}
 			function buttonCancel(input) {
 				toggleLayer();
-				$('main').style.backgroundColor = bgCol;
+				$('main').style.backgroundColor = $('body').style.backgroundColor = bgCol;
 				const metaTheme = document.querySelector('meta[name="theme-color"]');
 				if (metaTheme) metaTheme.setAttribute('content', bgCol);
 				let target = null;
@@ -466,19 +466,25 @@
 			}
 			function buttonDots(){
 				$('#pop header .hRight label').style.visibility = 'hidden';
-				$('main').style.backgroundColor = '#000000';
+				$('main').style.backgroundColor = $('body').style.backgroundColor = '#000000';
 				$('meta[name="theme-color"]').setAttribute('content','#000000');
 				toggleLayer();
-				if(display(listSec)==='block'){
+				//if(display(listSec)==='block'){
+				if(leftPos(listSec)==='0px'){
+					listSec.style.display = 'block';
 					listSec.classList.add('sectionZoom');
+					listSec.classList.remove('listShowList');
 				}
 				else {
+					listSec.style.display = 'none';
 					detSec.classList.add('sectionZoom');
+					detSec.classList.remove('showDetail');
 				}
 				checkedFocus($('#pop input'));
 			}
 			function buttonSide() {
 				const showNav = display(navSec) !== 'block';
+				listSec.classList.remove('listShowList');
 				navSec.style.display = showNav ? 'block' : 'none';
 				listSec.style.display = showNav ? 'none' : 'block';
 				checkedFocus($(`${showNav ? '#navSection' : '#listSection'} header input`));
@@ -627,7 +633,7 @@
 				const parentSection = input.closest('section');
 				const holding = parentForm && (parentForm.classList.contains('rows') && input.type !== 'radio' && multiSelect);
 				const toggleMulti = () => $('header .selIcon svg',parentSection).classList.toggle('iconOn');
-					
+				
 				switch (e.key) {
 					case 'ArrowDown':
 						if(!parentForm) {
@@ -766,6 +772,9 @@
 					break;
 					case 'Escape':
 						buttonCancel(input);
+					break;
+					case 'Backspace':
+						buttonBack();
 					break;
 					case 'Shift':
 					//case 'Control':
