@@ -452,7 +452,8 @@
 				checkedFocus($('header input[data-btn=side]',listSec));
 			}
 			function buttonDelete(input){
-				if((input.name === 'item') || input.dataset.btn === 'delete') setTimeout(()=>{
+				if((input.name === 'item' || input.name === 'copy') || input.dataset.btn === 'delete') setTimeout(()=>{
+					console.log(1);
 					const section = input.closest('section');
 					const selection = $$('.rows .focused',section);
 					const totSelection = selection.length || 1;
