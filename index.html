@@ -143,8 +143,12 @@
 				#detailSection div.hRight label.last {display:none}
 				#detailSection div.hRight label.secondLast svg {margin-right:var(--mg)}
 				#navSection form div.head:first-of-type {margin-top:calc((var(--mg) * 2) + (var(--mg) / 2))}
-				#detailSection {display:none}
+				#detailSection {display:none;position:absolute;z-index:1;top:0;width:100vw;}
 				#listSection {display:block}
+				.showDetail {animation:showDetail .3s forwards}
+				.detailShowList {animation:detailShowList .5s forwards}
+				.listShowDetail {animation:listShowDetail 1.5s forwards}
+				.listShowList {animation:listShowList .3s forwards}
 				.mobHid {display:none}
 				section header .tabHid {display:flex}
 				#dots {position:absolute;z-index:1;top:100px;left:100px;background-color:red;}
@@ -156,6 +160,10 @@
 				.sectionZoom {height:80vh;border-radius:var(--mg);animation:zooming .3s forwards}
 				@keyframes zooming { from {transform:scale(1);} to {transform:scale(.94);} }
 				@keyframes popRising { from {height:25%;} to {height:30%;} }
+				@keyframes showDetail { from {left:150px;} to {left:0;} }
+				@keyframes detailShowList { from {left:30vw;} to {left:100vw;} }
+				@keyframes listShowDetail { from {left:0;} to {left:-100px;} }
+				@keyframes listShowList { from {left:-100px;} to {left:0;} }
 			}
 			@media (prefers-color-scheme: dark) {
 				:root {--bhg:#38474d}
@@ -398,6 +406,7 @@
 			const bgCol = getComputedStyle(document.documentElement).getPropertyValue('--bg');
 			const toggleLayer = () => $('#layer').classList.toggle('layerToggle');
 			const display = (el) => {return window.getComputedStyle(el).display;}
+			const leftPos = (el) => {return window.getComputedStyle(el).left;}
 			
 			let multiSelect = false;
 			let selDown = true;
@@ -434,12 +443,16 @@
 				}
 			}
 			function buttonBack(){
+				listSec.classList.remove('listShowDetail');
+				listSec.classList.add('listShowList');
 				listSec.style.display = 'block';
-				detSec.style.display = 'none';
+				detSec.classList.remove('showDetail');
+				detSec.classList.add('detailShowList');
+				//detSec.style.display = 'none';
 				checkedFocus($('header input[data-btn=side]',listSec));
 			}
 			function buttonDelete(input){
-				if(input.name === 'item') setTimeout(()=>{
+				if((input.name === 'item') || input.dataset.btn === 'delete') setTimeout(()=>{
 					const section = input.closest('section');
 					const selection = $$('.rows .focused',section);
 					const totSelection = selection.length || 1;
@@ -773,8 +786,12 @@
 								case 'popSend':	buttonCancel(input); break;
 							}
 						}
-						else if(input.name === 'item' && display(detSec)==='none') {
-							listSec.style.display = 'none';
+						else if(input.name === 'item' && (display(detSec) === 'none' || leftPos(detSec) > '200px')) {
+							//listSec.style.display = 'none';
+							listSec.classList.remove('listShowList');
+							listSec.classList.add('listShowDetail');
+							detSec.classList.remove('detailShowList');
+							detSec.classList.add('showDetail');
 							detSec.style.display = 'block';
 							checkedFocus($('.rows input',detSec));
 						}
@@ -828,12 +845,19 @@
 
 				}
 				else if (input.closest('form.rows')){
+					//console.log(leftPos(detSec));
 					if (section === 'navSection' && display(listSec) === 'none') {
 						navSec.style.display = 'none';
 						listSec.style.display = 'block';
 					}
-					else if (detSec && display(detSec) === 'none' && section === 'listSection') {
-						listSec.style.display = 'none';
+					//else if (detSec && display(detSec) === 'none' && section === 'listSection') {
+					else if (detSec && (display(detSec) === 'none' || leftPos(detSec) > '200px') && section === 'listSection') {
+						//listSec.style.display = 'none';
+						//because it set none
+						listSec.classList.remove('listShowList');
+						listSec.classList.add('listShowDetail');
+						detSec.classList.remove('detailShowList');
+						detSec.classList.add('showDetail');
 						detSec.style.display = 'block';
 					}
 				}	
