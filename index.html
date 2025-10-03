@@ -356,12 +356,12 @@
 						</label>
 					</form>
 					<form class="filters">
-						<label class="select"><input type="radio" name="filter">Filter1</label><label class="select"><input type="radio" name="filter">Filter2</label>
+						<label class="select"><input type="radio" name="filter" checked>Filter1</label><label class="select"><input type="radio" name="filter">Filter2</label>
 						<label class="select"><input type="radio" name="filter">Filter3</label><label class="select"><input type="radio" name="filter">Filter4</label>
 						<label class="select"><input type="radio" name="filter">Filter5</label>
 					</form>
 					<form class="rows">
-						<label class="select"><input type="checkbox" name="copy">Copy 1</label><label class="select"><input type="checkbox" name="copy">Copy 2</label>
+						<label class="select"><input type="checkbox" name="copy" checked>Copy 1</label><label class="select"><input type="checkbox" name="copy">Copy 2</label>
 						<label class="select"><input type="checkbox" name="copy">Copy 3</label><label class="select"><input type="checkbox" name="copy">Copy 4</label>
 						<label class="select"><input type="checkbox" name="copy">Copy 5</label><label class="select"><input type="checkbox" name="copy">Copy 6</label>
 						<label class="select"><input type="checkbox" name="copy">Copy 7</label><label class="select"><input type="checkbox" name="copy">Copy 8</label>
@@ -442,7 +442,8 @@
 					}
 				}
 			}
-			function buttonBack(){
+			function buttonBack(input){
+				if(input.type === 'search'||input.type === 'text') return;
 				listSec.classList.remove('listShowDetail');
 				listSec.classList.add('listShowList');
 				listSec.style.display = 'block';
@@ -453,9 +454,8 @@
 			}
 			function buttonDelete(input){
 				if((input.name === 'item' || input.name === 'copy') || input.dataset.btn === 'delete') setTimeout(()=>{
-					console.log(1);
 					const section = input.closest('section');
-					const selection = $$('.rows .focused',section);
+					const selection = $$('.rows .focused,.rows .checked',section);
 					const totSelection = selection.length || 1;
 					if(section !== 'navSection' && confirm('Delete ' + totSelection + ' selection in ' + section.id)){
 						selection.forEach(label=>{
@@ -463,6 +463,7 @@
 						});
 					}
 					cancelMulti(input);
+					checkedFocus($('.rows input',section));
 				},200);
 			}
 			function buttonDots(){
@@ -597,7 +598,11 @@
 				if(!e.target.matches(selector)) return;
 				const input = e.target;
 				const iconSec = [];
-				if(input.matches(selector)){
+				if(input.type==='text'||input.type==='search'){
+					//alert(1);
+					e.preventDefault();
+				}
+				else if(input.matches(selector)){
 					const rows = ['item','copy'].includes(input.name);
 					const sid = input.closest('section').id;
 					if (multiSelect && rows) {
@@ -612,7 +617,11 @@
 						}
 						totTextSel(input.closest('section'));
 					}
+					else if(input.type==='text'||input.type==='search'){
+						e.preventDefault();
+					}
 					else if(!(multiSelect && !rows)){
+						//alert(1);
 						input.closest('label')?.classList.add('focused');
 					}
 					if(input.name=='iBtn'){
@@ -775,7 +784,7 @@
 						buttonCancel(input);
 					break;
 					case 'Backspace':
-						buttonBack();
+						buttonBack(input);
 					break;
 					case 'Shift':
 					//case 'Control':
@@ -791,7 +800,7 @@
 								case 'side':	buttonSide(); break;
 								case 'compose':	buttonCompose(input); break;
 								case 'dots':	buttonDots(); break;
-								case 'back':	buttonBack(); break;
+								case 'back':	buttonBack(input); break;
 								case 'popCancel':
 								case 'popSend':	buttonCancel(input); break;
 							}
@@ -842,7 +851,7 @@
 					e.preventDefault();
 					const { btn } = input.dataset;
 					switch (btn) {
-						case 'back':	buttonBack(); break;
+						case 'back':	buttonBack(input); break;
 						case 'side':	buttonSide(); break;
 						case 'tiles':	cancelMulti(input); break;
 						case 'delete':	buttonDelete(input); break;
@@ -855,20 +864,19 @@
 
 				}
 				else if (input.closest('form.rows')){
-					//console.log(leftPos(detSec));
 					if (section === 'navSection' && display(listSec) === 'none') {
 						navSec.style.display = 'none';
 						listSec.style.display = 'block';
 					}
 					//else if (detSec && display(detSec) === 'none' && section === 'listSection') {
 					else if (detSec && (display(detSec) === 'none' || leftPos(detSec) > '200px') && section === 'listSection') {
-						//listSec.style.display = 'none';
-						//because it set none
 						listSec.classList.remove('listShowList');
 						listSec.classList.add('listShowDetail');
 						detSec.classList.remove('detailShowList');
 						detSec.classList.add('showDetail');
 						detSec.style.display = 'block';
+						checkedFocus($('.rows input',detSec));
+						$('.rows input',detSec).focus();
 					}
 				}	
 			}
@@ -900,6 +908,7 @@
 			$$(selector.split(',').map(s => s.trim()).map(s => /checkbox|radio/.test(s) ? s + ':checked' : s).join(', ')).forEach(input => {
 				if(input.checked) checkedFocus(input);
 			});
+			$('#listSection .rows input').focus();
 		</script>
 	</body>
 </html>
