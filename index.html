@@ -126,7 +126,7 @@
 					to {margin-top:calc((var(--mg) * 2) + (var(--mg) / 2));}
 				}
 			}
-			@media screen and (max-width: 500px) and (orientation: portrait){
+			@media screen and (max-width: 770px) and (orientation: portrait){
 				:root {
 					--fn1:6vw; 	--fn2:7vw;	--dmy:25vw;
 					--mg:3.2vw;	--mg2:calc(var(--fn2) / 2);
@@ -149,7 +149,7 @@
 				section header div label h1 {margin:0;}
 				#listSection .h1Hid {display:flex;margin:0 auto}
 
-				.showDetail {animation:showDetail .3s forwards}
+				.detailShowDetail {animation:detailShowDetail .3s forwards}
 				.detailShowList {animation:detailShowList .35s forwards}
 				.listShowDetail {animation:listShowDetail 1.5s forwards}
 				.listShowList {animation:listShowList .3s forwards}
@@ -164,7 +164,7 @@
 				.sectionZoom {height:80vh;border-radius:var(--mg);animation:zooming .3s forwards}
 				@keyframes zooming { from {transform:scale(1);} to {transform:scale(.94);} }
 				@keyframes popRising { from {height:25%;} to {height:30%;} }
-				@keyframes showDetail { from {left:150px;} to {left:0;} }
+				@keyframes detailShowDetail { from {left:150px;} to {left:0;} }
 				@keyframes detailShowList { from {left:30vw;} to {left:100vw;} }
 				@keyframes listShowDetail { from {left:0;} to {left:-100px;} }
 				@keyframes listShowList { from {left:-100px;} to {left:0;} }
@@ -447,14 +447,20 @@
 				}
 			}
 			function buttonBack(input){
-				if(input.type === 'search'||input.type === 'text') return;
+				listSec.style.display = 'block';
 				listSec.classList.remove('listShowDetail');
 				listSec.classList.add('listShowList');
 				listSec.style.display = 'block';
-				detSec.classList.remove('showDetail');
+				detSec.classList.remove('detailShowDetail');
 				detSec.classList.add('detailShowList');
-				//detSec.style.display = 'none';
 				checkedFocus($('header input[data-btn=side]',listSec));
+				listSec.addEventListener('animationend', () => {
+					listSec.classList.remove('listShowList');
+				}, { once: true });
+				detSec.addEventListener('animationend', () => {
+					detSec.classList.remove('detailShowList');
+					detSec.style.display = 'none';
+				}, { once: true });
 			}
 			function buttonDelete(input){
 				if((input.name === 'item' || input.name === 'copy') || input.dataset.btn === 'delete') setTimeout(()=>{
@@ -484,7 +490,7 @@
 				else {
 					listSec.style.display = 'none';
 					detSec.classList.add('sectionZoom');
-					detSec.classList.remove('showDetail');
+					detSec.classList.remove('detailShowDetail');
 				}
 				checkedFocus($('#pop input'));
 			}
@@ -602,11 +608,7 @@
 				if(!e.target.matches(selector)) return;
 				const input = e.target;
 				const iconSec = [];
-				if(input.type==='text'||input.type==='search'){
-					//alert(1);
-					e.preventDefault();
-				}
-				else if(input.matches(selector)){
+				if(input.matches(selector)){
 					const rows = ['item','copy'].includes(input.name);
 					const sid = input.closest('section').id;
 					if (multiSelect && rows) {
@@ -620,9 +622,6 @@
 							input.closest('label')?.classList.add('checked','focused');
 						}
 						totTextSel(input.closest('section'));
-					}
-					else if(input.type==='text'||input.type==='search'){
-						e.preventDefault();
 					}
 					else if(!(multiSelect && !rows)){
 						//alert(1);
@@ -810,13 +809,21 @@
 							}
 						}
 						else if(input.name === 'item' && (display(detSec) === 'none' || leftPos(detSec) > '200px')) {
-							//listSec.style.display = 'none';
+
 							listSec.classList.remove('listShowList');
 							listSec.classList.add('listShowDetail');
 							detSec.classList.remove('detailShowList');
-							detSec.classList.add('showDetail');
+							detSec.classList.add('detailShowDetail');
 							detSec.style.display = 'block';
 							checkedFocus($('.rows input',detSec));
+
+							listSec.addEventListener('animationend', () => {
+								listSec.classList.remove('listShowDetail');
+								listSec.style.display = 'none';
+							}, { once: true });
+							detSec.addEventListener('animationend', () => {
+								detSec.classList.remove('detailShowDetail');
+							}, { once: true });
 						}
 						else if(input.name === 'nav' && display(listSec)==='none') {
 							navSec.style.display = 'none';
@@ -867,27 +874,29 @@
 					}
 
 				}
-				else if ((input.type === 'search' || input.type === 'text')) {
-					//alert(1);
-					//e.preventDefault();
-					//return;
-				}
 				else if (input.closest('form.rows')){
 					if (section === 'navSection' && display(listSec) === 'none') {
 						navSec.style.display = 'none';
 						listSec.style.display = 'block';
 					}
-					//else if (detSec && display(detSec) === 'none' && section === 'listSection') {
-					else if (detSec && (display(detSec) === 'none' || leftPos(detSec) > '200px') && section === 'listSection') {
-						setTimeout(()=>{
-							listSec.classList.remove('listShowList');
-							listSec.classList.add('listShowDetail');
-							detSec.classList.remove('detailShowList');
-							detSec.classList.add('showDetail');
-							detSec.style.display = 'block';
-							checkedFocus($('.rows input',detSec));
-							$('.rows input',detSec).focus();
-						},50);
+					else if (detSec && (display(detSec) === 'none' || leftPos(detSec) > '200px')) {
+						
+						listSec.classList.remove('listShowList');
+						listSec.classList.add('listShowDetail');
+						detSec.classList.remove('detailShowList');
+						detSec.classList.add('detailShowDetail');
+						detSec.style.display = 'block';
+						checkedFocus($('.rows input',detSec));
+						$('.rows input',detSec).focus();
+
+						listSec.addEventListener('animationend', () => {
+							listSec.classList.remove('listShowDetail');
+							listSec.style.display = 'none';
+						}, { once: true });
+						detSec.addEventListener('animationend', () => {
+							detSec.classList.remove('detailShowDetail');
+						}, { once: true });
+
 					}
 				}	
 			}
@@ -895,13 +904,9 @@
 				if(window.innerWidth>1175){
 					navSec.style.display = listSec.style.display = detSec.style.display = 'block';
 				}
-				else if(window.innerWidth<1175 && window.innerWidth>500){
+				else if(window.innerWidth<1175 && window.innerWidth>770){
 					listSec.style.display = detSec.style.display = 'block';
 					navSec.style.display = 'none';
-				}
-				else if(window.innerWidth<500){
-					navSec.style.display = detSec.style.display = 'none';
-					listSec.style.display = 'block';
 				}
 			}
 			
@@ -914,6 +919,8 @@
 			document.addEventListener('visibilitychange', () => {
 				if (document.hidden) multiSelect = false;
 			});
+
+			//this is the fucking problem
 			window.addEventListener('resize', handleResize);
 
 			$$(selector.split(',').map(s => s.trim()).map(s => /checkbox|radio/.test(s) ? s + ':checked' : s).join(', ')).forEach(input => {
