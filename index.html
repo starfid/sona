@@ -145,6 +145,10 @@
 				#navSection form div.head:first-of-type {margin-top:calc((var(--mg) * 2) + (var(--mg) / 2))}
 				#detailSection {display:none;position:absolute;z-index:1;top:0;width:100vw;}
 				#listSection {display:block}
+				#listSection header {grid-template-columns: 20% auto 20%;}
+				section header div label h1 {margin:0;}
+				#listSection .h1Hid {display:flex;margin:0 auto}
+
 				.showDetail {animation:showDetail .3s forwards}
 				.detailShowList {animation:detailShowList .35s forwards}
 				.listShowDetail {animation:listShowDetail 1.5s forwards}
@@ -224,9 +228,6 @@
 			</section>
 			<section id="listSection">
 				<header>
-					<div class="h1Hid">
-						<label><h1>Starfid</h1></label>						
-					</div>
 					<div class="deskHid">
 						<label class="btn">
 							<input type="radio" name="iBtn" data-btn="side">
@@ -234,6 +235,9 @@
 								<path d="M10 90 H90 V10 H10 Z M40 90 V10 M18 20 H32 M18 30 H32 M18 40 H32" />
 							</svg>
 						</label>
+					</div>
+					<div class="h1Hid">
+						<label><h1>Starfid</h1></label>						
 					</div>
 					<div class="hRight">
 						<label class="btn mobHid">
@@ -863,6 +867,11 @@
 					}
 
 				}
+				else if ((input.type === 'search' || input.type === 'text')) {
+					//alert(1);
+					//e.preventDefault();
+					//return;
+				}
 				else if (input.closest('form.rows')){
 					if (section === 'navSection' && display(listSec) === 'none') {
 						navSec.style.display = 'none';
@@ -870,13 +879,15 @@
 					}
 					//else if (detSec && display(detSec) === 'none' && section === 'listSection') {
 					else if (detSec && (display(detSec) === 'none' || leftPos(detSec) > '200px') && section === 'listSection') {
-						listSec.classList.remove('listShowList');
-						listSec.classList.add('listShowDetail');
-						detSec.classList.remove('detailShowList');
-						detSec.classList.add('showDetail');
-						detSec.style.display = 'block';
-						checkedFocus($('.rows input',detSec));
-						$('.rows input',detSec).focus();
+						setTimeout(()=>{
+							listSec.classList.remove('listShowList');
+							listSec.classList.add('listShowDetail');
+							detSec.classList.remove('detailShowList');
+							detSec.classList.add('showDetail');
+							detSec.style.display = 'block';
+							checkedFocus($('.rows input',detSec));
+							$('.rows input',detSec).focus();
+						},50);
 					}
 				}	
 			}
