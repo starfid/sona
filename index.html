@@ -624,7 +624,6 @@
 						totTextSel(input.closest('section'));
 					}
 					else if(!(multiSelect && !rows)){
-						//alert(1);
 						input.closest('label')?.classList.add('focused');
 					}
 					if(input.name=='iBtn'){
@@ -786,9 +785,6 @@
 					case 'Escape':
 						buttonCancel(input);
 					break;
-					case 'Backspace':
-						buttonBack(input);
-					break;
 					case 'Shift':
 					//case 'Control':
 						if(input.type==='checkbox') {
@@ -832,7 +828,7 @@
 						}
 					break;
 					case 'Delete':
-						buttonDelete(input);
+						if(!(input.type==='text'||input.type==='search')) buttonDelete(input);
 					break;
 				}
 			}
