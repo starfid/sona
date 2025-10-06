@@ -12,7 +12,7 @@
 		<style>
 			/*:root {--bhg:#0063E2;}*/:root {--bhg:#000000;}
 			:root {
-				--bg:#FAFAF9;	--cl:#000000;	--cl2:#858584;	--fn1:1.1vw;	--fn2:1.7vw;	--brC:#f3f3f2;		--nvB:#E1E0E1;
+				--bg:#FFFFFF;	--cl:#000000;	--cl2:#858584;	--fn1:1.1vw;	--fn2:1.7vw;	--brC:#f3f3f2;		--nvB:#E1E0E1;
 				--chg:#FFFFFF;	--cck:#000000;	--bck:#e7e7e5;	--mg:.7vw;	--mg2:calc(var(--fn2) / 2);		--dmy:5.2vw;
 			}
 			html {-webkit-tap-highlight-color: transparent;}
@@ -85,7 +85,6 @@
 			.btn.focused svg.delBtn, .btn svg.delBtn:hover {stroke:red;stroke-width:8}
 			.btn.focused svg.delBtn {stroke:red;}
 			.searchFrm label.focused {background-color:transparent;color:var(--cl)}
-			.rows label.focused {animation:focusing .4s forwards}
 			/*
 			#listSection fieldset .rows, #detailSection fieldset .rows {
 				display:grid;grid-template-columns:repeat(2, 1fr);gap:1vh;
@@ -103,7 +102,6 @@
 			#pop .focused {background-color:var(--bg);color:var(--cl);font-weight:bolder}
 
 			@keyframes popRising { from {top:51%;} to {top:50%;} }
-			@keyframes focusing { from {background-color:var(--bck);} to {background-color:var(--bhg);} }
 			
 			@media screen and (max-width: 1175px){
 				:root {
@@ -181,8 +179,7 @@
 				.btn.focused svg, .btn svg:hover, .btn.checked, .btn.checked, .iconOn {stroke:var(--chg);}
 				#layer {background-color: rgba(0,0,0,0.7);}
 				#pop, #pop header {background-color:var(--bck)}
-				#pop .focused {background-color:var(--bck);}
-				
+				#pop .focused {background-color:var(--bck);}				
 			}
 		</style>
 	</head>
@@ -481,7 +478,6 @@
 				$('main').style.backgroundColor = $('body').style.backgroundColor = '#000000';
 				$('meta[name="theme-color"]').setAttribute('content','#000000');
 				toggleLayer();
-				//if(display(listSec)==='block'){
 				if(leftPos(listSec)==='0px'){
 					listSec.style.display = 'block';
 					listSec.classList.add('sectionZoom');
@@ -868,15 +864,13 @@
 						case 'popCancel':
 						case 'popSend':	buttonCancel(input); break;
 					}
-
 				}
 				else if (input.closest('form.rows')){
 					if (section === 'navSection' && display(listSec) === 'none') {
 						navSec.style.display = 'none';
 						listSec.style.display = 'block';
 					}
-					else if (detSec && (display(detSec) === 'none' || leftPos(detSec) > '200px')) {
-						
+					else if (detSec && (display(detSec) === 'none' || leftPos(detSec) > '200px')) {						
 						listSec.classList.remove('listShowList');
 						listSec.classList.add('listShowDetail');
 						detSec.classList.remove('detailShowList');
@@ -892,7 +886,6 @@
 						detSec.addEventListener('animationend', () => {
 							detSec.classList.remove('detailShowDetail');
 						}, { once: true });
-
 					}
 				}	
 			}
@@ -906,18 +899,14 @@
 				}
 			}
 			
+			window.addEventListener('resize', handleResize);
 			document.addEventListener('change', handleChange);
 			document.addEventListener('focusin', handleFocusIn);
 			document.addEventListener('focusout', handleFocusOut);
 			document.addEventListener('keydown', handleKeyDown);
 			document.addEventListener('keyup', handleKeyUp);
 			document.addEventListener('click', handleClick);
-			document.addEventListener('visibilitychange', () => {
-				if (document.hidden) multiSelect = false;
-			});
-
-			//this is the fucking problem
-			window.addEventListener('resize', handleResize);
+			document.addEventListener('visibilitychange', () => {if (document.hidden) multiSelect = false;});
 
 			$$(selector.split(',').map(s => s.trim()).map(s => /checkbox|radio/.test(s) ? s + ':checked' : s).join(', ')).forEach(input => {
 				if(input.checked) checkedFocus(input);
