@@ -127,9 +127,9 @@
 			@media screen and (max-width: 770px) and (orientation: portrait){
 				:root {
 					--fn1:6vw; 	--fn2:7vw;	--dmy:25vw;
-					--mg:3.2vw;	--mg2:calc(var(--fn2) / 2);
+					--mg:3.2vw;	--mg2:calc(var(--fn2) / 2);	--tTop:50%;
 				}
-				main {display:block}
+				main {display:block;background-color:#000000!important;min-height:60vh}
 				#listSection header div:last-child label:not(.deskHid):not(.tabHid).last svg
 				section header div label svg {margin-right:calc(var(--mg) * 2);}
 				section header .hRight label.secondLast svg {margin-right: calc(var(--mg) * 2);}
@@ -152,8 +152,24 @@
 				.listShowDetail {animation:listShowDetail .7s forwards}
 				.listShowList {animation:listShowList .3s forwards}
 				.mobHid {display:none}
+				#pop header div {padding:0 3vw}
+				#pop fieldset form {display:block}
+				#pop fieldset form label {
+					border-top:solid 1px var(--bck);border-bottom:0;
+					border-left:solid 1px var(--bck);border-right:solid 1px var(--bck);
+					padding:var(--mg);border-radius:0;flex-direction: row-reverse;
+				}
+				#pop fieldset form label:first-child {
+					border-top-left-radius:1vh;border-top-right-radius:1vh;
+				}
+				#pop fieldset form label:last-child {
+					border-bottom:solid 1px var(--bck);
+					border-bottom-left-radius:1vh;border-bottom-right-radius:1vh;
+				}
+				#pop fieldset form label span {text-transform: capitalize;}
+				#pop .mobHid {display:flex;align-items:center;justify-content:space-between;}
 				section header .tabHid {display:flex}
-				#dots {position:absolute;z-index:1;top:100px;left:100px;background-color:red;}
+				#dots {position:absolute;z-index:1;top:100px;left:100px;}
 				#pop {
 					position:absolute;bottom:0;min-width:auto;transform:none;top:auto;left:auto;
                 			background-color:white;width:100%;left:0;border-radius:2vh;border-width:0;
@@ -161,7 +177,7 @@
 				}
 				.sectionZoom {height:80vh;border-radius:var(--mg);animation:zooming .3s forwards}
 				@keyframes zooming { from {transform:scale(1);} to {transform:scale(.94);} }
-				@keyframes popRising { from {height:25%;} to {height:30%;} }
+				@keyframes popRising { from {height:25%;} to {height:var(--tTop);} }
 				@keyframes detailShowDetail { from {left:150px;} to {left:0;} }
 				@keyframes detailShowList { from {left:30vw;} to {left:100vw;} }
 				@keyframes listShowDetail { from {left:0;} to {left:-45px;} }
@@ -399,6 +415,7 @@
 						</label>
 					</div>
 				</header>
+				<fieldset></fieldset>
 			</section>
 		</div>
 		<script>
@@ -419,16 +436,79 @@
 			let selDown = true;
 			let lastSection = null;
 
-			function buttonCompose(input){
-				cancelMulti(input);
-				$('#pop header .hRight label').style.visibility = 'visible';
+			function setPop(percent){
+				$('#pop header .hRight label').style.visibility = 'hidden';
+				//$('main').style.backgroundColor = '#000000';
+				$('meta[name="theme-color"]').setAttribute('content','#000000');
+				document.documentElement.style.setProperty("--tTop", percent);
 				toggleLayer();
-				lastSection = input.closest('section');
+				if(leftPos(listSec)==='0px'){
+					listSec.style.display = 'block';
+					listSec.classList.add('sectionZoom');
+					listSec.classList.remove('listShowList');
+					section = listSec;
+				}
+				else {
+					listSec.style.display = 'none';
+					detSec.classList.add('sectionZoom');
+					detSec.classList.remove('detailShowDetail');
+					section = detSec;
+				}
+			}
+			function buttonDots(){
+				setPop('50%');
 				checkedFocus($('#pop input'));
+				$('#pop fieldset').innerHTML = "<form><form>";
+				$$('header .hRight .mobHid',section).forEach(lbl=>{
+					$('#pop fieldset form').appendChild(lbl.cloneNode(true));
+				});
+				$$('#pop fieldset form label').forEach(lbl=>{
+					const label = document.createElement('span');
+					label.innerText = $('input',lbl).dataset.btn;
+					lbl.appendChild(label);
+				});
+			}
+			function buttonMulti(e){
+				e.preventDefault();
+				const input = e.target;
+				const label = input.closest('label');
+				const svg = input.nextElementSibling;
+				const section = input.closest('section');
+				if(section.id==='pop'){
+					buttonCancel(input);
+				}
+				svg.classList.toggle('iconOn');
+				if(!svg.classList.contains('iconOn') || $$('.rows .select.focused ',section).length > 1){
+					multiSelect = false;
+					svg.classList.remove('iconOn');
+					label.classList.remove('focused');					
+					const lastInp = $('.rows .focused input,.rows .checked input',section);
+					clearbyClick(section,lastInp);
+					checkedFocus(lastInp);
+				}
+				else {
+					multiSelect = true;
+				}
+			}
+			function buttonCompose(input){
+				const lastSection = input.closest('section');
+				if(lastSection.id==='pop'){
+					buttonCancel(input);
+					setTimeout(()=>{
+						setPop('96%');
+					},100);
+				}
+				else {
+					cancelMulti(input);
+					$('#pop header .hRight label').style.visibility = 'visible';
+					toggleLayer();
+					checkedFocus($('#pop input'));
+				}
 			}
 			function buttonCancel(input) {
 				toggleLayer();
-				$('main').style.backgroundColor = $('body').style.backgroundColor = bgCol;
+				$('#pop fieldset form').parentNode.removeChild($('#pop fieldset form'));
+				//$('main').style.backgroundColor = bgCol;
 				const metaTheme = document.querySelector('meta[name="theme-color"]');
 				if (metaTheme) metaTheme.setAttribute('content', bgCol);
 				let target = null;
@@ -479,48 +559,12 @@
 					checkedFocus($('.rows input',section));
 				},200);
 			}
-			function buttonDots(){
-				$('#pop header .hRight label').style.visibility = 'hidden';
-				$('main').style.backgroundColor = $('body').style.backgroundColor = '#000000';
-				$('meta[name="theme-color"]').setAttribute('content','#000000');
-				toggleLayer();
-				if(leftPos(listSec)==='0px'){
-					listSec.style.display = 'block';
-					listSec.classList.add('sectionZoom');
-					listSec.classList.remove('listShowList');
-				}
-				else {
-					listSec.style.display = 'none';
-					detSec.classList.add('sectionZoom');
-					detSec.classList.remove('detailShowDetail');
-				}
-				checkedFocus($('#pop input'));
-			}
 			function buttonSide() {
 				const showNav = display(navSec) !== 'block';
 				listSec.classList.remove('listShowList');
 				navSec.style.display = showNav ? 'block' : 'none';
 				listSec.style.display = showNav ? 'none' : 'block';
 				checkedFocus($(`${showNav ? '#navSection' : '#listSection'} header input`));
-			}
-			function buttonMulti(e){
-				e.preventDefault();
-				const input = e.target;
-				const label = input.closest('label');
-				const svg = input.nextElementSibling;
-				const section = input.closest('section');
-				svg.classList.toggle('iconOn');
-				if(!svg.classList.contains('iconOn') || $$('.rows .select.focused ',section).length > 1){
-					multiSelect = false;
-					svg.classList.remove('iconOn');
-					label.classList.remove('focused');					
-					const lastInp = $('.rows .focused input,.rows .checked input',section);
-					clearbyClick(section,lastInp);
-					checkedFocus(lastInp);
-				}
-				else {
-					multiSelect = true;
-				}
 			}
 			function checkedFocus(el) {
 				if(!el) return;
@@ -884,7 +928,6 @@
 						detSec.style.display = 'block';
 						checkedFocus($('.rows input',detSec));
 						$('.rows input',detSec).focus();
-
 						listSec.addEventListener('animationend', () => {
 							listSec.classList.remove('listShowDetail');
 							listSec.style.display = 'none';
