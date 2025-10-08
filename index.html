@@ -152,7 +152,9 @@
 				.listShowDetail {animation:listShowDetail .7s forwards}
 				.listShowList {animation:listShowList .3s forwards}
 				.mobHid {display:none}
+				#pop header {padding: var(--mg) var(--mg) 0 var(--mg);}
 				#pop header div {padding:0 3vw}
+				#pop fieldset {padding: calc((2 * var(--mg)) + var(--fn2)) 0 0 0;}
 				#pop fieldset form {display:block}
 				#pop fieldset form label {
 					border-top:solid 1px var(--bck);border-bottom:0;
@@ -438,7 +440,6 @@
 
 			function setPop(percent){
 				$('#pop header .hRight label').style.visibility = 'hidden';
-				//$('main').style.backgroundColor = '#000000';
 				$('meta[name="theme-color"]').setAttribute('content','#000000');
 				document.documentElement.style.setProperty("--tTop", percent);
 				toggleLayer();
@@ -474,9 +475,7 @@
 				const label = input.closest('label');
 				const svg = input.nextElementSibling;
 				const section = input.closest('section');
-				if(section.id==='pop'){
-					buttonCancel(input);
-				}
+				if(section.id==='pop') buttonCancel(input);
 				svg.classList.toggle('iconOn');
 				if(!svg.classList.contains('iconOn') || $$('.rows .select.focused ',section).length > 1){
 					multiSelect = false;
@@ -507,8 +506,8 @@
 			}
 			function buttonCancel(input) {
 				toggleLayer();
-				$('#pop fieldset form').parentNode.removeChild($('#pop fieldset form'));
-				//$('main').style.backgroundColor = bgCol;
+				const frm = $('#pop fieldset form');
+				if(frm) frm.parentNode.removeChild(frm);
 				const metaTheme = document.querySelector('meta[name="theme-color"]');
 				if (metaTheme) metaTheme.setAttribute('content', bgCol);
 				let target = null;
@@ -546,8 +545,9 @@
 				}, { once: true });
 			}
 			function buttonDelete(input){
+				const section = input.closest('section');
+				if(section.id==='pop') buttonCancel(input);
 				if((input.name === 'item' || input.name === 'copy') || input.dataset.btn === 'delete') setTimeout(()=>{
-					const section = input.closest('section');
 					const selection = $$('.rows .focused,.rows .checked',section);
 					const totSelection = selection.length || 1;
 					if(section !== 'navSection' && confirm('Delete ' + totSelection + ' selection in ' + section.id)){
