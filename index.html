@@ -433,7 +433,6 @@
 			const toggleLayer = () => $('#layer').classList.toggle('layerToggle');
 			const display = (el) => {return window.getComputedStyle(el).display;}
 			const leftPos = (el) => {return window.getComputedStyle(el).left;}
-			
 			let multiSelect = false;
 			let selDown = true;
 			let lastSection = null;
@@ -720,8 +719,8 @@
 							totTextSel(parentSection);
 						}						
 						else {
-							e.preventDefault();
 							const nextForm = parentForm.nextElementSibling;
+							if(!(parentForm && parentSection.id == 'pop')) e.preventDefault();
 							if(nextForm) {
 								checkedFocus($('input', nextForm));
 							}
@@ -749,7 +748,7 @@
 								checkedFocus(inputTarget);
 								const isHeader = inputTarget?.closest('div');								
 								if(isHeader && display(isHeader) === 'none') {
-									checkedFocus($('input', isHeader.nextElementSibling));
+									checkedFocus($('.hRight input', isHeader.closest('header')));
 								}
 							}
 							else if(parentSection.id === 'navSection'){
