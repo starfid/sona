@@ -10,7 +10,7 @@
 		<meta content="width=device-width,initial-scale=1,maximum-scale=1,shrink-to-fit=no,user-scalable=0,viewport-fit=cover" name="viewport">
 		<link rel="icon" href="data:,">
 		<style>
-			/*:root {--bhg:#0063E2;}*/:root {--bhg:#000000;}
+			/*:root {--bhg:#0063E2;}*/:root {--bhg:#006141;}
 			:root {
 				--bg:#FFFFFF;	--cl:#000000;	--cl2:#858584;	--fn1:1.1vw;	--fn2:1.7vw;	--brC:#f3f3f2;		--nvB:#E1E0E1;
 				--chg:#FFFFFF;	--cck:#000000;	--bck:#e7e7e5;	--mg:.7vw;	--mg2:calc(var(--fn2) / 2);		--dmy:5.2vw;
@@ -100,6 +100,7 @@
 				background-color:var(--bg);width:38.2vw;height:80vh;box-sizing:border-box;
 			}
 			#pop .focused {background-color:var(--bg);color:var(--cl);font-weight:bolder}
+			#pop header {padding: calc(var(--mg)*1.5) calc(var(--mg)*2) 0 calc(var(--mg)*2);}
 
 			@keyframes popRising { from {top:51%;} to {top:50%;} }
 			
@@ -489,8 +490,7 @@
 				}
 			}
 			function buttonCompose(input){
-				const lastSection = input.closest('section');
-				if(lastSection.id==='pop'){
+				if(input.closest('section').id==='pop'){//compose inside pop
 					buttonCancel(input);
 					setTimeout(()=>{
 						setPop('96%');
@@ -514,7 +514,7 @@
 					target = (display(listSec) === 'block') ? listSec : detSec;
 				}
 				else {
-					target = lastSection;
+					target = lastSection||$('#listSection');
 				}
 				if(target) {
 					target.classList.remove('sectionZoom');
@@ -526,6 +526,7 @@
 						checkedFocus($('header input[data-btn=compose]',target));
 					}
 				}
+				lastSection = null;
 			}
 			function buttonBack(input){
 				listSec.style.display = 'block';
@@ -586,7 +587,8 @@
 						$('input', label).checked = false;
 					}
 				});
-				selDown = true; lastSection = null; clrTextSel(section);
+				if(multiSelect) {lastSection = null;}
+				selDown = true; clrTextSel(section);
 			}
 			function clearbyClick(section, input){
 				const selection = $$('.rows .focused',section);
@@ -596,7 +598,8 @@
 					$('input', label).checked = false;
 				});
 				clrTextSel(section);
-				selDown = true; lastSection = null;
+				selDown = true;
+				if(multiSelect) {lastSection = null;}
 				if(input.name == 'iBtn'){
 					checkedFocus($('.rows input',section));
 				}
@@ -672,8 +675,13 @@
 						input.closest('label')?.classList.add('focused');
 					}
 					if(input.name=='iBtn'){
+						if(sid !== 'pop') {
+							console.log(input.closest('section'));
+							lastSection = input.closest('section');
+						}
 						e.preventDefault();
 					}
+					
 				}
 			}
 			function handleFocusOut(e) {
