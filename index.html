@@ -438,6 +438,7 @@
 			let selections = [];
 			let selDown = true;
 			let lastSection = null;
+			let backAnimating = false;
 
 			function setPop(percent){
 				$('#pop header .hRight label').style.visibility = 'hidden';
@@ -505,7 +506,7 @@
 					checkedFocus($('#pop input'));
 				}
 			}
-			function buttonCancel(input) {				
+			function buttonCancel(input) {
 				toggleLayer();
 				const frm = $('#pop fieldset form');
 				if(frm) frm.parentNode.removeChild(frm);
@@ -513,12 +514,20 @@
 				if (metaTheme) metaTheme.setAttribute('content', bgCol);
 				let target = null;
 				if (display(navSec) === 'none' && display(detSec) === 'none') {
-					target = (display(listSec) === 'block') ? listSec : detSec;
+					target = listSec;
+					//target = (display(listSec) === 'block') ? listSec : detSec;
+				}
+				else if (display(navSec) === 'none' && display(listSec) === 'none') {
+					target = detSec;
 				}
 				else {
 					target = lastSection||$('#listSection');
 				}
 				if(target) {
+					listSec.classList.remove('listShowDetail');
+					listSec.style.display = 'none';
+					detSec.classList.remove('detailShowDetail');
+					backAnimating = false;
 					target.classList.remove('sectionZoom');
 					const inputDots = $('header input[data-btn=dots]',target);
 					if($('header input[data-btn=dots]',target) && display(inputDots.closest('label')) === 'flex'){
@@ -531,6 +540,8 @@
 				//lastSection = null;
 			}
 			function buttonBack(input){
+				//alert(backAnimating);
+				if(backAnimating) return;
 				listSec.style.display = 'block';
 				listSec.classList.remove('listShowDetail');
 				listSec.classList.add('listShowList');
@@ -580,7 +591,10 @@
 				$$('input[name='+el.name+']', el.closest('form, header')).forEach(
 					el => el.closest('label').classList.remove('checked')
 				);
-				if(el.checked && notSearch) parentLabel.classList.add('checked');
+				if(el.checked && notSearch) {
+					parentLabel.classList.add('checked');
+					selections = [parentLabel];
+				}
 			}
 			function clearbyArrow(section) {
 				const selection = $$('.rows .focused',section);
@@ -956,12 +970,16 @@
 						detSec.classList.remove('detailShowList');
 						detSec.classList.add('detailShowDetail');
 						detSec.style.display = 'block';
-						
+
 						checkedFocus($('.rows input',detSec));
 						$('.rows input',detSec).focus();
+						listSec.addEventListener('animationstart', () => {
+							backAnimating = true;
+						});
 						listSec.addEventListener('animationend', () => {
 							listSec.classList.remove('listShowDetail');
 							listSec.style.display = 'none';
+							backAnimating = false;
 						}, { once: true });
 						detSec.addEventListener('animationend', () => {
 							detSec.classList.remove('detailShowDetail');
