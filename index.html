@@ -519,14 +519,21 @@
 				}
 				else if (display(navSec) === 'none' && display(listSec) === 'none') {
 					target = detSec;
+					listSec.classList.remove('listShowDetail');
+					listSec.style.display = 'none';
+					detSec.classList.remove('detailShowDetail');
+					$$('.rows .focused',detSec).forEach(fc=>{
+						fc.classList.remove('focused');
+					});
+					multiSelect = false;
 				}
 				else {
 					target = lastSection||$('#listSection');
 				}
 				if(target) {
-					listSec.classList.remove('listShowDetail');
-					listSec.style.display = 'none';
-					detSec.classList.remove('detailShowDetail');
+					//listSec.classList.remove('listShowDetail');
+					//listSec.style.display = 'none';
+					//detSec.classList.remove('detailShowDetail');
 					backAnimating = false;
 					target.classList.remove('sectionZoom');
 					const inputDots = $('header input[data-btn=dots]',target);
@@ -951,7 +958,7 @@
 					function clearCheck(){
 						const sect = input.closest('section');
 						$$('.rows .checked',sect).forEach(chk=>{
-							chk.classList.remove('checked');
+							chk.classList.remove('checked','focused');
 						});
 						selections = $$('.rows .focused',sect);
 					}
