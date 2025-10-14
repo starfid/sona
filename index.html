@@ -600,7 +600,7 @@
 				);
 				if(el.checked && notSearch) {
 					parentLabel.classList.add('checked');
-					selections = [parentLabel];
+					if(!multiSelect) selections = [parentLabel];
 				}
 			}
 			function clearbyArrow(section) {
