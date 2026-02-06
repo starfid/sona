@@ -10,15 +10,20 @@
 		<meta content="width=device-width,initial-scale=1,maximum-scale=1,shrink-to-fit=no,user-scalable=0,viewport-fit=cover" name="viewport">
 		<link rel="icon" href="data:,">
 		<style>
-			/*:root {--bhg:#0063E2;}*/:root {--bhg:#006141;}
+			:root {
+				--bhg:#000000;
+				/*--bhg:#0063E2;*/
+				/*--bhg:#006141;*/
+			}
 			:root {
 				--bg:#FFFFFF;	--cl:#000000;	--cl2:#858584;	--fn1:1.1vw;	--fn2:1.7vw;	--brC:#f3f3f2;		--nvB:#E1E0E1;
-				--chg:#FFFFFF;	--cck:#000000;	--bck:#e7e7e5;	--mg:.7vw;	--mg2:calc(var(--fn2) / 2);		--dmy:6.2vw;
+				--chg:#FFFFFF;	--cck:#000000;	--bck:#e7e7e5;	--mg:.9vw;	--mg2:calc(var(--fn2) / 2);		--cir:3.1vw;
 			}
 			html {-webkit-tap-highlight-color: transparent;}
 			body {margin:0;padding:0;font-family:arial;color:var(--cl);background:var(--bg)}
 			main, section header {display:grid}
-			main{grid-template-columns:23.5% auto 38.2%}
+			main{grid-template-columns:22% auto;}
+			main:has(#detailSection:not(:empty)) {grid-template-columns: 22% auto 39%;}
 			section {position:relative; height:100vh; overflow:hidden;background:var(--bg)}
 			label, #navSection form div.head {cursor:pointer;user-select:none;font-size:var(--fn1);}
 
@@ -30,14 +35,13 @@
 
 			#navSection form.rows {display: grid;grid-template-columns:repeat(2, 1fr);gap:1vh;color:var(--cl2)}
 			#navSection form * {display: block;box-sizing:border-box;}
-			#navSection form label.select {border:solid 1px var(--nvB);}
-			#navSection form div.head {color:var(--cl2);cursor:default;margin-left:var(--mg);font-weight:bolder;grid-column: 1 / -1;}
+			#navSection form label.select {border:solid 1px var(--nvB)}
+			#navSection form div.head {color:var(--cl2);cursor:default;margin-left:0/*var(--mg)*/;font-weight:bolder;grid-column: 1 / -1;}
 			#navSection form div.head:not(:first-of-type) {margin-top:calc(var(--mg) * 2)}
 			#navSection form div.head:first-of-type {margin-top:calc((var(--mg) * 2) + (var(--mg) / 2));animation:navToggle .2s forwards}
 
 			#listSection {border-left:1px solid var(--brC); border-right:1px solid var(--brC);}
-			#listSection form.rows label, #detailSection form.rows label {height:var(--dmy)}
-
+			
 			section header {
 				position:absolute; top:0; left:0; right:0; z-index:1;padding:var(--mg);
 				grid-template-columns:50% 50%;background-color:var(--bg);opacity:.97;
@@ -56,9 +60,9 @@
 			section header .hRight {justify-content: flex-end;}
 			section header .deskHid, section header .tabHid {display:none}
 
-			.searchFrm, .searchFrm label, section fieldset form.filters label, .rows label.checked, 
+			.searchFrm, .searchFrm label, fieldset form.filters label, .rows label.checked, 
 				.rows label.focused, #navSection form label.select, #pop {border-radius:1vh;}
-			.searchFrm {border:solid 1px var(--nvB);}
+			.searchFrm {border:solid 1px var(--brC)/*var(--nvB)*/;}
 			.searchFrm .deskHid {visibility:hidden}
 			.searchFrm label {padding:calc(var(--mg) * .68) var(--mg);display: flex;justify-content: space-between;}
 			.searchFrm label input {
@@ -67,15 +71,23 @@
 			}
 			.searchFrm label input::-webkit-search-cancel-button {display: none;}
 
-			section fieldset form {margin:0 var(--mg) var(--mg) var(--mg);padding:0}
-			section fieldset form label {display:block;padding:var(--mg);}
-			section fieldset form.filters {margin-left:0;margin-right:0;}
-			section fieldset form.filters label {margin-right:var(--mg)}
+			fieldset form {margin:0 var(--mg) var(--mg) var(--mg);padding:0}
+			fieldset form label {display:block;padding:var(--mg);}
+			fieldset form.filters {margin-left:0;margin-right:0;}
+			fieldset form.filters label {margin-right:var(--mg)}
 			
-			section fieldset form.filters label:first-child {margin-left:var(--mg)}
-			section fieldset form.filters label:last-child {margin-right:var(--mg)}
+			fieldset form.filters label:first-child {margin-left:var(--mg)}
+			fieldset form.filters label:last-child {margin-right:var(--mg)}
 			
-			section fieldset form.rows label {border-bottom:solid 1px var(--brC)}
+			fieldset form.rows label {border-bottom:solid 1px var(--nvB)}
+
+			fieldset .rows label.select {display:flex;align-items:stretch;gap:var(--mg);}
+			fieldset .rows label.select > div:first-of-type {width:var(--cir);height:var(--cir);display:flex;align-items:center;justify-content:center;border-radius:50%;background-color:var(--cl2);color:var(--bg);flex-shrink:0;}
+			fieldset .rows label.select > div:last-of-type {display:flex;flex-direction:column;gap:2px;flex:1;min-width:0;}
+			fieldset .rows label.select > div:last-of-type > dl {margin:0;padding:0;display:grid;grid-template-columns:auto auto;}
+			fieldset .rows label.select > div:last-of-type > dl > dt {margin:0;padding:0;word-break:break-all;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;}
+			fieldset .rows label.select > div:last-of-type > dl > dd {margin:0;padding:0;text-align:right;}
+			fieldset .rows label.select > div:last-of-type > div {display:-webkit-box;-webkit-line-clamp:2;min-height:calc(var(--fn1) * 2.3);-webkit-box-orient:vertical;overflow:hidden;}
 
 			.btn input[type=checkbox], .btn [type=radio], .select input[type=checkbox], .select input[type=radio]{position: absolute;left: -9999px;}
 			.checked {background-color:var(--bck);color:var(--cck);}
@@ -107,9 +119,10 @@
 			@media screen and (max-width: 1175px){
 				:root {
 					--fn1:2vw; 	--fn2:2.5vw;	--brC:#FAF9F7;	--bg:#FFFFFF;
-					--mg:1.1vw;	--mg2:calc(var(--fn2) / 2);	--dmy:7vw;
+					--mg:1.1vw;	--mg2:calc(var(--fn2) / 2);	--cir:5.5vw;
 				}
-				main {grid-template-columns:50% auto}
+				main {grid-template-columns:auto}
+				main:has(#detailSection:not(:empty)) {grid-template-columns:50% auto}
 				.searchFrm .deskHid {visibility:visible}
 				.searchFrm label {padding:var(--mg);}
 				.searchFrm label input {padding:0; appearance: none;}
@@ -127,7 +140,7 @@
 			}
 			@media screen and (max-width: 770px) and (orientation: portrait){
 				:root {
-					--fn1:6vw; 	--fn2:7vw;	--dmy:25vw;
+					--fn1:6vw; 	--fn2:7vw;	--dmy:25vw;	--cir:17vw;
 					--mg:3.2vw;	--mg2:calc(var(--fn2) / 2);	--tTop:50%;
 				}
 				main {display:block;background-color:#000000!important;min-height:60vh}
@@ -137,6 +150,7 @@
 				.searchFrm label {padding:calc(var(--mg) * .92) var(--mg);}
 				.filters {width:100vw;overflow: scroll; scrollbar-width:none;}
 				#navSection, #listSection {border-right:none;}
+				
 				#detailSection div:first-child {display:none}
 				#detailSection div:nth-child(2) {display:flex}
 				#detailSection div.hRight label.last {display:none}
@@ -146,8 +160,12 @@
 				#listSection {display:block}
 				#listSection header {grid-template-columns: 20% auto 20%;}
 				section header div label h1 {margin:0;}
+				
 				#listSection .h1Hid {display:flex;margin:0 auto}
-
+				
+				fieldset form {width:93.4vw;}
+				
+				
 				.detailShowDetail {animation:detailShowDetail .3s forwards}
 				.detailShowList {animation:detailShowList .35s forwards}
 				.listShowDetail {animation:listShowDetail .7s forwards}
@@ -158,15 +176,15 @@
 				#pop fieldset {padding: calc((2 * var(--mg)) + var(--fn2)) 0 0 0;}
 				#pop fieldset form {display:block}
 				#pop fieldset form label {
-					border-top:solid 1px var(--bck);border-bottom:0;
-					border-left:solid 1px var(--bck);border-right:solid 1px var(--bck);
+					border-top:solid 1px var(--nvB);border-bottom:0;
+					border-left:solid 1px var(--nvB);border-right:solid 1px var(--nvB);
 					padding:var(--mg);border-radius:0;flex-direction: row-reverse;
 				}
 				#pop fieldset form label:first-child {
 					border-top-left-radius:1vh;border-top-right-radius:1vh;
 				}
 				#pop fieldset form label:last-child {
-					border-bottom:solid 1px var(--bck);
+					border-bottom:solid 1px var(--nvB);
 					border-bottom-left-radius:1vh;border-bottom-right-radius:1vh;
 				}
 				#pop fieldset form label span {text-transform: capitalize;}
@@ -210,7 +228,7 @@
 						<label class="btn">
 							<input type="radio" name="iBtn" data-btn="side">
 							<svg viewbox="0 0 100 100">
-								<path d="M10 10h80v5H10zM10 40h80v5H10zM10 70h50v5H10z"/>
+								<path d="M 10 26 H 90 V 31 H 10 Z M 10 47 H 90 V 52 H 10 Z M 10 68 H 60 V 73 H 10 Z" />
 							</svg>
 						</label>
 					</div>
@@ -226,19 +244,19 @@
 				</header>
 				<fieldset>
 					<form class="rows">
-						<div class="head">Division 1</div>
-							<label class="select"><input type="radio" name="nav" checked>Task 1</label>
-						<div class="head">Division 2</div>
-							<label class="select"><input type="radio" name="nav">Task 1</label>
-							<label class="select"><input type="radio" name="nav">Task 2</label>
-						<div class="head">Division 3</div>
-							<label class="select"><input type="radio" name="nav">Task 1</label><label class="select"><input type="radio" name="nav">Task 2</label>
-							<label class="select"><input type="radio" name="nav">Task 3</label><label class="select"><input type="radio" name="nav">Task 4</label>
-						<div class="head">Division 4</div>
-							<label class="select"><input type="radio" name="nav">Task 1</label><label class="select"><input type="radio" name="nav">Task 2</label>
-							<label class="select"><input type="radio" name="nav">Task 3</label><label class="select"><input type="radio" name="nav">Task 4</label>
-						<div class="head">Division 5</div>
-							<label class="select"><input type="radio" name="nav">Task 1</label>
+						<div class="head">Himenaeos</div>
+							<label class="select"><input type="radio" name="nav" checked>Interdum</label>
+						<div class="head">Vehicula</div>
+							<label class="select"><input type="radio" name="nav">Pharetra</label>
+							<label class="select"><input type="radio" name="nav">Tristique</label>
+						<div class="head">Rutrum</div>
+							<label class="select"><input type="radio" name="nav">Nisl</label><label class="select"><input type="radio" name="nav">Nostra</label>
+							<label class="select"><input type="radio" name="nav">Commodo</label><label class="select"><input type="radio" name="nav">Egestas</label>
+						<div class="head">Risus</div>
+							<label class="select"><input type="radio" name="nav">Rhoncus</label><label class="select"><input type="radio" name="nav">Eget</label>
+							<label class="select"><input type="radio" name="nav">Imperdiet</label><label class="select"><input type="radio" name="nav">Congue</label>
+						<div class="head">Finibus</div>
+							<label class="select"><input type="radio" name="nav">Accumsan</label>
 					</form>
 				</fieldset>
 			</section>
@@ -248,7 +266,10 @@
 						<label class="btn">
 							<input type="radio" name="iBtn" data-btn="side">
 							<svg viewbox="0 0 100 100">
+								<!--
 								<path d="M10 10h80v5H10zM10 40h80v5H10zM10 70h50v5H10z"/>
+								-->
+								<path d="M 10 26 H 90 V 31 H 10 Z M 10 47 H 90 V 52 H 10 Z M 10 68 H 60 V 73 H 10 Z" />
 							</svg>
 						</label>
 					</div>
@@ -299,23 +320,65 @@
 						</label>
 					</form>
 					<form class="filters">
-						<label class="select"><input type="radio" name="filter" checked>Filter1</label><label class="select"><input type="radio" name="filter">Filter2</label>
-						<label class="select"><input type="radio" name="filter">Filter3</label><label class="select"><input type="radio" name="filter">Filter4</label>
-						<label class="select"><input type="radio" name="filter">Filter5</label>
+						<label class="select"><input type="radio" name="filter" checked>Potenti</label><label class="select"><input type="radio" name="filter">Nibh</label>
+						<label class="select"><input type="radio" name="filter">Velit</label><label class="select"><input type="radio" name="filter">Scelerisque</label>
+						<label class="select"><input type="radio" name="filter">Eros</label>
 					</form>
 					<form class="rows">
-						<label class="select"><input type="checkbox" name="item" checked>Product 1</label><label class="select"><input type="checkbox" name="item">Product 2</label>
-						<label class="select"><input type="checkbox" name="item">Product 3</label><label class="select"><input type="checkbox" name="item">Product 4</label>
-						<label class="select"><input type="checkbox" name="item">Product 5</label><label class="select"><input type="checkbox" name="item">Product 6</label>
-						<label class="select"><input type="checkbox" name="item">Product 7</label><label class="select"><input type="checkbox" name="item">Product 8</label>
-						<label class="select"><input type="checkbox" name="item">Product 9</label><label class="select"><input type="checkbox" name="item">Product 10</label>
-						<label class="select"><input type="checkbox" name="item">Product 11</label><label class="select"><input type="checkbox" name="item">Product 12</label>
-						<label class="select"><input type="checkbox" name="item">Product 13</label><label class="select"><input type="checkbox" name="item">Product 14</label>
-						<label class="select"><input type="checkbox" name="item">Product 15</label><label class="select"><input type="checkbox" name="item">Product 16</label>
-						<label class="select"><input type="checkbox" name="item">Product 17</label><label class="select"><input type="checkbox" name="item">Product 18</label>
-						<label class="select"><input type="checkbox" name="item">Product 19</label><label class="select"><input type="checkbox" name="item">Product 20</label>
-						<label class="select"><input type="checkbox" name="item">Product 21</label>
-						
+						<label class="select">
+							<input type="checkbox" name="item" checked>
+							<div>PP</div>
+							<div>
+								<dl><dt><strong>Turpis Morbi Mauris Augue Aenean Consectetur Adipiscing Elit, Sed Do Eiusmod Tempor Incididunt Ut Labore Et Dolore Magna Aliqua</strong></dt><dd>01/06/24</dd></dl>
+								<dl><dt>Ullamcorper Sollicitudin</dt><dd>&#9872;</dd></dl>
+								<div>Quisque Sociosqu Consequat Fames Urna Mollis Blandit Auctor Aenean Aptent Euismod Aenean Hac Fusce Quis Netus</div>
+							</div>
+						</label>
+						<label class="select">
+							<input type="checkbox" name="item">
+							<div>MT</div>
+							<div>
+								<dl><dt><strong>Tincidunt Eros Ullamcorper</strong></dt><dd>22/10/12</dd></dl>
+								<dl><dt>Potenti Venenatis Ornare</dt><dd>&#9872;</dd></dl>
+								<div>Tellus Fames Tortor Cras Suspendisse Torquent Sodales Molestie Eros Lectus Tristique Fringilla Aliquet Libero Neque</div>
+							</div>
+						</label>
+						<label class="select">
+							<input type="checkbox" name="item">
+							<div>AP</div>
+							<div>
+								<dl><dt><strong>Tincidunt Euismod Ac Viverra Dictumst Consectetur Dignissim Semper Per Leo Vivamus Rutrum Tortor</strong></dt><dd>01/06/24</dd></dl>
+								<dl><dt>Diam Nibh Mollis</dt><dd>&#9872;</dd></dl>
+								<div>Integer Senectus Est Cras Id Lacinia</div>
+							</div>
+						</label>
+						<label class="select">
+							<input type="checkbox" name="item">
+							<div>CS</div>
+							<div>
+								<dl><dt><strong>Ullamcorper Nunc Iaculis Tempus</strong></dt><dd>03/05/11</dd></dl>
+								<dl><dt>Nisl Nullam Litora Ad Lacinia Iaculis Felis</dt><dd>&#9872;</dd></dl>
+								<div>Senectus Tellus Turpis Nisl Fringilla Vel Conubia Vel Metus Diam Eget Porttitor.</div>
+							</div>
+						</label>
+						<label class="select">
+							<input type="checkbox" name="item">
+							<div>HM</div>
+							<div>
+								<dl><dt><strong>Lacinia Conubia Nulla Per Pretium Porta Nostra Elementum Eget Bibendum Urna Sagittis Cubilia</strong></dt><dd>25/09/13</dd></dl>
+								<dl><dt>Aliquet Amet Velit</dt><dd>&#9872;</dd></dl>
+								<div>Phasellus Ac Id Purus Himenaeos Justo Feugiat Ullamcorper Consequat A Nisl Porta Vestibulum Dictum Interdum</div>
+							</div>
+						</label>
+						<label class="select">
+							<input type="checkbox" name="item">
+							<div>NT</div>
+							<div>
+								<dl><dt><strong>Ultricies Suscipit Dui</strong></dt><dd>22/11/08</dd></dl>
+								<dl><dt>Senectus In Diam</dt><dd>&#9872;</dd></dl>
+								<div>Metus Lectus Inceptos Metus Augue Vel Donec Primis Elit Varius Nam</div>
+							</div>
+						</label>
 					</form>
 				</fieldset>
 			</section>
@@ -382,22 +445,65 @@
 						</label>
 					</form>
 					<form class="filters">
-						<label class="select"><input type="radio" name="filter" checked>Filter1</label><label class="select"><input type="radio" name="filter">Filter2</label>
-						<label class="select"><input type="radio" name="filter">Filter3</label><label class="select"><input type="radio" name="filter">Filter4</label>
-						<label class="select"><input type="radio" name="filter">Filter5</label>
+						<label class="select"><input type="radio" name="filter" checked>Nunc</label><label class="select"><input type="radio" name="filter">Aptent</label>
+						<label class="select"><input type="radio" name="filter">Aenean</label><label class="select"><input type="radio" name="filter">Dapibus</label>
+						<label class="select"><input type="radio" name="filter">Malesuada</label>
 					</form>
 					<form class="rows">
-						<label class="select"><input type="checkbox" name="copy" checked>Copy 1</label><label class="select"><input type="checkbox" name="copy">Copy 2</label>
-						<label class="select"><input type="checkbox" name="copy">Copy 3</label><label class="select"><input type="checkbox" name="copy">Copy 4</label>
-						<label class="select"><input type="checkbox" name="copy">Copy 5</label><label class="select"><input type="checkbox" name="copy">Copy 6</label>
-						<label class="select"><input type="checkbox" name="copy">Copy 7</label><label class="select"><input type="checkbox" name="copy">Copy 8</label>
-						<label class="select"><input type="checkbox" name="copy">Copy 9</label><label class="select"><input type="checkbox" name="copy">Copy 10</label>
-						<label class="select"><input type="checkbox" name="copy">Copy 11</label><label class="select"><input type="checkbox" name="copy">Copy 12</label>
-						<label class="select"><input type="checkbox" name="copy">Copy 13</label><label class="select"><input type="checkbox" name="copy">Copy 14</label>
-						<label class="select"><input type="checkbox" name="copy">Copy 15</label><label class="select"><input type="checkbox" name="copy">Copy 16</label>
-						<label class="select"><input type="checkbox" name="copy">Copy 17</label><label class="select"><input type="checkbox" name="copy">Copy 18</label>
-						<label class="select"><input type="checkbox" name="copy">Copy 19</label><label class="select"><input type="checkbox" name="copy">Copy 20</label>
-						<label class="select"><input type="checkbox" name="copy">Copy 21</label>
+						<label class="select">
+							<input type="checkbox" name="item" checked>
+							<div>ID</div>
+							<div>
+								<dl><dt><strong>Taciti Augue Faucibus</strong></dt><dd>01/06/24</dd></dl>
+								<dl><dt>Sodales Nisl</dt><dd>&#9872;</dd></dl>
+								<div>Auctor Varius Est Ullamcorper Viverra Eleifend Nulla Est Massa Tempus Magna</div>
+							</div>
+						</label>
+						<label class="select">
+							<input type="checkbox" name="item">
+							<div>DK</div>
+							<div>
+								<dl><dt><strong>Quis Luctus A Nunc Cras Nam Velit Metus Eu Metus</strong></dt><dd></dd></dl>
+								<dl><dt>Tristique Fringilla Lectus Inceptos Mi Pharetra Fames Maximus</dt><dd>&#9872;</dd></dl>
+								<div>Suspendisse Et Risus Platea Venenatis</div>
+							</div>
+						</label>
+						<label class="select">
+							<input type="checkbox" name="item">
+							<div>FA</div>
+							<div>
+								<dl><dt><strong>Diam Hendrerit Inceptos Nulla.</strong></dt><dd>22/05/13</dd></dl>
+								<dl><dt>Lacinia Orci Class Vel</dt><dd>&#9872;</dd></dl>
+								<div>Vulputate Aliquet Faucibus Vulputate Pretium Urna Suscipit Sed Aliquam Aliquet Amet</div>
+							</div>
+						</label>
+						<label class="select">
+							<input type="checkbox" name="item">
+							<div>LN</div>
+							<div>
+								<dl><dt><strong>Justo Pulvinar Scelerisque Porta Taciti Lacinia Sapien Vel Rutrum Nam</strong></dt><dd>16/11/12</dd></dl>
+								<dl><dt>Tempor Laoreet Maecenas Ultrices.</dt><dd>&#9872;</dd></dl>
+								<div>Magna Etiam Orci Gravida Tortor Dictum Nostra Interdum Luctus Ad</div>
+							</div>
+						</label>
+						<label class="select">
+							<input type="checkbox" name="item">
+							<div>ST</div>
+							<div>
+								<dl><dt><strong>Torquent Dignissim Consequat Blandit Sem Ad Auctor Massa Quis</strong></dt><dd>13/10/05</dd></dl>
+								<dl><dt>Placerat Ornare Pretium</dt><dd>&#9872;</dd></dl>
+								<div>Donec Conubia Lectus Quam Commodo Nisl Amet Platea Morbi Aptent Eleifend Hac .</div>
+							</div>
+						</label>
+						<label class="select">
+							<input type="checkbox" name="item">
+							<div>AA</div>
+							<div>
+								<dl><dt><strong>Sem Sollicitudin Nibh Diam Taciti</strong></dt><dd>13/09/13</dd></dl>
+								<dl><dt>Massa Nam</dt><dd>&#9872;</dd></dl>
+								<div>Convallis Lectus Dolor Nibh Sem Lectus Maecenas Amet Mattis Tristique Tincidunt Morbi Viverra Hendrerit Accumsan Lacus Egestas Curabitur Ad</div>
+							</div>
+						</label>
 					</form>
 				</fieldset>
 			</section>
@@ -445,6 +551,9 @@
 				$('meta[name="theme-color"]').setAttribute('content','#000000');
 				document.documentElement.style.setProperty("--tTop", percent);
 				toggleLayer();
+
+
+
 				if(leftPos(listSec)==='0px'){
 					listSec.style.display = 'block';
 					listSec.classList.add('sectionZoom');
@@ -492,10 +601,13 @@
 				}
 			}
 			function buttonCompose(input){
+				const cancelFocus = () => checkedFocus($('#pop input'));
 				if(input.closest('section').id==='pop'){//compose inside pop
 					buttonCancel(input);
 					setTimeout(()=>{
 						setPop('96%');
+						//checkedFocus($('#pop input'));
+						cancelFocus();
 					},100);
 				}
 				else {
@@ -503,10 +615,11 @@
 					lastSection = input.closest('section');
 					$('#pop header .hRight label').style.visibility = 'visible';
 					toggleLayer();
-					checkedFocus($('#pop input'));
+					//checkedFocus($('#pop input'));
+					cancelFocus();
 				}
 			}
-			function buttonCancel(input) {
+			function buttonCancel(input,focused = true) {
 				toggleLayer();
 				const frm = $('#pop fieldset form');
 				if(frm) frm.parentNode.removeChild(frm);
@@ -538,7 +651,7 @@
 					target.classList.remove('sectionZoom');
 					const inputDots = $('header input[data-btn=dots]',target);
 					if($('header input[data-btn=dots]',target) && display(inputDots.closest('label')) === 'flex'){
-						checkedFocus(inputDots);
+						focused && checkedFocus(inputDots);
 					}
 					else {
 						checkedFocus($('header input[data-btn=compose]',target));
@@ -546,7 +659,7 @@
 				}
 				//lastSection = null;
 			}
-			function buttonBack(input){
+			function buttonBack(input,focused = true){
 				//alert(backAnimating);
 				if(backAnimating) return;
 				listSec.style.display = 'block';
@@ -555,7 +668,7 @@
 				listSec.style.display = 'block';
 				detSec.classList.remove('detailShowDetail');
 				detSec.classList.add('detailShowList');
-				checkedFocus($('header input[data-btn=side]',listSec));
+				focused && checkedFocus($('header input[data-btn=side]',listSec));
 				listSec.addEventListener('animationend', () => {
 					listSec.classList.remove('listShowList');
 				}, { once: true });
@@ -581,12 +694,12 @@
 					selections = [$('.rows label',section)];
 				}
 			}
-			function buttonSide() {
+			function buttonSide(focused = true) {
 				const showNav = display(navSec) !== 'block';
 				listSec.classList.remove('listShowList');
 				navSec.style.display = showNav ? 'block' : 'none';
 				listSec.style.display = showNav ? 'none' : 'block';
-				checkedFocus($(`${showNav ? '#navSection' : '#listSection'} header input`));
+				focused && checkedFocus($(`${showNav ? '#navSection' : '#listSection'} header input`));
 			}
 			function checkedFocus(el) {
 				if(!el) return;
@@ -854,7 +967,7 @@
 							else if(e.key === 'ArrowRight'){								
 								const labels = [...parentForm.querySelectorAll('label.select')];
 								const idx = labels.indexOf(parentLabel);
-								if (idx % 2 === 0) {
+								if (idx % 2 === 0 || (idx == labels.length-1)) {
 									checkedFocus($('#' + map[parentSection.id] + ' form.rows input:first-child'));
 								} else {
 									parentLabel.nextElementSibling && checkedFocus($('input', parentLabel.nextElementSibling));
@@ -943,18 +1056,18 @@
 					e.preventDefault();
 					const { btn } = input.dataset;
 					switch (btn) {
-						case 'back':	buttonBack(input); break;
-						case 'side':	buttonSide(); break;
+						case 'back':	buttonBack(input,false); break;
+						case 'side':	buttonSide(false); break;
 						case 'tiles':	cancelMulti(input); break;
 						case 'delete':	buttonDelete(input); break;
 						case 'compose':	buttonCompose(input); break;
 						case 'dots':	buttonDots(); break;
 						case 'multi':	buttonMulti(e); break;
 						case 'popCancel':
-						case 'popSend':	buttonCancel(input); break;
+						case 'popSend':	buttonCancel(input,false); break;
 					}
 				}
-				else if (input.closest('form.rows')){
+				else if (input.closest('form.rows')){					
 					function clearCheck(){
 						const sect = input.closest('section');
 						$$('.rows .checked',sect).forEach(chk=>{
@@ -992,17 +1105,17 @@
 							detSec.classList.remove('detailShowDetail');
 						}, { once: true });
 					}
-					else if(!multiSelect) {
+					else if(!multiSelect && section != 'navSection' && !label.classList.contains("checked")) {
 						clearCheck();
 					}
 				}
 			}
 			function handleResize() {
 				if(window.innerWidth>1175){
-					navSec.style.display = listSec.style.display = detSec.style.display = 'block';
+					[navSec, listSec, detSec].forEach(el => el && (el.style.display = 'block'));
 				}
 				else if(window.innerWidth<1175 && window.innerWidth>770){
-					listSec.style.display = detSec.style.display = 'block';
+					[listSec, detSec].forEach(el => el && (el.style.display = 'block'));
 					navSec.style.display = 'none';
 				}
 			}
@@ -1015,6 +1128,12 @@
 			document.addEventListener('keyup', handleKeyUp);
 			document.addEventListener('click', handleClick);
 			document.addEventListener('visibilitychange', () => {if (document.hidden) multiSelect = false;});
+
+			$('#layer').addEventListener('click', function (e) {
+				if (!e.target.closest('#pop')) {
+					buttonCancel($('#pop input'));
+				}
+			});
 
 			$$(selector.split(',').map(s => s.trim()).map(s => /checkbox|radio/.test(s) ? s + ':checked' : s).join(', ')).forEach(input => {
 				if(input.checked) checkedFocus(input);
