@@ -126,6 +126,7 @@
 				.searchFrm .deskHid {visibility:visible}
 				.searchFrm label {padding:var(--mg);}
 				.searchFrm label input {padding:0; appearance: none;}
+				section fieldset {padding-bottom:100px}
 				#navSection {border-right:1px solid var(--brC);}
 				#listSection header div:last-child label:not(.deskHid):not(.tabHid).last svg,
 				#listSection header .hRight label.thirdLast svg {margin-right:calc((var(--mg) * 3) + 1px);}
@@ -546,8 +547,8 @@
 			let lastSection = null;
 			let backAnimating = false;
 
-			function setPop(percent){
-				$('#pop header .hRight label').style.visibility = 'hidden';
+			function setPop(percent,cancelBut){
+				$('#pop header .hRight label').style.visibility = cancelBut?'hidden':'visible';
 				$('meta[name="theme-color"]').setAttribute('content','#000000');
 				document.documentElement.style.setProperty("--tTop", percent);
 				toggleLayer();
@@ -568,7 +569,7 @@
 				}
 			}
 			function buttonDots(){
-				setPop('50%');
+				setPop('50%',true);
 				checkedFocus($('#pop input'));
 				$('#pop fieldset').innerHTML = "<form><form>";
 				$$('header .hRight .mobHid',section).forEach(lbl=>{
@@ -605,7 +606,7 @@
 				if(input.closest('section').id==='pop'){//compose inside pop
 					buttonCancel(input);
 					setTimeout(()=>{
-						setPop('96%');
+						setPop('96%',false);
 						//checkedFocus($('#pop input'));
 						cancelFocus();
 					},100);
@@ -619,8 +620,7 @@
 					cancelFocus();
 				}
 			}
-			function buttonCancel(input,focused = true) {
-				toggleLayer();
+			function cancelPop(input,focused){
 				const frm = $('#pop fieldset form');
 				if(frm) frm.parentNode.removeChild(frm);
 				const metaTheme = document.querySelector('meta[name="theme-color"]');
@@ -658,6 +658,14 @@
 					}
 				}
 				//lastSection = null;
+			}
+			function buttonSend(input,focused = true) {
+				toggleLayer();
+				cancelPop(input,focused);
+			}
+			function buttonCancel(input,focused = true) {
+				toggleLayer();
+				cancelPop(input,focused);
 			}
 			function buttonBack(input,focused = true){
 				//alert(backAnimating);
@@ -995,12 +1003,12 @@
 						if (input.name === 'iBtn') {
 							const { btn } = input.dataset;
 							switch (btn) {
-								case 'side':	buttonSide(); break;
-								case 'compose':	buttonCompose(input); break;
-								case 'dots':	buttonDots(); break;
-								case 'back':	buttonBack(input); break;
-								case 'popCancel':
-								case 'popSend':	buttonCancel(input); break;
+								case 'side':		buttonSide(); break;
+								case 'compose':		buttonCompose(input); break;
+								case 'dots':		buttonDots(); break;
+								case 'back':		buttonBack(input); break;
+								case 'popCancel':	buttonCancel(input); break;
+								case 'popSend':		buttonSend(input); break;
 							}
 						}
 						else if(input.name === 'item' && (display(detSec) === 'none' || leftPos(detSec) > '200px')) {
@@ -1056,15 +1064,15 @@
 					e.preventDefault();
 					const { btn } = input.dataset;
 					switch (btn) {
-						case 'back':	buttonBack(input,false); break;
-						case 'side':	buttonSide(false); break;
-						case 'tiles':	cancelMulti(input); break;
-						case 'delete':	buttonDelete(input); break;
-						case 'compose':	buttonCompose(input); break;
-						case 'dots':	buttonDots(); break;
-						case 'multi':	buttonMulti(e); break;
-						case 'popCancel':
-						case 'popSend':	buttonCancel(input,false); break;
+						case 'back':		buttonBack(input,false); break;
+						case 'side':		buttonSide(false); break;
+						case 'tiles':		cancelMulti(input); break;
+						case 'delete':		buttonDelete(input); break;
+						case 'compose':		buttonCompose(input); break;
+						case 'dots':		buttonDots(); break;
+						case 'multi':		buttonMulti(e); break;
+						case 'popCancel':	buttonCancel(input); break;
+						case 'popSend':		buttonSend(input,false); break;
 					}
 				}
 				else if (input.closest('form.rows')){					
@@ -1130,9 +1138,7 @@
 			document.addEventListener('visibilitychange', () => {if (document.hidden) multiSelect = false;});
 
 			$('#layer').addEventListener('click', function (e) {
-				if (!e.target.closest('#pop')) {
-					buttonCancel($('#pop input'));
-				}
+				if (!e.target.closest('#pop')) buttonCancel($('#pop input'));
 			});
 
 			$$(selector.split(',').map(s => s.trim()).map(s => /checkbox|radio/.test(s) ? s + ':checked' : s).join(', ')).forEach(input => {
