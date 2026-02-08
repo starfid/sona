@@ -18,12 +18,13 @@
 			:root {
 				--bg:#FFFFFF;	--cl:#000000;	--cl2:#858584;	--fn1:1.1vw;	--fn2:1.7vw;	--brC:#f3f3f2;		--nvB:#E1E0E1;
 				--chg:#FFFFFF;	--cck:#000000;	--bck:#e7e7e5;	--mg:.9vw;	--mg2:calc(var(--fn2) / 2);		--cir:3.1vw;
+				--wdt:39vw;
 			}
 			html {-webkit-tap-highlight-color: transparent;}
 			body {margin:0;padding:0;font-family:arial;color:var(--cl);background:var(--bg)}
 			main, section header {display:grid}
 			main{grid-template-columns:22% auto;}
-			main:has(#detailSection:not(:empty)) {grid-template-columns: 22% auto 39%;}
+			main:has(#detailSection:not(:empty)) {grid-template-columns: 22vw auto var(--wdt);}
 			section {position:relative; height:100vh; overflow:hidden;background:var(--bg)}
 			label, #navSection form div.head {cursor:pointer;user-select:none;font-size:var(--fn1);}
 
@@ -73,7 +74,7 @@
 
 			fieldset form {margin:0 var(--mg) var(--mg) var(--mg);padding:0}
 			fieldset form label {display:block;padding:var(--mg);}
-			fieldset form.filters {margin-left:0;margin-right:0;}
+			fieldset form.filters {margin-left:0;margin-right:0;width:var(--wdt);overflow:scroll;scrollbar-width:none;}
 			fieldset form.filters label {margin-right:var(--mg)}
 			
 			fieldset form.filters label:first-child {margin-left:var(--mg)}
@@ -88,7 +89,7 @@
 			fieldset .rows label.select > div:last-of-type > dl > dt {margin:0;padding:0;word-break:break-all;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;}
 			fieldset .rows label.select > div:last-of-type > dl > dd {margin:0;padding:0;text-align:right;}
 			fieldset .rows label.select > div:last-of-type > div {display:-webkit-box;-webkit-line-clamp:2;min-height:calc(var(--fn1) * 2.3);-webkit-box-orient:vertical;overflow:hidden;}
-
+			
 			.btn input[type=checkbox], .btn [type=radio], .select input[type=checkbox], .select input[type=radio]{position: absolute;left: -9999px;}
 			.checked {background-color:var(--bck);color:var(--cck);}
 			.focused {background-color:var(--bhg);color:var(--chg);}
@@ -119,7 +120,7 @@
 			@media screen and (max-width: 1175px){
 				:root {
 					--fn1:2vw; 	--fn2:2.5vw;	--brC:#FAF9F7;	--bg:#FFFFFF;
-					--mg:1.1vw;	--mg2:calc(var(--fn2) / 2);	--cir:5.5vw;
+					--mg:1.1vw;	--mg2:calc(var(--fn2) / 2);	--cir:5.5vw;	--wdt:50vw;
 				}
 				main {grid-template-columns:auto}
 				main:has(#detailSection:not(:empty)) {grid-template-columns:50% auto}
@@ -142,14 +143,13 @@
 			@media screen and (max-width: 770px) and (orientation: portrait){
 				:root {
 					--fn1:6vw; 	--fn2:7vw;	--dmy:25vw;	--cir:17vw;
-					--mg:3.2vw;	--mg2:calc(var(--fn2) / 2);	--tTop:50%;
+					--mg:3.2vw;	--mg2:calc(var(--fn2) / 2);	--tTop:50%;	--wdt:100vw;
 				}
 				main {display:block;background-color:#000000!important;min-height:60vh}
 				#listSection header div:last-child label:not(.deskHid):not(.tabHid).last svg
 				section header div label svg {margin-right:calc(var(--mg) * 2);}
 				section header .hRight label.secondLast svg {margin-right: calc(var(--mg) * 2);}
 				.searchFrm label {padding:calc(var(--mg) * .92) var(--mg);}
-				.filters {width:100vw;overflow: scroll; scrollbar-width:none;}
 				#navSection, #listSection {border-right:none;}
 				
 				#detailSection div:first-child {display:none}
