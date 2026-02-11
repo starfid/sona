@@ -15,20 +15,20 @@
 		<link rel="manifest" href="./manifest.json">
 		<style>
 			:root {
-				--bhg:#000000;
-				/*--bhg:#0063E2;*/
+				/*--bhg:#000000;*/
+				--bhg:#0063E2;
 				/*--bhg:#006141;*/
 			}
 			:root {
 				--bg:#FFFFFF;	--cl:#000000;	--cl2:#858584;	--fn1:1.1vw;	--fn2:1.7vw;	--brC:#f3f3f2;		--nvB:#E1E0E1;
-				--chg:#FFFFFF;	--cck:#000000;	--bck:#e7e7e5;	--mg:.9vw;	--mg2:calc(var(--fn2) / 2);		--cir:3.1vw;
-				--wdt:39vw;
+				--wdt:39vw;	--cck:#000000;	--bck:#e7e7e5;	--mg:.9vw;	--mg2:calc(var(--fn2) / 2);		--cir:3.1vw;
+				--fdC:color-mix(in srgb, var(--cl) 70%, transparent); 	--chg:color-mix(in srgb, var(--bhg) 10%, white);
 			}
 			html {-webkit-tap-highlight-color: transparent;}
 			body {margin:0;padding:0;font-family:arial;color:var(--cl);background:var(--bg)}
 			main, section header {display:grid}
 			main{grid-template-columns:22% auto;}
-			main:has(#detailSection:not(:empty)) {grid-template-columns: 22vw auto var(--wdt);}
+			main:has(#detailSection:not(:empty)) {grid-template-columns: 22vw var(--wdt) auto;}
 			section {position:relative; height:100vh; overflow:hidden;background:var(--bg)}
 			label, #navSection form div.head {cursor:pointer;user-select:none;font-size:var(--fn1);}
 
@@ -91,14 +91,15 @@
 			fieldset .rows label.select > div:last-of-type {display:flex;flex-direction:column;gap:2px;flex:1;min-width:0;}
 			fieldset .rows label.select > div:last-of-type > dl {margin:0;padding:0;display:grid;grid-template-columns:auto auto;}
 			fieldset .rows label.select > div:last-of-type > dl > dt {margin:0;padding:0;word-break:break-all;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;}
-			fieldset .rows label.select > div:last-of-type > dl > dd {margin:0;padding:0;text-align:right;}
-			fieldset .rows label.select > div:last-of-type > div {display:-webkit-box;-webkit-line-clamp:2;min-height:calc(var(--fn1) * 2.3);-webkit-box-orient:vertical;overflow:hidden;}
+			fieldset .rows label.select > div:last-of-type > dl > dd {margin:0;padding:0;text-align:right;color:var(--fdC);}
+			fieldset .rows label.select > div:last-of-type > dl:nth-child(2) > dd {line-height:calc(var(--fn1)*0.99);}
+			fieldset .rows label.select > div:last-of-type > div {color:var(--fdC);display:-webkit-box;-webkit-line-clamp:2;min-height:calc(var(--fn1) * 2.3);-webkit-box-orient:vertical;overflow:hidden;}
 			
 			.btn input[type=checkbox], .btn [type=radio], .select input[type=checkbox], .select input[type=radio]{position: absolute;left: -9999px;}
 			.checked {background-color:var(--bck);color:var(--cck);}
-			.focused {background-color:var(--bhg);color:var(--chg);}
+			.rows .focused, .rows .focused dd, .rows .focused div:last-of-type > div {background-color:var(--bhg);color:var(--chg)!important;}
 			.btn.checked, .btn.focused {background-color:transparent;}
-			.btn.focused svg, .btn svg:hover, .btn.checked, .btn.checked, .iconOn {stroke:var(--bhg);stroke-width:8}
+			.btn.focused svg, .btn svg:hover, .btn.checked, .btn.checked, .iconOn {stroke:var(--cl);stroke-width:8}
 			.btn.focused svg.delBtn, .btn svg.delBtn:hover {stroke:red;stroke-width:8}
 			.btn.focused svg.delBtn {stroke:red;}
 			.searchFrm label.focused {background-color:transparent;color:var(--cl)}
@@ -127,7 +128,7 @@
 					--mg:1.1vw;	--mg2:calc(var(--fn2) / 2);	--cir:5.5vw;	--wdt:50vw;
 				}
 				main {grid-template-columns:auto}
-				main:has(#detailSection:not(:empty)) {grid-template-columns:50% auto}
+				main:has(#detailSection:not(:empty)) {grid-template-columns:auto var(--wdt)}
 				.searchFrm .deskHid {visibility:visible}
 				.searchFrm label {padding:var(--mg);}
 				.searchFrm label input {padding:0; appearance: none;}
@@ -161,7 +162,7 @@
 				#detailSection div.hRight label.last {display:none}
 				#detailSection div.hRight label.secondLast svg {margin-right:var(--mg)}
 				#navSection form div.head:first-of-type {margin-top:calc((var(--mg) * 2) + (var(--mg) / 2))}
-				#detailSection {display:none;position:absolute;z-index:1;top:0;width:100vw;}
+				#detailSection {display:none;position:absolute;z-index:1;top:0;width:var(--wdt)}
 				#listSection {display:block}
 				#listSection header {grid-template-columns: 20% auto 20%;}
 				section header div label h1 {margin:0;}
@@ -213,12 +214,13 @@
 				:root {--bhg:#38474d}
 				:root {
 					--bg:#1E1E1E;	--cl:#afafaf;	--cl2:#575858;	--brC:#191919;		--nvB:#141414;
-					--chg:#FFFFFF;	--cck:#929293;	--bck:#29292a;
+					/*--chg:#FFFFFF;*/	--cck:#929293;	--bck:#29292a;	--fdC:color-mix(in srgb, var(--cl) 50%, black);
+					--chg:color-mix(in srgb, var(--bhg) 20%, black);
 				}
 				@media screen and (max-width: 1175px){
 					:root {	--bg:#000000;	--brC:#0a0a0a;	--bck:#232324; }
 				}
-				.btn.focused svg, .btn svg:hover, .btn.checked, .btn.checked, .iconOn {stroke:var(--chg);}
+				.btn.focused svg, .btn svg:hover, .btn.checked, .btn.checked, .iconOn {stroke:var(--cl);}
 				#layer {background-color: rgba(0,0,0,0.7);}
 				#pop, #pop header {background-color:var(--bck)}
 				#pop .focused {background-color:var(--bck);}				
@@ -334,7 +336,7 @@
 							<input type="checkbox" name="item" checked>
 							<div>PP</div>
 							<div>
-								<dl><dt><strong>Turpis Morbi Mauris Augue Aenean Consectetur Adipiscing Elit, Sed Do Eiusmod Tempor Incididunt Ut Labore Et Dolore Magna Aliqua</strong></dt><dd>01/06/24</dd></dl>
+								<dl><dt><strong>Morbi Mauris Augue Aenean Consectetur Adipiscing Elit, Sed Do Eiusmod Tempor Incididunt Ut Labore Et Dolore Magna Aliqua</strong></dt><dd>Now</dd></dl>
 								<dl><dt>Ullamcorper Sollicitudin</dt><dd>&#9872;</dd></dl>
 								<div>Quisque Sociosqu Consequat Fames Urna Mollis Blandit Auctor Aenean Aptent Euismod Aenean Hac Fusce Quis Netus</div>
 							</div>
@@ -343,7 +345,7 @@
 							<input type="checkbox" name="item">
 							<div>MT</div>
 							<div>
-								<dl><dt><strong>Tincidunt Eros Ullamcorper</strong></dt><dd>22/10/12</dd></dl>
+								<dl><dt><strong>Tincidunt Eros Ullamcorper</strong></dt><dd>09:52</dd></dl>
 								<dl><dt>Potenti Venenatis Ornare</dt><dd>&#9872;</dd></dl>
 								<div>Tellus Fames Tortor Cras Suspendisse Torquent Sodales Molestie Eros Lectus Tristique Fringilla Aliquet Libero Neque</div>
 							</div>
@@ -352,8 +354,8 @@
 							<input type="checkbox" name="item">
 							<div>AP</div>
 							<div>
-								<dl><dt><strong>Tincidunt Euismod Ac Viverra Dictumst Consectetur Dignissim Semper Per Leo Vivamus Rutrum Tortor</strong></dt><dd>01/06/24</dd></dl>
-								<dl><dt>Diam Nibh Mollis</dt><dd>&#9872;</dd></dl>
+								<dl><dt><strong>Euismod Ac Viverra Dictumst Consectetur Dignissim Semper Per Leo Vivamus Rutrum Tortor</strong></dt><dd>Yesterday</dd></dl>
+								<dl><dt>Metus Nibh Mollis</dt><dd><!--&#9872;--></dd></dl>
 								<div>Integer Senectus Est Cras Id Lacinia</div>
 							</div>
 						</label>
@@ -361,7 +363,7 @@
 							<input type="checkbox" name="item">
 							<div>CS</div>
 							<div>
-								<dl><dt><strong>Ullamcorper Nunc Iaculis Tempus</strong></dt><dd>03/05/11</dd></dl>
+								<dl><dt><strong>Ullamcorper Nunc Iaculis Tempus</strong></dt><dd>Monday</dd></dl>
 								<dl><dt>Nisl Nullam Litora Ad Lacinia Iaculis Felis</dt><dd>&#9872;</dd></dl>
 								<div>Senectus Tellus Turpis Nisl Fringilla Vel Conubia Vel Metus Diam Eget Porttitor.</div>
 							</div>
@@ -371,7 +373,7 @@
 							<div>HM</div>
 							<div>
 								<dl><dt><strong>Lacinia Conubia Nulla Per Pretium Porta Nostra Elementum Eget Bibendum Urna Sagittis Cubilia</strong></dt><dd>25/09/13</dd></dl>
-								<dl><dt>Aliquet Amet Velit</dt><dd>&#9872;</dd></dl>
+								<dl><dt>Aliquet Amet Velit</dt><dd><!--&#9872;--></dd></dl>
 								<div>Phasellus Ac Id Purus Himenaeos Justo Feugiat Ullamcorper Consequat A Nisl Porta Vestibulum Dictum Interdum</div>
 							</div>
 						</label>
@@ -459,8 +461,8 @@
 							<input type="checkbox" name="item" checked>
 							<div>ID</div>
 							<div>
-								<dl><dt><strong>Taciti Augue Faucibus</strong></dt><dd>01/06/24</dd></dl>
-								<dl><dt>Sodales Nisl</dt><dd>&#9872;</dd></dl>
+								<dl><dt><strong>Augue Faucibus Taciti</strong></dt><dd>01/06/24</dd></dl>
+								<dl><dt>Sodales Nisl</dt><dd><!--&#9872;--></dd></dl>
 								<div>Auctor Varius Est Ullamcorper Viverra Eleifend Nulla Est Massa Tempus Magna</div>
 							</div>
 						</label>
@@ -468,7 +470,7 @@
 							<input type="checkbox" name="item">
 							<div>DK</div>
 							<div>
-								<dl><dt><strong>Quis Luctus A Nunc Cras Nam Velit Metus Eu Metus</strong></dt><dd></dd></dl>
+								<dl><dt><strong>Quis Luctus A Nunc Cras Nam Velit Metus Eu Metus</strong></dt><dd>22/05/13</dd></dl>
 								<dl><dt>Tristique Fringilla Lectus Inceptos Mi Pharetra Fames Maximus</dt><dd>&#9872;</dd></dl>
 								<div>Suspendisse Et Risus Platea Venenatis</div>
 							</div>
@@ -477,8 +479,8 @@
 							<input type="checkbox" name="item">
 							<div>FA</div>
 							<div>
-								<dl><dt><strong>Diam Hendrerit Inceptos Nulla.</strong></dt><dd>22/05/13</dd></dl>
-								<dl><dt>Lacinia Orci Class Vel</dt><dd>&#9872;</dd></dl>
+								<dl><dt><strong>Metus Hendrerit Inceptos Nulla.</strong></dt><dd>22/05/13</dd></dl>
+								<dl><dt>Lacinia Orci Class Vel</dt><dd><!--&#9872;--></dd></dl>
 								<div>Vulputate Aliquet Faucibus Vulputate Pretium Urna Suscipit Sed Aliquam Aliquet Amet</div>
 							</div>
 						</label>
@@ -1016,7 +1018,7 @@
 							}
 						}
 						else if(input.name === 'item' && (display(detSec) === 'none' || leftPos(detSec) > '200px')) {
-
+							console.log(multiSelect);
 							listSec.classList.remove('listShowList');
 							listSec.classList.add('listShowDetail');
 							detSec.classList.remove('detailShowList');
@@ -1091,8 +1093,7 @@
 						navSec.style.display = 'none';
 						listSec.style.display = 'block';
 					}
-					else if (detSec && (display(detSec) === 'none' || leftPos(detSec) > '200px')) {						
-						
+					else if (!multiSelect && detSec && (display(detSec) === 'none' || leftPos(detSec) > '200px')) {
 						if(display(listSec)==='block'){
 							clearCheck();
 						}
