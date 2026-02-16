@@ -562,9 +562,6 @@
 				$('meta[name="theme-color"]').setAttribute('content','#000000');
 				document.documentElement.style.setProperty("--tTop", percent);
 				toggleLayer();
-
-
-
 				if(leftPos(listSec)==='0px'){
 					listSec.style.display = 'block';
 					listSec.classList.add('sectionZoom');
@@ -588,12 +585,11 @@
 				$$('#pop fieldset form label').forEach(lbl=>{
 					const label = document.createElement('span');
 					label.innerText = $('input',lbl).dataset.btn;
+					if(label.innerText==='select' && multiSelect) label.innerText = 'Unselect';
 					lbl.appendChild(label);
 				});
 			}
 			function buttonMulti(e){
-				
-				console.log('1 '+multiSelect);
 				e.preventDefault();
 				const input = e.target;
 				const label = input.closest('label');
@@ -601,17 +597,13 @@
 				let section = input.closest('section');
 				
 				if(section.id==='pop') buttonCancel(input);
-				console.log('2 '+multiSelect);
 				svg.classList.toggle('iconOn');
-				//console.log(display($('header input[data-btn=dots]',lastSection).closest('label'))=='flex');
-				//console.log(display($('header input[data-btn=dots]',lastSection).closest('label'))=='flex');
 				
 				if(
 					!svg.classList.contains('iconOn') || 
 					$$('.rows .select.focused ',section).length > 1 ||
 					(display($('header input[data-btn=dots]',lastSection).closest('label'))=='flex' && multiSelect)
 				){
-					console.log('slect set false');
 					if(section.id==='pop') section = lastSection;
 					multiSelect = false;
 					svg.classList.remove('iconOn');
@@ -621,10 +613,8 @@
 					checkedFocus(lastInp);
 				}
 				else {
-					//console.log(3);
 					multiSelect = true;
 				}
-				//console.log(multiSelect);
 			}
 			function buttonCompose(input){
 				const cancelFocus = () => checkedFocus($('#pop input'));
@@ -663,7 +653,7 @@
 					$$('.rows .focused',detSec).forEach(fc=>{
 						fc.classList.remove('focused');
 					});
-					multiSelect = false;
+					//multiSelect = false;
 				}
 				else {
 					target = lastSection||$('#listSection');
@@ -849,7 +839,6 @@
 							||
 							iconSec.includes(sid)
 						) {
-							//console.log($('header input[data-btn=dots]',section));
 							input.closest('label')?.classList.add('checked','focused');
 						}
 						totTextSel(section);
