@@ -15,14 +15,14 @@
 		<link rel="manifest" href="./manifest.json">
 		<style>
 			:root {
-				/*--bhg:#000000;*/
-				--bhg:#0063E2;
-				/*--bhg:#006141;*/
+				/*--bhg:#000000;	--thg:#d5d5d5;*/
+				--bhg:#0063E2;	--thg:#E6EFFC;
+				/*--bhg:#006141;	--thg:#f1f2f1;*/
 			}
 			:root {
 				--bg:#FFFFFF;	--cl:#000000;	--cl2:#858584;	--fn1:1.1vw;	--fn2:1.7vw;	--brC:#f3f3f2;		--nvB:#E1E0E1;
 				--wdt:39vw;	--cck:#000000;	--bck:#e7e7e5;	--mg:.9vw;	--mg2:calc(var(--fn2) / 2);		--cir:3.1vw;
-				--fdC:color-mix(in srgb, var(--cl) 70%, transparent); 	--chg:color-mix(in srgb, var(--bhg) 10%, white);
+				--fdC:#6a6a6a; 	
 			}
 			html {-webkit-tap-highlight-color: transparent;}
 			body {margin:0;padding:0;font-family:arial;color:var(--cl);background:var(--bg)}
@@ -41,7 +41,7 @@
 			#navSection form.rows {display: grid;grid-template-columns:repeat(2, 1fr);gap:1vh;color:var(--cl2)}
 			#navSection form * {display: block;box-sizing:border-box;}
 			#navSection form label.select {border:solid 1px var(--nvB)}
-			#navSection form div.head {color:var(--cl2);cursor:default;margin-left:0/*var(--mg)*/;font-weight:bolder;grid-column: 1 / -1;}
+			#navSection form div.head {color:var(--cl2);cursor:default;margin-left:/*0*/var(--mg);font-weight:bolder;grid-column: 1 / -1;}
 			#navSection form div.head:not(:first-of-type) {margin-top:calc(var(--mg) * 2)}
 			#navSection form div.head:first-of-type {margin-top:calc((var(--mg) * 2) + (var(--mg) / 2));animation:navToggle .2s forwards}
 
@@ -97,7 +97,7 @@
 			
 			.btn input[type=checkbox], .btn [type=radio], .select input[type=checkbox], .select input[type=radio]{position: absolute;left: -9999px;}
 			.checked {background-color:var(--bck);color:var(--cck);}
-			.rows .focused, .rows .focused dd, .rows .focused div:last-of-type > div {background-color:var(--bhg);color:var(--chg)!important;}
+			.rows .focused, .rows .focused dd, .rows .focused div:last-of-type > div {background-color:var(--bhg);color:var(--thg)!important;}
 			.btn.checked, .btn.focused {background-color:transparent;}
 			.btn.focused svg, .btn svg:hover, .btn.checked, .btn.checked, .iconOn {stroke:var(--cl);stroke-width:8}
 			.btn.focused svg.delBtn, .btn svg.delBtn:hover {stroke:red;stroke-width:8}
@@ -122,7 +122,7 @@
 
 			@keyframes popRising { from {top:51%;} to {top:50%;} }
 			
-			@media screen and (max-width: 1175px){
+			@media screen and (max-width: 1181px){
 				:root {
 					--fn1:2vw; 	--fn2:2.5vw;	--brC:#FAF9F7;	--bg:#FFFFFF;
 					--mg:1.1vw;	--mg2:calc(var(--fn2) / 2);	--cir:5.5vw;	--wdt:50vw;
@@ -169,8 +169,7 @@
 				
 				#listSection .h1Hid {display:flex;margin:0 auto}
 				
-				fieldset form {width:93.4vw;}
-				
+				fieldset form {width:93.4vw;}				
 				
 				.detailShowDetail {animation:detailShowDetail .3s forwards}
 				.detailShowList {animation:detailShowList .35s forwards}
@@ -211,15 +210,20 @@
 				@keyframes listShowList { from {left:-100px;} to {left:0;} }
 			}
 			@media (prefers-color-scheme: dark) {
-				:root {--bhg:#38474d}
 				:root {
-					--bg:#1E1E1E;	--cl:#afafaf;	--cl2:#575858;	--brC:#191919;		--nvB:#141414;
-					/*--chg:#FFFFFF;*/	--cck:#929293;	--bck:#29292a;	--fdC:color-mix(in srgb, var(--cl) 50%, black);
-					--chg:color-mix(in srgb, var(--bhg) 20%, black);
+					--bhg:#38474d;	--fDC:#1a1f20;		--thg:#dde2e3;
 				}
-				@media screen and (max-width: 1175px){
+				:root {
+					--bg:#1E1E1E;	--cl:#929292;	--cl2:#575858;	--brC:#191919;		--nvB:#141414;
+					--cck:#929293;	--bck:#29292a;
+					/*
+					--fdC:color-mix(in srgb, var(--cl) 50%, black);
+					--thg:color-mix(in srgb, var(--bhg) 20%, black);*/
+				}
+				@media screen and (max-width: 1181px){
 					:root {	--bg:#000000;	--brC:#0a0a0a;	--bck:#232324; }
 				}
+				fieldset .rows label.select > div:first-of-type {color:var(--cl)}
 				.btn.focused svg, .btn svg:hover, .btn.checked, .btn.checked, .iconOn {stroke:var(--cl);}
 				#layer {background-color: rgba(0,0,0,0.7);}
 				#pop, #pop header {background-color:var(--bck)}
@@ -291,7 +295,7 @@
 							</svg>
 						</label>
 						<label class="btn selIcon mobHid">
-							<input type="radio" name="iBtn" data-btn="multi">
+							<input type="radio" name="iBtn" data-btn="select">
 							<svg viewbox="0 0 100 100">
 								<path d="M10 20H80V90H10ZM20 60L35 75L70 30M20 20V10H90V80H80"/>
 							</svg>
@@ -416,7 +420,7 @@
 							</svg>
 						</label>
 						<label class="btn selIcon mobHid">
-							<input type="radio" name="iBtn" data-btn="multi">
+							<input type="radio" name="iBtn" data-btn="select">
 							<svg viewbox="0 0 100 100">
 								<path d="M10 20H80V90H10ZM20 60L35 75L70 30M20 20V10H90V80H80"/>
 							</svg>
@@ -588,14 +592,27 @@
 				});
 			}
 			function buttonMulti(e){
+				
+				console.log('1 '+multiSelect);
 				e.preventDefault();
 				const input = e.target;
 				const label = input.closest('label');
 				const svg = input.nextElementSibling;
-				const section = input.closest('section');
+				let section = input.closest('section');
+				
 				if(section.id==='pop') buttonCancel(input);
+				console.log('2 '+multiSelect);
 				svg.classList.toggle('iconOn');
-				if(!svg.classList.contains('iconOn') || $$('.rows .select.focused ',section).length > 1){
+				//console.log(display($('header input[data-btn=dots]',lastSection).closest('label'))=='flex');
+				//console.log(display($('header input[data-btn=dots]',lastSection).closest('label'))=='flex');
+				
+				if(
+					!svg.classList.contains('iconOn') || 
+					$$('.rows .select.focused ',section).length > 1 ||
+					(display($('header input[data-btn=dots]',lastSection).closest('label'))=='flex' && multiSelect)
+				){
+					console.log('slect set false');
+					if(section.id==='pop') section = lastSection;
 					multiSelect = false;
 					svg.classList.remove('iconOn');
 					label.classList.remove('focused');					
@@ -604,8 +621,10 @@
 					checkedFocus(lastInp);
 				}
 				else {
+					//console.log(3);
 					multiSelect = true;
 				}
+				//console.log(multiSelect);
 			}
 			function buttonCompose(input){
 				const cancelFocus = () => checkedFocus($('#pop input'));
@@ -674,8 +693,8 @@
 				cancelPop(input,focused);
 			}
 			function buttonBack(input,focused = true){
-				//alert(backAnimating);
 				if(backAnimating) return;
+				multiSelect = false;
 				listSec.style.display = 'block';
 				listSec.classList.remove('listShowDetail');
 				listSec.classList.add('listShowList');
@@ -701,6 +720,7 @@
 						selections.forEach(label=>{
 							if(label && label.parentNode) label.parentNode.removeChild(label);
 						});
+						multiSelect = false;
 					}
 					//selection = [];
 					cancelMulti(input);
@@ -709,6 +729,8 @@
 				}
 			}
 			function buttonSide(focused = true) {
+				multiSelect = false;
+				//clearbyClick(lastSection, $('fieldset .rows input',lastSection))
 				const showNav = display(navSec) !== 'block';
 				listSec.classList.remove('listShowList');
 				navSec.style.display = showNav ? 'block' : 'none';
@@ -750,8 +772,8 @@
 					$('input', label).checked = false;
 				});
 				clrTextSel(section);
-				selDown = true;
-				//lastSection = null;//if(multiSelect) {lastSection = null;}
+				//selDown = true;lastSection = null;
+				if(multiSelect) {lastSection = null;}
 				if(input.name == 'iBtn'){
 					checkedFocus($('.rows input',section));
 				}
@@ -822,7 +844,12 @@
 						if(input.closest('label').classList.contains('focused')){
 							input.closest('label').classList.remove('checked','focused');
 						}
-						else if(iconSec.includes(sid)) {
+						else if(
+							(display($('header input[data-btn=dots]',section).closest('label'))=='flex' && multiSelect)
+							||
+							iconSec.includes(sid)
+						) {
+							//console.log($('header input[data-btn=dots]',section));
 							input.closest('label')?.classList.add('checked','focused');
 						}
 						totTextSel(section);
@@ -832,10 +859,8 @@
 					}
 					if(input.name=='iBtn'){
 						if(sid !== 'pop') {
-							//console.log(input.closest('section'));
 							lastSection = section;
 						}
-						//console.log(lastSection);
 						e.preventDefault();
 					}
 					else if(input.type=='search'){
@@ -1013,12 +1038,12 @@
 								case 'compose':		buttonCompose(input); break;
 								case 'dots':		buttonDots(); break;
 								case 'back':		buttonBack(input); break;
+								case 'select':		buttonMulti(e); break;
 								case 'popCancel':	buttonCancel(input); break;
 								case 'popSend':		buttonSend(input); break;
 							}
 						}
 						else if(input.name === 'item' && (display(detSec) === 'none' || leftPos(detSec) > '200px')) {
-							console.log(multiSelect);
 							listSec.classList.remove('listShowList');
 							listSec.classList.add('listShowDetail');
 							detSec.classList.remove('detailShowList');
@@ -1060,7 +1085,7 @@
 					break;
 				}
 			}
-			function handleClick(e) {
+			function handleClick(e) {				
 				const input = e.target;
 				if(!input.matches(selector)) return;
 				if (e.clientX === 0 && e.clientY === 0) return;
@@ -1076,12 +1101,12 @@
 						case 'delete':		buttonDelete(input); break;
 						case 'compose':		buttonCompose(input); break;
 						case 'dots':		buttonDots(); break;
-						case 'multi':		buttonMulti(e); break;
+						case 'select':		buttonMulti(e); break;
 						case 'popCancel':	buttonCancel(input); break;
 						case 'popSend':		buttonSend(input,false); break;
 					}
 				}
-				else if (input.closest('form.rows')){					
+				else if (input.closest('form.rows')){
 					function clearCheck(){
 						const sect = input.closest('section');
 						$$('.rows .checked',sect).forEach(chk=>{
@@ -1097,7 +1122,6 @@
 						if(display(listSec)==='block'){
 							clearCheck();
 						}
-
 						listSec.classList.remove('listShowList');
 						listSec.classList.add('listShowDetail');
 						detSec.classList.remove('detailShowList');
@@ -1124,10 +1148,10 @@
 				}
 			}
 			function handleResize() {
-				if(window.innerWidth>1175){
+				if(window.innerWidth>1181){
 					[navSec, listSec, detSec].forEach(el => el && (el.style.display = 'block'));
 				}
-				else if(window.innerWidth<1175 && window.innerWidth>770){
+				else if(window.innerWidth<1181 && window.innerWidth>770){
 					[listSec, detSec].forEach(el => el && (el.style.display = 'block'));
 					navSec.style.display = 'none';
 				}
