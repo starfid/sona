@@ -97,9 +97,15 @@
 			
 			.btn input[type=checkbox], .btn [type=radio], .select input[type=checkbox], .select input[type=radio]{position: absolute;left: -9999px;}
 			.checked {background-color:var(--bck);color:var(--cck);}
-			.rows .focused, .rows .focused dd, .rows .focused div:last-of-type > div {background-color:var(--bhg);color:var(--thg)!important;}
+			
+			.rows .focused, .filters .focused,
+			.rows .focused dd,
+			.rows .focused div:last-of-type > div {
+				background-color:var(--bhg);color:var(--thg)!important;
+			}
+			#pop label.focused {color:var(--bhg)}
 			.btn.checked, .btn.focused {background-color:transparent;}
-			.btn.focused svg, .btn svg:hover, .btn.checked, .btn.checked, .iconOn {stroke:var(--cl);stroke-width:8}
+			.btn.focused svg, .btn svg:hover, .btn.checked, .btn.checked, .iconOn {stroke:var(--bhg);stroke-width:8}
 			.btn.focused svg.delBtn, .btn svg.delBtn:hover {stroke:red;stroke-width:8}
 			.btn.focused svg.delBtn {stroke:red;}
 			.searchFrm label.focused {background-color:transparent;color:var(--cl)}
