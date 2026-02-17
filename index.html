@@ -103,6 +103,7 @@
 			.btn.focused svg.delBtn, .btn svg.delBtn:hover {stroke:red;stroke-width:8}
 			.btn.focused svg.delBtn {stroke:red;}
 			.searchFrm label.focused {background-color:transparent;color:var(--cl)}
+			
 			/*
 			#listSection fieldset .rows, #detailSection fieldset .rows {
 				display:grid;grid-template-columns:repeat(2, 1fr);gap:1vh;
@@ -622,16 +623,15 @@
 					buttonCancel(input);
 					setTimeout(()=>{
 						setPop('96%',false);
-						//checkedFocus($('#pop input'));
 						cancelFocus();
+						multiSelect = false;
+						clearbyClick(lastSection, $('fieldset .rows input',lastSection));
 					},100);
 				}
 				else {
-					//cancelMulti(input);
 					lastSection = input.closest('section');
 					$('#pop header .hRight label').style.visibility = 'visible';
 					toggleLayer();
-					//checkedFocus($('#pop input'));
 					cancelFocus();
 				}
 			}
@@ -699,6 +699,7 @@
 					detSec.classList.remove('detailShowList');
 					detSec.style.display = 'none';
 				}, { once: true });
+				clearbyClick(detSec, $('fieldset .rows input',detSec));
 			}
 			function buttonDelete(input){
 				const section = input.closest('section');
@@ -720,12 +721,16 @@
 			}
 			function buttonSide(focused = true) {
 				multiSelect = false;
-				//clearbyClick(lastSection, $('fieldset .rows input',lastSection))
+				//lastSection ??= listSec;				
+				clearbyClick(listSec, $('fieldset .rows input',listSec));
 				const showNav = display(navSec) !== 'block';
 				listSec.classList.remove('listShowList');
 				navSec.style.display = showNav ? 'block' : 'none';
 				listSec.style.display = showNav ? 'none' : 'block';
 				focused && checkedFocus($(`${showNav ? '#navSection' : '#listSection'} header input`));
+			}
+			function buttonTiles(){
+				//
 			}
 			function checkedFocus(el) {
 				if(!el) return;
@@ -1028,6 +1033,7 @@
 								case 'dots':		buttonDots(); break;
 								case 'back':		buttonBack(input); break;
 								case 'select':		buttonMulti(e); break;
+								case 'tiles':		buttonTiles(); break;
 								case 'popCancel':	buttonCancel(input); break;
 								case 'popSend':		buttonSend(input); break;
 							}
@@ -1086,7 +1092,7 @@
 					switch (btn) {
 						case 'back':		buttonBack(input,false); break;
 						case 'side':		buttonSide(false); break;
-						case 'tiles':		cancelMulti(input); break;
+						case 'tiles':		buttonTiles(); break;
 						case 'delete':		buttonDelete(input); break;
 						case 'compose':		buttonCompose(input); break;
 						case 'dots':		buttonDots(); break;
