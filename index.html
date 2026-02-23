@@ -582,6 +582,9 @@
 					section = detSec;
 				}
 			}
+			function oppositeMulti(section,val){
+				$('header input[data-btn=select]',section).disabled = val;
+			}
 			function buttonDots(){
 				setPop('50%',true);
 				checkedFocus($('#pop input'));
@@ -603,15 +606,23 @@
 				const svg = input.nextElementSibling;
 				let section = input.closest('section');
 				
-				if(section.id==='pop') buttonCancel(input);
-				svg.classList.toggle('iconOn');
+				if(section.id==='pop'){
+					buttonCancel(input);
+				}
+				svg.classList.toggle('iconOn');				
 				
 				if(
 					!svg.classList.contains('iconOn') || 
 					$$('.rows .select.focused ',section).length > 1 ||
 					(display($('header input[data-btn=dots]',lastSection).closest('label'))=='flex' && multiSelect)
 				){
-					if(section.id==='pop') section = lastSection;
+					if(section.id==='pop') {
+						section = lastSection;
+					}
+					else {
+						if(detSec && section.id==='listSection') oppositeMulti(detSec,false);
+						else if(section.id==='detailSection') oppositeMulti(listSec,false);
+					}
 					multiSelect = false;
 					svg.classList.remove('iconOn');
 					label.classList.remove('focused');					
@@ -621,6 +632,10 @@
 				}
 				else {
 					multiSelect = true;
+					if(section.id !== 'pop'){
+						if(detSec && section.id==='listSection') oppositeMulti(detSec,true);
+						else if(section.id==='detailSection') oppositeMulti(listSec,true);
+					}
 				}
 			}
 			function buttonCompose(input){
