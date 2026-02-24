@@ -700,6 +700,7 @@
 				cancelPop(input,focused);
 			}
 			function buttonCancel(input,focused = true) {
+				if(display($('#layer'))==='none') return;
 				toggleLayer();
 				cancelPop(input,focused);
 			}
@@ -1053,7 +1054,6 @@
 								case 'compose':		buttonCompose(input); break;
 								case 'dots':		buttonDots(); break;
 								case 'back':		buttonBack(input); break;
-								case 'select':		buttonMulti(e); break;
 								case 'tiles':		buttonTiles(); break;
 								case 'popCancel':	buttonCancel(input); break;
 								case 'popSend':		buttonSend(input); break;
