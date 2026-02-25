@@ -582,8 +582,11 @@
 					section = detSec;
 				}
 			}
-			function oppositeMulti(section,val){
+			function focusMulti(section,val){
 				$('header input[data-btn=select]',section).disabled = val;
+				[...$$('header input[data-btn=compose],header input[data-btn=tiles],header input[data-btn=save],header input[data-btn=signout]')].forEach(el=>{
+					el.disabled = val;
+				});
 			}
 			function buttonDots(){
 				setPop('50%',true);
@@ -620,8 +623,8 @@
 						section = lastSection;
 					}
 					else {
-						if(detSec && section.id==='listSection') oppositeMulti(detSec,false);
-						else if(section.id==='detailSection') oppositeMulti(listSec,false);
+						if(detSec && section.id==='listSection') focusMulti(detSec,false);
+						else if(section.id==='detailSection') focusMulti(listSec,false);
 					}
 					multiSelect = false;
 					svg.classList.remove('iconOn');
@@ -633,8 +636,8 @@
 				else {
 					multiSelect = true;
 					if(section.id !== 'pop'){
-						if(detSec && section.id==='listSection') oppositeMulti(detSec,true);
-						else if(section.id==='detailSection') oppositeMulti(listSec,true);
+						if(detSec && section.id==='listSection') focusMulti(detSec,true);
+						else if(section.id==='detailSection') focusMulti(listSec,true);
 					}
 				}
 			}
@@ -835,7 +838,7 @@
 			function handleChange(e) {
 				if(!e.target.matches(selector)) return;
 				const input = e.target;
-				if(input.matches(rowsCheck) && lastSection) {
+				if(input.matches(rowsCheck) && lastSection && !multiSelect) {
 					clearbyClick(lastSection,input);
 					clrTextSel(lastSection);
 				}
@@ -872,6 +875,7 @@
 					}
 					else if(!(multiSelect && !rows)){
 						input.closest('label')?.classList.add('focused');
+						
 					}
 					if(input.name=='iBtn'){
 						if(sid !== 'pop') {
