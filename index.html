@@ -582,12 +582,6 @@
 					section = detSec;
 				}
 			}
-			function focusMulti(section,val){
-				$('header input[data-btn=select]',section).disabled = val;
-				[...$$('header input[data-btn=compose],header input[data-btn=tiles],header input[data-btn=save],header input[data-btn=signout]')].forEach(el=>{
-					el.disabled = val;
-				});
-			}
 			function buttonDots(){
 				setPop('50%',true);
 				checkedFocus($('#pop input'));
@@ -600,6 +594,14 @@
 					label.innerText = $('input',lbl).dataset.btn;
 					if(label.innerText==='select' && multiSelect) label.innerText = 'Unselect';
 					lbl.appendChild(label);
+				});
+			}
+			function focusMulti(section,val){
+				[...$$('header input[data-btn=select],header input[data-btn=delete',section)].forEach(el=>{
+					el.disabled = val;
+				});
+				[...$$('header input[data-btn=compose],header input[data-btn=tiles],header input[data-btn=save],header input[data-btn=signout]')].forEach(el=>{
+					el.disabled = val;
 				});
 			}
 			function buttonMulti(e){
@@ -689,7 +691,7 @@
 					backAnimating = false;
 					target.classList.remove('sectionZoom');
 					const inputDots = $('header input[data-btn=dots]',target);
-					if($('header input[data-btn=dots]',target) && display(inputDots.closest('label')) === 'flex'){
+					if($('header input[data-btn=dots]',target) && isPhone){
 						focused && checkedFocus(inputDots);
 					}
 					else {
@@ -745,10 +747,22 @@
 				}
 			}
 			function buttonSide(focused = true) {
+				const navDis = display(navSec);
+				const showNav = navDis !== 'block';
 				multiSelect = false;
-				//lastSection ??= listSec;				
-				clearbyClick(listSec, $('fieldset .rows input',listSec));
-				const showNav = display(navSec) !== 'block';
+				if(navDis==='none'){
+					[...$$('header input[data-btn=select],header input[data-btn=delete')].forEach(el=>{
+						el.disabled = false;
+					});
+					[...$$('.iconOn')].forEach(el=>{
+						el.classList.remove('iconOn');
+						el.closest('label').classList.remove('focused');
+						lastSection = null;
+					});
+				}
+				//lastSection ??= listSec;
+				//clearbyClick(listSec, $('fieldset .rows input',listSec));
+				
 				listSec.classList.remove('listShowList');
 				navSec.style.display = showNav ? 'block' : 'none';
 				listSec.style.display = showNav ? 'none' : 'block';
@@ -1186,14 +1200,22 @@
 			document.addEventListener('click', handleClick);
 			document.addEventListener('visibilitychange', () => {if (document.hidden) multiSelect = false;});
 
+			const isTablet = display($('header input[data-btn=side]',listSec).closest('label'))=='flex';
+			const isPhone = display($('header input[data-btn=dots]',listSec).closest('label'))=='flex';
+
 			$('#layer').addEventListener('click', function (e) {
 				if (!e.target.closest('#pop')) buttonCancel($('#pop input'));
 			});
-
 			$$(selector.split(',').map(s => s.trim()).map(s => /checkbox|radio/.test(s) ? s + ':checked' : s).join(', ')).forEach(input => {
 				if(input.checked) checkedFocus(input);
 			});
-			$('#listSection .rows input').focus();
+			if(!isPhone){				
+				$('#listSection .rows input').focus();
+			}
+			else {
+				$('#listSection .rows input').blur();
+				//console.log($('#listSection .rows input').closest('label'));
+			}
 			selections = [$('#listSection .rows label')];
 		</script>
 	</body>
