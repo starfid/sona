@@ -29,7 +29,7 @@
 			main, section header {display:grid}
 			main{grid-template-columns:22% auto;}
 			main:has(#detailSection:not(:empty)) {grid-template-columns: 22vw var(--wdt) auto;}
-			section {position:relative; height:100vh; overflow:hidden;background:var(--bg)}
+			section {position:relative; height:100vh; overflow:hidden;background:/*var(--bg)*/transparent}
 			label, #navSection form div.head {cursor:pointer;user-select:none;font-size:var(--fn1);}
 
 			section fieldset {
@@ -49,7 +49,7 @@
 			
 			section header {
 				position:absolute; top:0; left:0; right:0; z-index:1;padding:var(--mg);
-				grid-template-columns:50% 50%;background-color:var(--bg);opacity:.97;
+				grid-template-columns:50% 50%;background-color:/*var(--bg)*/transparent;opacity:.97;
 			}
 			section header div label h1 {color:var(--cl2);margin:0 0 0 var(--mg);padding:0;font-size:var(--fn2);height:var(--fn2);line-height: calc(var(--fn2) - 1px);}
 			section header div, .filters {display:flex;}
@@ -610,7 +610,8 @@
 				const label = input.closest('label');
 				const svg = input.nextElementSibling;
 				let section = input.closest('section');
-				
+				lastSection ??= section;
+
 				if(section.id==='pop'){
 					buttonCancel(input);
 				}
