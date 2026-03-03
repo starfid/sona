@@ -15,13 +15,15 @@
 		<link rel="manifest" href="./manifest.json">
 		<style>
 			:root {
+				--bg:#FFFFFF;		--bck:#e7e7e5;
+
 				/*--bhg:#000000;	--thg:#d5d5d5;*/
-				--bhg:#0063E2;	--thg:#E6EFFC;
+				--bhg:#0063E2;		--thg:#E6EFFC;
 				/*--bhg:#006141;	--thg:#f1f2f1;*/
 			}
 			:root {
-				--bg:#FFFFFF;	--cl:#000000;	--cl2:#858584;	--fn1:1.1vw;	--fn2:1.7vw;	--brC:#f3f3f2;		--nvB:#E1E0E1;
-				--wdt:39vw;	--cck:#000000;	--bck:#e7e7e5;	--mg:.9vw;	--mg2:calc(var(--fn2) / 2);		--cir:3.1vw;
+				--cl:#000000;	--cl2:#858584;	--fn1:1.1vw;	--fn2:1.7vw;	--brC:#f3f3f2;		--nvB:#E1E0E1;
+				--wdt:39vw;	--cck:#000000;	--mg:.9vw;	--mg2:calc(var(--fn2) / 2);		--cir:3.1vw;
 				--fdC:#6a6a6a; 	
 			}
 			html {-webkit-tap-highlight-color: transparent;}
@@ -126,12 +128,13 @@
 			}
 			#pop .focused {background-color:var(--bg);color:var(--cl);font-weight:bolder}
 			#pop header {padding: calc(var(--mg)*1.5) calc(var(--mg)*2) 0 calc(var(--mg)*2);}
+			#pop fieldset {padding:var(--mg)}
 
 			@keyframes popRising { from {top:51%;} to {top:50%;} }
 			
 			@media screen and (max-width: 1181px){
 				:root {
-					--fn1:2vw; 	--fn2:2.5vw;	--brC:#FAF9F7;	--bg:#FFFFFF;
+					--fn1:2vw; 	--fn2:2.5vw;	--brC:#FAF9F7;	/*--bg:#FFFFFF;*/
 					--mg:1.1vw;	--mg2:calc(var(--fn2) / 2);	--cir:5.5vw;	--wdt:50vw;
 				}
 				main {grid-template-columns:auto}
@@ -332,7 +335,7 @@
 					<form class="searchFrm">
 						<label class="select">
 							<input type="search" name="q" placeholder="Search" ondblclick="this.value=''" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off">
-							<svg viewbox="0 0 100 100" class="deskHid">
+							<svg viewbox="0 0 100 100" class="deskHid camIcon">
 								<path d="M10 80H90V30H70L60 20H40L30 30H10Z M50 38a15 15 0 1 0 0 30a15 15 0 1 0 0-30z M70 40h1" />
 							</svg>
 						</label>
@@ -457,7 +460,7 @@
 					<form class="searchFrm">
 						<label class="select">
 							<input type="search" name="q" placeholder="Search" ondblclick="this.value=''" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off">
-							<svg viewbox="0 0 100 100" class="deskHid">
+							<svg viewbox="0 0 100 100" class="deskHid camIcon">
 								<path d="M10 80H90V30H70L60 20H40L30 30H10Z M50 38a15 15 0 1 0 0 30a15 15 0 1 0 0-30z M70 40h1" />
 							</svg>
 						</label>
@@ -560,6 +563,7 @@
 			const leftPos = (el) => {return window.getComputedStyle(el).left;}
 			let multiSelect = false;
 			let selections = [];
+			let camId; let codeReader = {};
 			let selDown = true;
 			let lastSection = null;
 			let backAnimating = false;
@@ -707,6 +711,7 @@
 			}
 			function buttonCancel(input,focused = true) {
 				if(display($('#layer'))==='none') return;
+				if('reset' in codeReader) codeReader.reset();
 				toggleLayer();
 				cancelPop(input,focused);
 			}
@@ -771,6 +776,21 @@
 			}
 			function buttonTiles(){
 				//
+			}
+			function buttonCam(section){
+				setPop('96%',true);
+				$('#pop fieldset').innerHTML = "<form><video id=\"viewFinder\" autoplay=\"true\" muted=\"true\" playsinline=\"true\" width=\"100%\"></video></form>";
+				codeReader.decodeFromVideoDevice(camId, 'viewFinder', (result, err) => {
+					if(result) {
+						$('.searchFrm input',section).value = result;
+						codeReader.reset();
+						buttonCancel(null);
+					}
+					if(err && !(err instanceof ZXing.NotFoundException)) {
+						console.log(err);
+					}
+				});
+				
 			}
 			function checkedFocus(el) {
 				if(!el) return;
@@ -918,7 +938,7 @@
 				const parentSection = input.closest('section');
 				const holding = parentForm && (parentForm.classList.contains('rows') && input.type !== 'radio' && multiSelect);
 				const toggleMulti = () => $('header .selIcon svg',parentSection).classList.toggle('iconOn');
-				
+
 				switch (e.key) {
 					case 'ArrowDown':
 						if(!parentForm) {
@@ -1122,10 +1142,13 @@
 			}
 			function handleClick(e) {				
 				const input = e.target;
-				if(!input.matches(selector)) return;
-				if (e.clientX === 0 && e.clientY === 0) return;
+				if(input.closest('section')===null) return;
 				const section = input.closest('section').id;
+				if(e.target.closest('.camIcon')) {e.preventDefault(); e.stopPropagation(); buttonCam(input.closest('section')); return;}
+				if(!input.matches(selector)) return;
+				if(e.clientX === 0 && e.clientY === 0) return;
 				const label = input.closest('label');
+
 				if (label?.classList.contains('btn')) {
 					e.preventDefault();
 					const { btn } = input.dataset;
@@ -1181,6 +1204,9 @@
 						clearCheck();
 					}
 				}
+				else if(input.name==='filter') {
+					//console.log(label.innerText);
+				}
 			}
 			function handleResize() {
 				if(window.innerWidth>1181){
@@ -1201,7 +1227,7 @@
 			document.addEventListener('click', handleClick);
 			document.addEventListener('visibilitychange', () => {if (document.hidden) multiSelect = false;});
 
-			const isTablet = display($('header input[data-btn=side]',listSec).closest('label'))=='flex';
+			const sideExist = display($('header input[data-btn=side]',listSec).closest('div'))!=='none';
 			const isPhone = display($('header input[data-btn=dots]',listSec).closest('label'))=='flex';
 
 			$('#layer').addEventListener('click', function (e) {
@@ -1210,14 +1236,28 @@
 			$$(selector.split(',').map(s => s.trim()).map(s => /checkbox|radio/.test(s) ? s + ':checked' : s).join(', ')).forEach(input => {
 				if(input.checked) checkedFocus(input);
 			});
-			if(!isPhone){				
-				$('#listSection .rows input').focus();
-			}
-			else {
-				$('#listSection .rows input').blur();
-				//console.log($('#listSection .rows input').closest('label'));
-			}
 			selections = [$('#listSection .rows label')];
+			$('#listSection .rows input')[isPhone?'blur':'focus']();
+
+			if(sideExist){
+				import('./cam.js').then(module => {
+					let cams = [];
+					codeReader = new ZXing.BrowserMultiFormatReader();
+					codeReader.listVideoInputDevices().then((videoInputDevices) => {
+						if (videoInputDevices.length >= 1) {
+							videoInputDevices.forEach((el) => {
+								//camDriver[el.deviceId] = el.label;
+								cams.push(el.deviceId);
+							});
+							camId = cams[0];
+						}
+					})
+					.catch((err) => {
+						console.error(err);
+					})
+        			});
+			}
+			
 		</script>
 	</body>
 </html>
