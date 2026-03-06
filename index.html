@@ -68,7 +68,7 @@
 			section header .deskHid, section header .tabHid {display:none}
 
 			.searchFrm, .searchFrm label, fieldset form.filters label, .rows label.checked, 
-				.rows label.focused, #navSection form label.select, #pop {border-radius:1vh;}
+				.rows label.focused, #navSection form label.select, #pop, video {border-radius:1vh;}
 			.searchFrm {border:solid 1px var(--brC)/*var(--nvB)*/;}
 			.searchFrm .deskHid {visibility:hidden}
 			.searchFrm label {padding:calc(var(--mg) * .68) var(--mg);display: flex;justify-content: space-between;}
@@ -105,7 +105,6 @@
 			.rows .focused div:last-of-type > div {
 				background-color:var(--bhg);color:var(--thg)!important;
 			}
-			#pop label.focused {color:var(--bhg)}
 			.btn.checked, .btn.focused {background-color:transparent;}
 			.btn.focused svg, .btn svg:hover, .btn.checked, .btn.checked, .iconOn {stroke:var(--bhg);stroke-width:8}
 			.btn.focused svg.delBtn, .btn svg.delBtn:hover {stroke:red;stroke-width:8}
@@ -126,7 +125,8 @@
 				position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);animation:popRising .3s forwards;
 				background-color:var(--bg);width:38.2vw;height:80vh;box-sizing:border-box;
 			}
-			#pop .focused {background-color:var(--bg);color:var(--cl);font-weight:bolder}
+
+			#pop header .focused {background-color:var(--bg);color:var(--bhg);font-weight:bolder}
 			#pop header {padding: calc(var(--mg)*1.5) calc(var(--mg)*2) 0 calc(var(--mg)*2);}
 			#pop fieldset {padding:var(--mg)}
 
@@ -150,6 +150,7 @@
 				#listSection header .deskHid, #navSection header .deskHid {display:flex}
 				#listSection {border-left:none;}
 				#pop {width:60vw}
+				#pop fieldset {padding: calc((2 * var(--mg)) + var(--fn2)) 0 0 0;}
 				@keyframes navToggle {
 					from {margin-top:calc(var(--mg) * 2)}
 					to {margin-top:calc((var(--mg) * 2) + (var(--mg) / 2));}
@@ -188,21 +189,22 @@
 				.mobHid {display:none}
 				#pop header {padding: var(--mg) var(--mg) 0 var(--mg);}
 				#pop header div {padding:0 3vw}
-				#pop fieldset {padding: calc((2 * var(--mg)) + var(--fn2)) 0 0 0;}
-				#pop fieldset form {display:block}
-				#pop fieldset form label {
+				/*#pop fieldset {padding: calc((2 * var(--mg)) + var(--fn2)) 0 0 0;}*/
+				#pop fieldset form.filters {display:flex}
+				#pop fieldset form.icons {display:block}
+				#pop fieldset form.icons label {
 					border-top:solid 1px var(--nvB);border-bottom:0;
 					border-left:solid 1px var(--nvB);border-right:solid 1px var(--nvB);
 					padding:var(--mg);border-radius:0;flex-direction: row-reverse;
 				}
-				#pop fieldset form label:first-child {
+				#pop fieldset form.icons label:first-child {
 					border-top-left-radius:1vh;border-top-right-radius:1vh;
 				}
-				#pop fieldset form label:last-child {
+				#pop fieldset form.icons label:last-child {
 					border-bottom:solid 1px var(--nvB);
 					border-bottom-left-radius:1vh;border-bottom-right-radius:1vh;
 				}
-				#pop fieldset form label span {text-transform: capitalize;}
+				#pop fieldset form.icons label span {text-transform: capitalize;}
 				#pop .mobHid {display:flex;align-items:center;justify-content:space-between;}
 				section header .tabHid {display:flex}
 				#dots {position:absolute;z-index:1;top:100px;left:100px;}
@@ -563,7 +565,7 @@
 			const leftPos = (el) => {return window.getComputedStyle(el).left;}
 			let multiSelect = false;
 			let selections = [];
-			let camId; let codeReader = {};
+			let camId; let camDevices = {}; let camDriver = {};
 			let selDown = true;
 			let lastSection = null;
 			let backAnimating = false;
@@ -589,7 +591,7 @@
 			function buttonDots(){
 				setPop('50%',true);
 				checkedFocus($('#pop input'));
-				$('#pop fieldset').innerHTML = "<form><form>";
+				$('#pop fieldset').innerHTML = "<form class=\"icons\"><form>";
 				$$('header .hRight .mobHid',section).forEach(lbl=>{
 					$('#pop fieldset form').appendChild(lbl.cloneNode(true));
 				});
@@ -711,7 +713,7 @@
 			}
 			function buttonCancel(input,focused = true) {
 				if(display($('#layer'))==='none') return;
-				if('reset' in codeReader) codeReader.reset();
+				if('reset' in camDevices) camDevices.reset();
 				toggleLayer();
 				cancelPop(input,focused);
 			}
@@ -779,17 +781,35 @@
 			}
 			function buttonCam(section){
 				setPop('96%',true);
-				$('#pop fieldset').innerHTML = "<form><video id=\"viewFinder\" autoplay=\"true\" muted=\"true\" playsinline=\"true\" width=\"100%\"></video></form>";
-				codeReader.decodeFromVideoDevice(camId, 'viewFinder', (result, err) => {
+				let tmp = "<form class=\"cams filters\">";
+				
+				//tmp += "<label class=\"select checked\"><input type=\"radio\" value=\"cam1\" name=\"filter\">Cam 1</label>"
+				//tmp += "<label class=\"select\"><input type=\"radio\" value=\"cam2\" name=\"filter\">Cam 2</label>"
+								
+				Object.keys(camDriver).forEach((key, index) => {
+					let checked = index == 0?"checked":"";
+					let camNum = index+1; 
+					tmp += "<label class=\"select "+checked+"\"><input type=\"radio\" value=\""+key+"\" name=\"filter\" "+checked+">Cam "+camNum+"</label>";
+				});				
+
+				tmp += "</form>";
+				tmp += "<form><video id=\"viewFinder\" autoplay=\"true\" muted=\"true\" playsinline=\"true\" width=\"100%\"></video></form>";
+				$('#pop fieldset').innerHTML = tmp;
+				
+				let getCam = $('#pop .cams .checked input').value;
+				lastSection = section;
+				if (!getCam || getCam === "undefined") getCam = null;
+				camDevices.decodeFromVideoDevice(getCam, 'viewFinder', (result, err) => {
 					if(result) {
 						$('.searchFrm input',section).value = result;
-						codeReader.reset();
+						camDevices.reset();
 						buttonCancel(null);
 					}
 					if(err && !(err instanceof ZXing.NotFoundException)) {
 						console.log(err);
 					}
 				});
+				
 				
 			}
 			function checkedFocus(el) {
@@ -1206,6 +1226,22 @@
 				}
 				else if(input.name==='filter') {
 					//console.log(label.innerText);
+					if(input.closest('form').classList.contains('cams')){
+						camDevices.reset();
+						let deviceId = input?.value;
+						if(!deviceId || deviceId === "undefined") deviceId = null;
+						camDevices.decodeFromVideoDevice(deviceId, 'viewFinder', (result, err) => {
+							if(result) {
+								$('.searchFrm input',lastSection).value = result;
+								camDevices.reset();
+								buttonCancel(input);
+							}
+							if(err && !(err instanceof ZXing.NotFoundException)) {
+								console.log(err);
+							}
+						});
+					}
+					//console.log(input.value);
 				}
 			}
 			function handleResize() {
@@ -1241,15 +1277,15 @@
 
 			if(sideExist){
 				import('./cam.js').then(module => {
-					let cams = [];
-					codeReader = new ZXing.BrowserMultiFormatReader();
-					codeReader.listVideoInputDevices().then((videoInputDevices) => {
+					//let cams = [];
+					camDevices = new ZXing.BrowserMultiFormatReader();
+					camDevices.listVideoInputDevices().then((videoInputDevices) => {
 						if (videoInputDevices.length >= 1) {
 							videoInputDevices.forEach((el) => {
-								//camDriver[el.deviceId] = el.label;
-								cams.push(el.deviceId);
+								camDriver[el.deviceId] = el.label;
+								//cams.push(el.deviceId);
 							});
-							camId = cams[0];
+							//camId = cams[0];
 						}
 					})
 					.catch((err) => {
