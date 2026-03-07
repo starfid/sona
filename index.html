@@ -838,7 +838,7 @@
 					if(result) {
 						$('.searchFrm input',section).value = result;
 						camAPI.reset();
-						buttonCancel(input);
+						buttonCancel();
 					}
 					if(err && !(err instanceof ZXing.NotFoundException)) {
 						console.log(err);
