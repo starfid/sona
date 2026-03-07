@@ -45,7 +45,7 @@
 			#navSection form label.select {border:solid 1px var(--nvB)}
 			#navSection form div.head {color:var(--cl2);cursor:default;margin-left:/*0*/var(--mg);font-weight:bolder;grid-column: 1 / -1;}
 			#navSection form div.head:not(:first-of-type) {margin-top:calc(var(--mg) * 2)}
-			#navSection form div.head:first-of-type {margin-top:calc((var(--mg) * 2) + (var(--mg) / 2));animation:navToggle .2s forwards}
+			#navSection form div.head:first-of-type {margin-top:calc((var(--mg) * 1.9) + (var(--mg) / 2));animation:navToggle .2s forwards}
 
 			#listSection {border-left:1px solid var(--brC); border-right:1px solid var(--brC);}
 			
@@ -111,14 +111,22 @@
 			.btn.focused svg.delBtn {stroke:red;}
 			.searchFrm label.focused {background-color:transparent;color:var(--cl)}
 			
-			/*
-			#listSection fieldset .rows, #detailSection fieldset .rows {
-				display:grid;grid-template-columns:repeat(2, 1fr);gap:1vh;
+			/**/
+
+			.tilesRow {
+				display:grid;grid-template-columns:repeat(2, 1fr)!important;gap:1vh!important;
 			}
-			#listSection fieldset .rows label, #detailSection fieldset .rows label {
-				height: calc(var(--dmy) * 2.5);
+			.tilesLabel {
+				height: calc(var(--dmy) * 2.5)!important; display:block!important;
 			}
-			*/
+			.tilesPreview {
+				width:auto!important;height:20vh!important;border-radius:1vh!important;margin-bottom:.5vh!important;
+			}
+			.tilesNone {
+				display:none!important;
+			}
+
+
 			.layerToggle {display:block!important}
 			#layer {position:absolute;z-index:1;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,0.6);display:none;}
 			#pop {
@@ -565,7 +573,7 @@
 			const leftPos = (el) => {return window.getComputedStyle(el).left;}
 			let multiSelect = false;
 			let selections = [];
-			let camId; let camDevices = {}; let camDriver = {};
+			let camAPI = {}; let camLenses = {};
 			let selDown = true;
 			let lastSection = null;
 			let backAnimating = false;
@@ -713,7 +721,7 @@
 			}
 			function buttonCancel(input,focused = true) {
 				if(display($('#layer'))==='none') return;
-				if('reset' in camDevices) camDevices.reset();
+				if('reset' in camAPI) camAPI.reset();
 				toggleLayer();
 				cancelPop(input,focused);
 			}
@@ -777,16 +785,28 @@
 				focused && checkedFocus($(`${showNav ? '#navSection' : '#listSection'} header input`));
 			}
 			function buttonTiles(){
-				//
+				[...$$('#listSection .rows, #detailSection .rows')].forEach(el=>{
+					el.classList.toggle('tilesRow');
+				});
+				[...$$('#listSection .rows label, #detailSection .rows label')].forEach(el=>{
+					el.classList.toggle('tilesLabel');
+				});
+				[...$$('fieldset .rows label.select > div:first-of-type')].forEach(el=>{
+					el.classList.toggle('tilesPreview');
+				});
+				[...$$('fieldset .rows label.select > div:last-of-type > div, fieldset .rows label dd')].forEach(el=>{
+					el.classList.toggle('tilesNone');
+				});
+				if(isPhone){
+					buttonCancel();
+				}
+				
 			}
 			function buttonCam(section){
 				setPop('96%',true);
 				let tmp = "<form class=\"cams filters\">";
-				
-				//tmp += "<label class=\"select checked\"><input type=\"radio\" value=\"cam1\" name=\"filter\">Cam 1</label>"
-				//tmp += "<label class=\"select\"><input type=\"radio\" value=\"cam2\" name=\"filter\">Cam 2</label>"
-								
-				Object.keys(camDriver).forEach((key, index) => {
+						
+				Object.keys(camLenses).forEach((key, index) => {
 					let checked = index == 0?"checked":"";
 					let camNum = index+1; 
 					tmp += "<label class=\"select "+checked+"\"><input type=\"radio\" value=\""+key+"\" name=\"filter\" "+checked+">Cam "+camNum+"</label>";
@@ -797,20 +817,9 @@
 				$('#pop fieldset').innerHTML = tmp;
 				
 				let getCam = $('#pop .cams .checked input').value;
+				if(!getCam || getCam === "undefined") getCam = null;
 				lastSection = section;
-				if (!getCam || getCam === "undefined") getCam = null;
-				camDevices.decodeFromVideoDevice(getCam, 'viewFinder', (result, err) => {
-					if(result) {
-						$('.searchFrm input',section).value = result;
-						camDevices.reset();
-						buttonCancel(null);
-					}
-					if(err && !(err instanceof ZXing.NotFoundException)) {
-						console.log(err);
-					}
-				});
-				
-				
+				viewFinder(getCam,section);			
 			}
 			function checkedFocus(el) {
 				if(!el) return;
@@ -826,6 +835,18 @@
 					parentLabel.classList.add('checked');
 					if(!multiSelect) selections = [parentLabel];
 				}
+			}
+			function viewFinder(lense,section){
+				camAPI.decodeFromVideoDevice(lense, 'viewFinder', (result, err) => {
+					if(result) {
+						$('.searchFrm input',section).value = result;
+						camAPI.reset();
+						buttonCancel(input);
+					}
+					if(err && !(err instanceof ZXing.NotFoundException)) {
+						console.log(err);
+					}
+				});
 			}
 			function clearbyArrow(section) {
 				const selection = $$('.rows .focused',section);
@@ -1225,23 +1246,12 @@
 					}
 				}
 				else if(input.name==='filter') {
-					//console.log(label.innerText);
 					if(input.closest('form').classList.contains('cams')){
-						camDevices.reset();
+						camAPI.reset();
 						let deviceId = input?.value;
 						if(!deviceId || deviceId === "undefined") deviceId = null;
-						camDevices.decodeFromVideoDevice(deviceId, 'viewFinder', (result, err) => {
-							if(result) {
-								$('.searchFrm input',lastSection).value = result;
-								camDevices.reset();
-								buttonCancel(input);
-							}
-							if(err && !(err instanceof ZXing.NotFoundException)) {
-								console.log(err);
-							}
-						});
+						viewFinder(deviceId,lastSection);
 					}
-					//console.log(input.value);
 				}
 			}
 			function handleResize() {
@@ -1277,15 +1287,12 @@
 
 			if(sideExist){
 				import('./cam.js').then(module => {
-					//let cams = [];
-					camDevices = new ZXing.BrowserMultiFormatReader();
-					camDevices.listVideoInputDevices().then((videoInputDevices) => {
+					camAPI = new ZXing.BrowserMultiFormatReader();
+					camAPI.listVideoInputDevices().then((videoInputDevices) => {
 						if (videoInputDevices.length >= 1) {
 							videoInputDevices.forEach((el) => {
-								camDriver[el.deviceId] = el.label;
-								//cams.push(el.deviceId);
+								camLenses[el.deviceId] = el.label;
 							});
-							//camId = cams[0];
 						}
 					})
 					.catch((err) => {
