@@ -111,6 +111,7 @@
 			.btn.focused svg.delBtn {stroke:red;}
 			.searchFrm label.focused {background-color:transparent;color:var(--cl)}
 			
+			#pathList {display:none;}
 			.tilesRow {
 				display:grid;grid-template-columns:repeat(2, 1fr)!important;gap:1vh!important;
 			}
@@ -120,9 +121,8 @@
 			.tilesPreview {
 				width:auto!important;height:20vh!important;border-radius:1vh!important;margin-bottom:.5vh!important;
 			}
-			.tilesNone {
-				display:none!important;
-			}
+			.tilesBlock {display:block!important;}
+			.tilesNone {display:none!important;}
 
 			.layerToggle {display:block!important}
 			#layer {position:absolute;z-index:1;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,0.6);display:none;}
@@ -306,7 +306,7 @@
 					</div>
 					<div class="hRight">
 						<label class="btn mobHid">
-							<input type="radio" name="iBtn" data-btn="compose">
+							<input type="radio" name="iBtn" data-btn="new item">
 							<svg viewbox="0 0 100 100">
 								<path d="M50 10 A40 40 0 1 1 50 90 A40 40 0 1 1 50 10 M50 25 V75 M25 50 H75" />
 							</svg>
@@ -324,10 +324,10 @@
 							</svg>
 						</label>
 						<label class="btn mobHid secondLast">
-							<input type="radio" name="iBtn" data-btn="tiles">
+							<input type="radio" name="iBtn" data-btn="change view">
 							<svg viewbox="0 0 100 100">
-								<path d="M10 10 H40 V40 H10 Z M60 10 H90 V40 H60 Z M10 60 H40 V90 H10 Z M60 60 H90 V90 H60 Z" />
-								<!--<path d="M10 10h80v18H10zM10 41h80v18H10zM10 72h80v18H10z"/>-->
+								<path id="pathTile" d="M10 10 H40 V40 H10 Z M60 10 H90 V40 H60 Z M10 60 H40 V90 H10 Z M60 60 H90 V90 H60 Z" />
+								<path id="pathList" d="M10 20H30V40H10Z M40 20H90V25H40Z M40 35H90V40H40Z M10 60H30V80H10Z M40 60H90V65H40Z M40 75H90V80H40Z"/>
 							</svg>
 						</label>
 						<label class="btn tabHid last">
@@ -425,7 +425,7 @@
 					</div>
 					<div class="hRight">
 						<label class="btn mobHid">
-							<input type="radio" name="iBtn" data-btn="compose">
+							<input type="radio" name="iBtn" data-btn="new item">
 							<svg viewbox="0 0 100 100">
 								<path d="M50 10 A40 40 0 1 1 50 90 A40 40 0 1 1 50 10 M50 25 V75 M25 50 H75" />
 							</svg>
@@ -611,7 +611,7 @@
 				[...$$('header input[data-btn=select],header input[data-btn=delete',section)].forEach(el=>{
 					el.disabled = val;
 				});
-				[...$$('header input[data-btn=compose],header input[data-btn=tiles],header input[data-btn=save],header input[data-btn=signout]')].forEach(el=>{
+				[...$$('header input[data-btn="new item"],header input[data-btn="change view"],header input[data-btn=save],header input[data-btn=signout]')].forEach(el=>{
 					el.disabled = val;
 				});
 			}
@@ -707,7 +707,7 @@
 						focused && checkedFocus(inputDots);
 					}
 					else {
-						checkedFocus($('header input[data-btn=compose]',target));
+						checkedFocus($('header input[data-btn="new item"]',target));
 					}
 				}
 				//lastSection = null;
@@ -781,7 +781,7 @@
 				listSec.style.display = showNav ? 'none' : 'block';
 				focused && checkedFocus($(`${showNav ? '#navSection' : '#listSection'} header input`));
 			}
-			function buttonTiles(){
+			function buttonView(){
 				[...$$('#listSection .rows, #detailSection .rows')].forEach(el=>{
 					el.classList.toggle('tilesRow');
 				});
@@ -794,6 +794,8 @@
 				[...$$('fieldset .rows label.select > div:last-of-type > div, fieldset .rows label dd')].forEach(el=>{
 					el.classList.toggle('tilesNone');
 				});
+				$('#pathTile').classList.toggle('tilesNone');
+				$('#pathList').classList.toggle('tilesBlock');
 				if(isPhone){
 					buttonCancel();
 				}
@@ -1128,10 +1130,10 @@
 							const { btn } = input.dataset;
 							switch (btn) {
 								case 'side':		buttonSide(); break;
-								case 'compose':		buttonCompose(input); break;
+								case 'new item':	buttonCompose(input); break;
 								case 'dots':		buttonDots(); break;
 								case 'back':		buttonBack(input); break;
-								case 'tiles':		buttonTiles(); break;
+								case 'change view':		buttonView(); break;
 								case 'popCancel':	buttonCancel(input); break;
 								case 'popSend':		buttonSend(input); break;
 							}
@@ -1193,9 +1195,9 @@
 					switch (btn) {
 						case 'back':		buttonBack(input,false); break;
 						case 'side':		buttonSide(false); break;
-						case 'tiles':		buttonTiles(); break;
+						case 'change view':	buttonView(); break;
 						case 'delete':		buttonDelete(input); break;
-						case 'compose':		buttonCompose(input); break;
+						case 'new item':	buttonCompose(input); break;
 						case 'dots':		buttonDots(); break;
 						case 'select':		buttonMulti(e); break;
 						case 'popCancel':	buttonCancel(input); break;
