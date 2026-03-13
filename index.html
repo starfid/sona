@@ -430,12 +430,14 @@
 								<path d="M50 10 A40 40 0 1 1 50 90 A40 40 0 1 1 50 10 M50 25 V75 M25 50 H75" />
 							</svg>
 						</label>
+						<!--
 						<label class="btn mobHid">
 							<input type="radio" name="iBtn" data-btn="save">
 							<svg viewbox="0 0 100 100">
 								<path d="M10,90 H90 V25 L75,10 H10Z M30,10 V35 H70 V10Z M20,90 V50 H80 V90Z M59,17 h3 v11 h-3Z" />
 							</svg>
 						</label>
+						-->
 						<label class="btn selIcon mobHid">
 							<input type="radio" name="iBtn" data-btn="select">
 							<svg viewbox="0 0 100 100">
@@ -606,6 +608,11 @@
 					if(label.innerText==='select' && multiSelect) label.innerText = 'Unselect';
 					lbl.appendChild(label);
 				});
+				if(multiSelect){
+					[...$$('input[data-btn="new item"],input[data-btn="change view"],input[data-btn=save]',$('#pop'))].forEach(el=>{
+						el.disabled = true;
+					});
+				}
 			}
 			function focusMulti(section,val){
 				[...$$('header input[data-btn=select],header input[data-btn=delete',section)].forEach(el=>{
