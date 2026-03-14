@@ -338,10 +338,10 @@
 						</label>
 					</div>
 				</header>
-				<fieldset>					
+				<fieldset>
 					<form class="searchFrm">
 						<label class="select">
-							<input type="search" name="q" placeholder="Search" ondblclick="this.value=''" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off">
+							<input type="search" name="q" placeholder="Search" ondblclick="this.placeholder='Search'" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off">
 							<svg viewbox="0 0 100 100" class="deskHid camIcon">
 								<path d="M10 80H90V30H70L60 20H40L30 30H10Z M50 38a15 15 0 1 0 0 30a15 15 0 1 0 0-30z M70 40h1" />
 							</svg>
@@ -760,6 +760,9 @@
 						});
 						multiSelect = false;
 					}
+					else if(isPhone){
+						multiSelect = false;
+					}
 					//selection = [];
 					cancelMulti(input);
 					checkedFocus($('.rows input',section));
@@ -848,6 +851,7 @@
 						$('.searchFrm input',section).value = result;
 						camAPI.reset();
 						buttonCancel();
+						if(section.id==='listSection') keyInp.closest('form').submit();
 					}
 					if(err && !(err instanceof ZXing.NotFoundException)) {
 						console.log(err);
@@ -987,6 +991,12 @@
 				const toggleMulti = () => $('header .selIcon svg',parentSection).classList.toggle('iconOn');
 
 				switch (e.key) {
+					case 'F3':
+						if(parentSection.id !== 'navSection'){
+							e.preventDefault();
+							$('.searchFrm input',parentSection).focus();
+						}
+					break;
 					case 'ArrowDown':
 						if(!parentForm) {
 							if(!holding && !multiSelect && $$('.iconOn',parentSection).length > 0){
@@ -1087,6 +1097,19 @@
 							(input.type === 'radio' && parentForm.classList.contains('rows')) ||
 							(input.type === 'search' && input.value.length < 1)
 						);
+						if(input.name === 'item' && display($('#pathList')) === 'block'){
+							const labels = [...parentForm.querySelectorAll('label.select')];
+							const idx = labels.indexOf(parentLabel);
+							if(e.key === 'ArrowLeft' &&  (!(idx % 2 === 0 || (idx == labels.length-1)))) {
+								parentLabel.previousElementSibling && checkedFocus($('input', parentLabel.previousElementSibling));
+								return;								
+
+							}
+							if(e.key === 'ArrowRight' && idx % 2 === 0 && idx != labels.length-1) {
+								parentLabel.nextElementSibling && checkedFocus($('input', parentLabel.nextElementSibling));
+								return;
+							}
+						}
 						if(holding){
 							multiSelect = false;
 							clearbyArrow(parentSection);
@@ -1289,8 +1312,14 @@
 				if(input.checked) checkedFocus(input);
 			});
 			selections = [$('#listSection .rows label')];
-			$('#listSection .rows input')[isPhone?'blur':'focus']();
-
+			const keyInp = $('#listSection .searchFrm input');
+			const params = new URLSearchParams(window.location.search);
+			const q = params.get('q');
+			if (q) keyInp.placeholder = q;
+			if(!isPhone){
+				keyInp.focus();
+			}
+			else {$('#listSection .rows input').blur();}
 			if(sideExist){
 				import('./cam.js').then(module => {
 					camAPI = new ZXing.BrowserMultiFormatReader();
@@ -1305,8 +1334,7 @@
 						console.error(err);
 					})
         			});
-			}
-			
+			}			
 		</script>
 	</body>
 </html>
