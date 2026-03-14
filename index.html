@@ -66,6 +66,7 @@
 			section header .hRight label.secondLast svg {margin-right: var(--mg);}	
 			section header .hRight {justify-content: flex-end;}
 			section header .deskHid, section header .tabHid {display:none}
+			section header h1 {word-break:break-all;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;}
 
 			.searchFrm, .searchFrm label, fieldset form.filters label, .rows label.checked, 
 				.rows label.focused, #navSection form label.select, #pop, video {border-radius:1vh;}
@@ -173,8 +174,10 @@
 				.searchFrm label {padding:calc(var(--mg) * .92) var(--mg);}
 				#navSection, #listSection {border-right:none;}
 				
-				#detailSection div:first-child {display:none}
-				#detailSection div:nth-child(2) {display:flex}
+				#detailSection header {grid-template-columns:20% auto 20%;}
+				#detailSection div:first-child {display:flex}
+				#detailSection div:nth-child(2) {display:flex;}
+				#detailSection div:nth-child(2) label {width:100%;text-align:center;display:inline-block}
 				#detailSection div.hRight label.last {display:none}
 				#detailSection div.hRight label.secondLast svg {margin-right:var(--mg)}
 				#navSection form div.head:first-of-type {margin-top:calc((var(--mg) * 2) + (var(--mg) / 2))}
@@ -273,18 +276,18 @@
 				<fieldset>
 					<form class="rows">
 						<div class="head">Himenaeos</div>
-							<label class="select"><input type="radio" name="nav" checked>Interdum</label>
+							<label class="select"><input type="radio" name="nav" checked>Quisque</label>
 						<div class="head">Vehicula</div>
-							<label class="select"><input type="radio" name="nav">Pharetra</label>
+							<label class="select"><input type="radio" name="nav">Sagittis</label>
 							<label class="select"><input type="radio" name="nav">Tristique</label>
 						<div class="head">Rutrum</div>
-							<label class="select"><input type="radio" name="nav">Nisl</label><label class="select"><input type="radio" name="nav">Nostra</label>
-							<label class="select"><input type="radio" name="nav">Commodo</label><label class="select"><input type="radio" name="nav">Egestas</label>
+							<label class="select"><input type="radio" name="nav">Adipiscing</label><label class="select"><input type="radio" name="nav">Scelerisque</label>
+							<label class="select"><input type="radio" name="nav">Inceptos</label><label class="select"><input type="radio" name="nav">Consequat</label>
 						<div class="head">Risus</div>
-							<label class="select"><input type="radio" name="nav">Rhoncus</label><label class="select"><input type="radio" name="nav">Eget</label>
-							<label class="select"><input type="radio" name="nav">Imperdiet</label><label class="select"><input type="radio" name="nav">Congue</label>
+							<label class="select"><input type="radio" name="nav">Volutpat</label><label class="select"><input type="radio" name="nav">Tristique</label>
+							<label class="select"><input type="radio" name="nav">Imperdiet</label><label class="select"><input type="radio" name="nav">Suspendisse</label>
 						<div class="head">Finibus</div>
-							<label class="select"><input type="radio" name="nav">Accumsan</label>
+							<label class="select"><input type="radio" name="nav">Consequat</label>
 					</form>
 				</fieldset>
 			</section>
@@ -357,7 +360,7 @@
 							<input type="checkbox" name="item" checked>
 							<div>PP</div>
 							<div>
-								<dl><dt><strong>Morbi Mauris Augue Aenean Consectetur Adipiscing Elit, Sed Do Eiusmod Tempor Incididunt Ut Labore Et Dolore Magna Aliqua</strong></dt><dd>Now</dd></dl>
+								<dl><dt><strong>Augue Aptent Augue Aenean Consectetur Adipiscing Elit, Sed Do Eiusmod Tempor Incididunt Ut Labore Et Dolore Magna Aliqua</strong></dt><dd>Now</dd></dl>
 								<dl><dt>Ullamcorper Sollicitudin</dt><dd>&#9872;</dd></dl>
 								<div>Quisque Sociosqu Consequat Fames Urna Mollis Blandit Auctor Aenean Aptent Euismod Aenean Hac Fusce Quis Netus</div>
 							</div>
@@ -366,7 +369,7 @@
 							<input type="checkbox" name="item">
 							<div>MT</div>
 							<div>
-								<dl><dt><strong>Tincidunt Eros Ullamcorper</strong></dt><dd>09:52</dd></dl>
+								<dl><dt><strong>Tempor Torquent Ullamcorper</strong></dt><dd>09:52</dd></dl>
 								<dl><dt>Potenti Venenatis Ornare</dt><dd>&#9872;</dd></dl>
 								<div>Tellus Fames Tortor Cras Suspendisse Torquent Sodales Molestie Eros Lectus Tristique Fringilla Aliquet Libero Neque</div>
 							</div>
@@ -375,7 +378,7 @@
 							<input type="checkbox" name="item">
 							<div>AP</div>
 							<div>
-								<dl><dt><strong>Euismod Ac Viverra Dictumst Consectetur Dignissim Semper Per Leo Vivamus Rutrum Tortor</strong></dt><dd>Yesterday</dd></dl>
+								<dl><dt><strong>Magna Dapibus Viverra Dictumst Consectetur Dignissim Semper Per Leo Vivamus Rutrum Tortor</strong></dt><dd>Yesterday</dd></dl>
 								<dl><dt>Metus Nibh Mollis</dt><dd><!--&#9872;--></dd></dl>
 								<div>Integer Senectus Est Cras Id Lacinia</div>
 							</div>
@@ -384,7 +387,7 @@
 							<input type="checkbox" name="item">
 							<div>CS</div>
 							<div>
-								<dl><dt><strong>Ullamcorper Nunc Iaculis Tempus</strong></dt><dd>Monday</dd></dl>
+								<dl><dt><strong>Aliquam Eget Iaculis Tempus</strong></dt><dd>Monday</dd></dl>
 								<dl><dt>Nisl Nullam Litora Ad Lacinia Iaculis Felis</dt><dd>&#9872;</dd></dl>
 								<div>Senectus Tellus Turpis Nisl Fringilla Vel Conubia Vel Metus Diam Eget Porttitor.</div>
 							</div>
@@ -393,7 +396,7 @@
 							<input type="checkbox" name="item">
 							<div>HM</div>
 							<div>
-								<dl><dt><strong>Lacinia Conubia Nulla Per Pretium Porta Nostra Elementum Eget Bibendum Urna Sagittis Cubilia</strong></dt><dd>25/09/13</dd></dl>
+								<dl><dt><strong>Tempus Aptent Nulla Per Pretium Porta Nostra Elementum Eget Bibendum Urna Sagittis Cubilia</strong></dt><dd>25/09/13</dd></dl>
 								<dl><dt>Aliquet Amet Velit</dt><dd><!--&#9872;--></dd></dl>
 								<div>Phasellus Ac Id Purus Himenaeos Justo Feugiat Ullamcorper Consequat A Nisl Porta Vestibulum Dictum Interdum</div>
 							</div>
@@ -402,7 +405,7 @@
 							<input type="checkbox" name="item">
 							<div>NT</div>
 							<div>
-								<dl><dt><strong>Ultricies Suscipit Dui</strong></dt><dd>22/11/08</dd></dl>
+								<dl><dt><strong>Imperdiet Suscipit Dui</strong></dt><dd>22/11/08</dd></dl>
 								<dl><dt>Senectus In Diam</dt><dd>&#9872;</dd></dl>
 								<div>Metus Lectus Inceptos Metus Augue Vel Donec Primis Elit Varius Nam</div>
 							</div>
@@ -411,10 +414,7 @@
 				</fieldset>
 			</section>
 			<section id="detailSection">
-				<header>
-					<div>
-						<label><h1></h1></label>
-					</div>
+				<header>					
 					<div class="deskHid">
 						<label class="btn">
 							<input type="radio" name="iBtn" data-btn="back">
@@ -423,6 +423,9 @@
 							</svg>
 						</label>
 					</div>
+					<div>
+						<label><h1></h1></label>
+					</div>
 					<div class="hRight">
 						<label class="btn mobHid">
 							<input type="radio" name="iBtn" data-btn="new item">
@@ -430,14 +433,12 @@
 								<path d="M50 10 A40 40 0 1 1 50 90 A40 40 0 1 1 50 10 M50 25 V75 M25 50 H75" />
 							</svg>
 						</label>
-						<!--
 						<label class="btn mobHid">
 							<input type="radio" name="iBtn" data-btn="save">
 							<svg viewbox="0 0 100 100">
 								<path d="M10,90 H90 V25 L75,10 H10Z M30,10 V35 H70 V10Z M20,90 V50 H80 V90Z M59,17 h3 v11 h-3Z" />
 							</svg>
 						</label>
-						-->
 						<label class="btn selIcon mobHid">
 							<input type="radio" name="iBtn" data-btn="select">
 							<svg viewbox="0 0 100 100">
@@ -484,7 +485,7 @@
 							<input type="checkbox" name="item" checked>
 							<div>ID</div>
 							<div>
-								<dl><dt><strong>Augue Faucibus Taciti</strong></dt><dd>01/06/24</dd></dl>
+								<dl><dt><strong>Morbi Faucibus Taciti</strong></dt><dd>01/06/24</dd></dl>
 								<dl><dt>Sodales Nisl</dt><dd><!--&#9872;--></dd></dl>
 								<div>Auctor Varius Est Ullamcorper Viverra Eleifend Nulla Est Massa Tempus Magna</div>
 							</div>
@@ -594,6 +595,9 @@
 					detSec.classList.remove('detailShowDetail');
 					section = detSec;
 				}
+			}
+			function setDetailTitle(input){
+				$('#detailSection h1').innerText = $('div:last-child dl dt',input.closest('label')).innerText;
 			}
 			function buttonDots(){
 				setPop('50%',true);
@@ -1176,7 +1180,6 @@
 							detSec.classList.add('detailShowDetail');
 							detSec.style.display = 'block';
 							checkedFocus($('.rows input',detSec));
-
 							listSec.addEventListener('animationend', () => {
 								listSec.classList.remove('listShowDetail');
 								listSec.style.display = 'none';
@@ -1184,11 +1187,15 @@
 							detSec.addEventListener('animationend', () => {
 								detSec.classList.remove('detailShowDetail');
 							}, { once: true });
+							setDetailTitle(input);
 						}
-						else if(input.name === 'nav' && display(listSec)==='none') {
-							navSec.style.display = 'none';
-							listSec.style.display = 'block';
-							checkedFocus($('.rows input',listSec));
+						else if(input.name === 'nav') {
+							$('#listSection h1').innerText = parentLabel.innerText;
+							if(display(listSec)==='none'){
+								navSec.style.display = 'none';
+								listSec.style.display = 'block';
+								checkedFocus($('.rows input',listSec));
+							}
 						}
 					break;
 					case 'Delete':
@@ -1243,9 +1250,12 @@
 						});
 						selections = $$('.rows .focused',sect);
 					}
-					if (section === 'navSection' && display(listSec) === 'none') {
-						navSec.style.display = 'none';
-						listSec.style.display = 'block';
+					if (section === 'navSection') {
+						$('#listSection h1').innerText = label.innerText;
+						if(display(listSec) === 'none'){
+							navSec.style.display = 'none';
+							listSec.style.display = 'block';
+						}
 					}
 					else if (!multiSelect && detSec && (display(detSec) === 'none' || leftPos(detSec) > '200px')) {
 						if(display(listSec)==='block'){
@@ -1270,6 +1280,7 @@
 						detSec.addEventListener('animationend', () => {
 							detSec.classList.remove('detailShowDetail');
 						}, { once: true });
+						setDetailTitle(input);
 					}
 					else if(!multiSelect && section != 'navSection' && !label.classList.contains("checked")) {
 						clearCheck();
@@ -1315,8 +1326,7 @@
 			selections = [$('#listSection .rows label')];
 			const keyInp = $('#listSection .searchFrm input');
 			const params = new URLSearchParams(window.location.search);
-			const q = params.get('q');
-			if (q) keyInp.placeholder = q;
+			if (params.get('q')) keyInp.placeholder = params.get('q');
 			if(!sideExist){
 				keyInp.focus();
 			}
