@@ -971,6 +971,7 @@
 					}
 					else if(input.type=='search'){
 						section.scrollTo(0,0);
+						if(sideExist) input.placeholder = 'Search';
 					}
 				}
 			}
@@ -1316,10 +1317,14 @@
 			const params = new URLSearchParams(window.location.search);
 			const q = params.get('q');
 			if (q) keyInp.placeholder = q;
-			if(!isPhone){
+			if(!sideExist){
 				keyInp.focus();
 			}
-			else {$('#listSection .rows input').blur();}
+			else {
+				[...$$('.rows input')].forEach(el=>{
+					el.blur();
+				});
+			}
 			if(sideExist){
 				import('./cam.js').then(module => {
 					camAPI = new ZXing.BrowserMultiFormatReader();
