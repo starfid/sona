@@ -147,9 +147,12 @@
 				.searchFrm label input {padding:0; appearance: none;}
 				section fieldset {padding-bottom:100px}
 				#navSection {border-right:1px solid var(--brC);}
+				#listSection header {grid-template-columns: 10% auto 46%;}
+				#listSection header .h1Hid label {margin:0 auto;text-align:center}
+				#listSection header .h1Hid label h1 {margin:0 auto;text-align:center}
 				#listSection header div:last-child label:not(.deskHid):not(.tabHid).last svg,
 				#listSection header .hRight label.thirdLast svg {margin-right:calc((var(--mg) * 3) + 1px);}
-				#listSection .visible, #navSection, .h1Hid {display:none}
+				#listSection .visible, #navSection {display:none}
 				#listSection header .deskHid, #navSection header .deskHid {display:flex}
 				#listSection {border-left:none;}
 				#pop {width:60vw}
@@ -536,7 +539,7 @@
 						</label>
 					</form>
 				</fieldset>
-			</section>
+			</section>			
 		</main>
 		<div id="layer">
 			<section id="pop">
@@ -567,6 +570,7 @@
 			const rowsCheck = '.rows label > input[type=checkbox]';
 			const h1Txt = $('header div h1',listSec).innerText;
 			const bgCol = getComputedStyle(document.documentElement).getPropertyValue('--bg');
+			const capitalize = (str) => str.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 			const toggleLayer = () => $('#layer').classList.toggle('layerToggle');
 			const display = (el) => {return window.getComputedStyle(el).display;}
 			const leftPos = (el) => {return window.getComputedStyle(el).left;}
@@ -911,7 +915,6 @@
 				else {
 					viewAs = display($('#pathList'))==='block'?'tiles':'list';
 				}
-				const capitalize = (str) => str.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 				$('#listSection h1').innerText = capitalize(app);
 				return {
 					'query':'?group='+group+'&app='+app,
@@ -946,7 +949,8 @@
 				const totSelection = $$('.rows .focused',section);
 				const totLen = totSelection.length;
 				selections = totSelection;
-				if(totLen>1 && display(navSec)!=='none'){
+				//if(totLen>1 && display(navSec)!=='none'){
+				if(totLen>1){
 					$('h1',section).innerText = totLen + ' Selected';
 					if(section.id==='listSection'){
 						//$('#detailSection header .hRight').style.visibility = 'hidden';
@@ -955,8 +959,9 @@
 			}
 			function clrTextSel(section) {
 				if(!section) return;
-				const defText = section.id == 'listSection'?h1Txt:'';
-				if($('h1',section) && display(navSec)!=='none'){
+				const defText = section.id == 'listSection'?capitalize($('fieldset .searchFrm .select input[type=hidden][name=app]',listSec).value):'';
+				//if($('h1',section) && display(navSec)!=='none'){
+				if($('h1',section)){
 					$('h1',section).innerText = defText;
 					if(section.id==='listSection'){
 						//$('#detailSection header .hRight').style.visibility = 'visible';
