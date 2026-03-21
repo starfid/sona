@@ -58,7 +58,7 @@
 			section header div label {display:flex;align-items:center;}
 			label svg {
 				width:var(--fn2); height:var(--fn2); cursor:pointer;
-				stroke-width:4; stroke:var(--cl);fill:transparent;
+				stroke-width:4; stroke:var(--cl2);fill:transparent;
 			}
 			section header div label svg {margin-right:calc((var(--mg) * 3) + 1px);}
 			section header div label:first-child svg {margin-left:var(--mg);}
@@ -157,7 +157,6 @@
 				#listSection .visible, #navSection {display:none}
 				#listSection header .deskHid, #navSection header .deskHid {display:flex}
 				#listSection {border-left:none;}
-
 				#pop {width:60vw}
 				#pop fieldset {padding: calc((2 * var(--mg)) + var(--fn2)) 0 0 0;}
 				@keyframes navToggle {
@@ -1026,7 +1025,7 @@
 					}
 					else if(input.type=='search'){
 						section.scrollTo(0,0);
-						clearDetH1();
+						//clearDetH1();
 						if(sideExist) input.placeholder = 'Search';
 					}
 					if (multiSelect && rows) {
@@ -1057,7 +1056,7 @@
 						}
 						else if(rows && !loaded && section === listSec){
 							setDetH1();
-						}						
+						}
 					}
 					
 				}
