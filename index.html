@@ -70,6 +70,8 @@
 				word-break:break-all;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;
 				
 			}
+			
+			#detailSection header {grid-template-columns: auto 60%}
 
 			.searchFrm, .searchFrm label, fieldset form.filters label, .rows label.checked, 
 				.rows label.focused, #navSection form label.select, #pop, video {border-radius:1vh;}
@@ -155,6 +157,7 @@
 				#listSection .visible, #navSection {display:none}
 				#listSection header .deskHid, #navSection header .deskHid {display:flex}
 				#listSection {border-left:none;}
+
 				#pop {width:60vw}
 				#pop fieldset {padding: calc((2 * var(--mg)) + var(--fn2)) 0 0 0;}
 				@keyframes navToggle {
@@ -580,6 +583,7 @@
 			let selDown = true;
 			let lastSection = null;
 			let backAnimating = false;
+			let loaded = false;
 
 			function setPop(percent,cancelBut){
 				$('#pop header .hRight label').style.visibility = cancelBut?'hidden':'visible';
@@ -950,7 +954,7 @@
 				const totLen = totSelection.length;
 				selections = totSelection;
 				//if(totLen>1 && display(navSec)!=='none'){
-				if(totLen>1){
+				if(totLen>0){
 					$('h1',section).innerText = totLen + ' Selected';
 					if(section.id==='listSection'){
 						//$('#detailSection header .hRight').style.visibility = 'hidden';
@@ -959,6 +963,16 @@
 			}
 			function clrTextSel(section) {
 				if(!section) return;
+				let h1 = "";
+				if(section.id == 'listSection'){
+					h1 = capitalize($('fieldset .searchFrm .select input[type=hidden][name=app]',listSec).value);
+				}
+				else if(section.id == 'detailSection'){
+					//console.log($("fieldset .rows .select.checked div:nth-child(3) dl dt",listSec).innerText);
+					h1 = $("fieldset .rows .select.checked div:nth-child(3) dl dt",listSec).innerText;
+				}
+				$('h1',section).innerText = h1;
+				/*
 				const defText = section.id == 'listSection'?capitalize($('fieldset .searchFrm .select input[type=hidden][name=app]',listSec).value):'';
 				//if($('h1',section) && display(navSec)!=='none'){
 				if($('h1',section)){
@@ -967,6 +981,7 @@
 						//$('#detailSection header .hRight').style.visibility = 'visible';
 					}
 				}
+				*/
 			}
 			function cancelMulti(input) {
 				if(input.closest('section')) {					
@@ -998,10 +1013,22 @@
 				if(!e.target.matches(selector)) return;
 				const input = e.target;
 				const iconSec = [];
+				const clearDetH1 = () => {$('#detailSection header h1').innerText = "";}
 				if(input.matches(selector)){
 					const rows = ['item','copy'].includes(input.name);
 					const section = input.closest('section');
 					const sid = section.id;
+					if(input.name=='iBtn'){
+						if(sid !== 'pop') {
+							lastSection = section;
+						}
+						e.preventDefault();
+					}
+					else if(input.type=='search'){
+						section.scrollTo(0,0);
+						clearDetH1();
+						if(sideExist) input.placeholder = 'Search';
+					}
 					if (multiSelect && rows) {
 						$$('.iconOn').forEach(m=>{
 							iconSec.push(m.closest('section').id);
@@ -1016,22 +1043,23 @@
 						) {
 							input.closest('label')?.classList.add('checked','focused');
 						}
+						clearDetH1();
 						totTextSel(section);
 					}
 					else if(!(multiSelect && !rows)){
 						input.closest('label')?.classList.add('focused');
-						
-					}
-					if(input.name=='iBtn'){
-						if(sid !== 'pop') {
-							lastSection = section;
+						const setDetH1 = () => {
+							$('#detailSection header h1').innerText = $('div:nth-child(3) dl dt',input.closest('label')).innerText;
 						}
-						e.preventDefault();
+						if(rows && loaded){
+							if(section === listSec) setDetH1();
+							//else if(section === detSec) clearDetH1();
+						}
+						else if(rows && !loaded && section === listSec){
+							setDetH1();
+						}						
 					}
-					else if(input.type=='search'){
-						section.scrollTo(0,0);
-						if(sideExist) input.placeholder = 'Search';
-					}
+					
 				}
 			}
 			function handleFocusOut(e) {
@@ -1420,7 +1448,8 @@
 						console.error(err);
 					})
         			});
-			}			
+			}		
+			loaded = true;	
 		</script>
 	</body>
 </html>
