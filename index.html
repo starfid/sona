@@ -118,9 +118,13 @@
 			#pathList {display:none;}
 			.tilesRow {display:grid;gap:1vh!important;}
 			.tilesRow {grid-template-columns:repeat(4, 1fr)!important;}
-			main:has(#detailSection:not(:empty)) .tilesRow {grid-template-columns:repeat(2, 1fr)!important;}
+			main:has(#detailSection:not(:empty)) .tilesRow {grid-template-columns:repeat(3, 1fr)!important;}
 			.tilesLabel {height:auto/*calc(var(--dmy) * 2.5)!important*/; display:block!important;border-bottom:none!important;}
-			.tilesPreview {width:auto!important;height:20vh!important;border-radius:1vh!important;margin-bottom:.5vh!important;}
+			.tilesPreview {
+				width: 100% !important; aspect-ratio: 1 / 1 !important; height: auto !important; object-fit: cover;
+				/*width:auto!important; height:20vh!important;*/
+				border-radius:1vh!important;margin-bottom:.5vh!important;
+			}
 			.tilesBlock {display:block!important;}
 			.tilesNone {display:none!important;}
 
@@ -171,6 +175,7 @@
 					--mg:3.2vw;	--mg2:calc(var(--fn2) / 2);	--tTop:50%;	--wdt:100vw;
 				}
 				main {display:block;background-color:#000000!important;min-height:60vh}
+				main:has(#detailSection:not(:empty)) .tilesRow {grid-template-columns:repeat(2, 1fr)!important;}
 				#listSection header div:last-child label:not(.deskHid):not(.tabHid).last svg
 				section header div label svg {margin-right:calc(var(--mg) * 2);}
 				section header .hRight label.secondLast svg {margin-right: calc(var(--mg) * 2);}
@@ -225,6 +230,7 @@
 					border-bottom-left-radius:0;border-bottom-right-radius:0;
 				}
 				.sectionZoom {height:80vh;border-radius:var(--mg);animation:zooming .3s forwards}
+				.tilesPreview {width: 100% !important; aspect-ratio: 1 / 1 !important; height: auto !important; object-fit: cover;}
 				@keyframes zooming { from {transform:scale(1);} to {transform:scale(.94);} }
 				@keyframes popRising { from {height:25%;} to {height:var(--tTop);} }
 				@keyframes detailShowDetail { from {left:150px;} to {left:0;} }
@@ -362,7 +368,7 @@
 					<form class="rows" method="post" action="?">
 						<label class="select">
 							<input type="checkbox" name="item" checked>
-							<div>PP</div>
+							<div>AA</div>
 							<div>
 								<dl><dt><strong>Augue Aptent Augue Aenean Consectetur Adipiscing Elit, Sed Do Eiusmod Tempor Incididunt Ut Labore Et Dolore Magna Aliqua</strong></dt><dd>Now</dd></dl>
 								<dl><dt>Ullamcorper Sollicitudin</dt><dd>&#9872;</dd></dl>
@@ -371,7 +377,7 @@
 						</label>
 						<label class="select">
 							<input type="checkbox" name="item">
-							<div>MT</div>
+							<div>TT</div>
 							<div>
 								<dl><dt><strong>Tempor Torquent Ullamcorper</strong></dt><dd>09:52</dd></dl>
 								<dl><dt>Potenti Venenatis Ornare</dt><dd>&#9872;</dd></dl>
@@ -380,7 +386,7 @@
 						</label>
 						<label class="select">
 							<input type="checkbox" name="item">
-							<div>AP</div>
+							<div>MD</div>
 							<div>
 								<dl><dt><strong>Magna Dapibus Viverra Dictumst Consectetur Dignissim Semper Per Leo Vivamus Rutrum Tortor</strong></dt><dd>Yesterday</dd></dl>
 								<dl><dt>Metus Nibh Mollis</dt><dd><!--&#9872;--></dd></dl>
@@ -389,7 +395,7 @@
 						</label>
 						<label class="select">
 							<input type="checkbox" name="item">
-							<div>CS</div>
+							<div>AE</div>
 							<div>
 								<dl><dt><strong>Aliquam Eget Iaculis Tempus</strong></dt><dd>Monday</dd></dl>
 								<dl><dt>Nisl Nullam Litora Ad Lacinia Iaculis Felis</dt><dd>&#9872;</dd></dl>
@@ -398,7 +404,7 @@
 						</label>
 						<label class="select">
 							<input type="checkbox" name="item">
-							<div>HM</div>
+							<div>TA</div>
 							<div>
 								<dl><dt><strong>Tempus Aptent Nulla Per Pretium Porta Nostra Elementum Eget Bibendum Urna Sagittis Cubilia</strong></dt><dd>25/09/13</dd></dl>
 								<dl><dt>Aliquet Amet Velit</dt><dd><!--&#9872;--></dd></dl>
@@ -407,11 +413,38 @@
 						</label>
 						<label class="select">
 							<input type="checkbox" name="item">
-							<div>NT</div>
+							<div>IS</div>
 							<div>
 								<dl><dt><strong>Imperdiet Suscipit Dui</strong></dt><dd>22/11/08</dd></dl>
 								<dl><dt>Senectus In Diam</dt><dd>&#9872;</dd></dl>
 								<div>Metus Lectus Inceptos Metus Augue Vel Donec Primis Elit Varius Nam</div>
+							</div>
+						</label>
+						<label class="select">
+							<input type="checkbox" name="item">
+							<div>GN</div>
+							<div>
+								<dl><dt><strong>Gravida Neque Fermentum Blandit Ad Facilisis Viverra</strong></dt><dd>Monday</dd></dl>
+								<dl><dt>Dui Velit Egestas Felis Nisi Magna Torquent Facilisis Magna Vehicula Rutrum Habitasse</dt><dd>&#9872;</dd></dl>
+								<div>Hendrerit Neque Odio Fermentum Diam Feugiat Pellentesque Iaculis.</div>
+							</div>
+						</label>
+						<label class="select">
+							<input type="checkbox" name="item">
+							<div>EL</div>
+							<div>
+								<dl><dt><strong>Ex Litora Consequat Arcu Lacinia Libero Tortor</strong></dt><dd>25/09/13</dd></dl>
+								<dl><dt>Senectus Dapibus Nec Nisl Risus Justo Condimentum Orci Mattis Porttitor Conubia Aptent</dt><dd><!--&#9872;--></dd></dl>
+								<div>Vel Velit Pellentesque Hendrerit Himenaeos Et Id Blandit Eros Inceptos Potenti Class Auctor Placerat Molestie Sem</div>
+							</div>
+						</label>
+						<label class="select">
+							<input type="checkbox" name="item">
+							<div>SP</div>
+							<div>
+								<dl><dt><strong>Sit Potenti Adipiscing Ipsum Habitant Potenti</strong></dt><dd>22/11/08</dd></dl>
+								<dl><dt>Varius Aliquam Netus In Lorem Maecenas Ullamcorper Condimentum Et Maximus</dt><dd>&#9872;</dd></dl>
+								<div>Est Sem Purus Tellus Sit Semper Fringilla Habitasse</div>
 							</div>
 						</label>
 					</form>
@@ -488,7 +521,7 @@
 					<form class="rows" method="post" action="?">
 						<label class="select">
 							<input type="checkbox" name="item" checked>
-							<div>ID</div>
+							<div>MF</div>
 							<div>
 								<dl><dt><strong>Morbi Faucibus Taciti</strong></dt><dd>01/06/24</dd></dl>
 								<dl><dt>Sodales Nisl</dt><dd>&#9872;</dd></dl>
@@ -497,7 +530,7 @@
 						</label>
 						<label class="select">
 							<input type="checkbox" name="item">
-							<div>DK</div>
+							<div>QL</div>
 							<div>
 								<dl><dt><strong>Quis Luctus A Nunc Cras Nam Velit Metus Eu Metus</strong></dt><dd>22/05/13</dd></dl>
 								<dl><dt>Tristique Fringilla Lectus Inceptos Mi Pharetra Fames Maximus</dt><dd>&#9872;</dd></dl>
@@ -506,7 +539,7 @@
 						</label>
 						<label class="select">
 							<input type="checkbox" name="item">
-							<div>FA</div>
+							<div>MH</div>
 							<div>
 								<dl><dt><strong>Metus Hendrerit Inceptos Nulla.</strong></dt><dd>22/05/13</dd></dl>
 								<dl><dt>Lacinia Orci Class Vel</dt><dd></dd></dl>
@@ -515,7 +548,7 @@
 						</label>
 						<label class="select">
 							<input type="checkbox" name="item">
-							<div>LN</div>
+							<div>JP</div>
 							<div>
 								<dl><dt><strong>Justo Pulvinar Scelerisque Porta Taciti Lacinia Sapien Vel Rutrum Nam</strong></dt><dd>16/11/12</dd></dl>
 								<dl><dt>Tempor Laoreet Maecenas Ultrices.</dt><dd>&#9872;</dd></dl>
@@ -524,7 +557,7 @@
 						</label>
 						<label class="select">
 							<input type="checkbox" name="item">
-							<div>ST</div>
+							<div>TD</div>
 							<div>
 								<dl><dt><strong>Torquent Dignissim Consequat Blandit Sem Ad Auctor Massa Quis</strong></dt><dd>13/10/05</dd></dl>
 								<dl><dt>Placerat Ornare Pretium</dt><dd>&#9872;</dd></dl>
@@ -533,11 +566,39 @@
 						</label>
 						<label class="select">
 							<input type="checkbox" name="item">
-							<div>AA</div>
+							<div>SS</div>
 							<div>
 								<dl><dt><strong>Sem Sollicitudin Nibh Diam Taciti</strong></dt><dd>13/09/13</dd></dl>
 								<dl><dt>Massa Nam</dt><dd>&#9872;</dd></dl>
 								<div>Convallis Lectus Dolor Nibh Sem Lectus Maecenas Amet Mattis Tristique Tincidunt Morbi Viverra Hendrerit Accumsan Lacus Egestas Curabitur Ad</div>
+							</div>
+						</label>
+
+						<label class="select">
+							<input type="checkbox" name="item">
+							<div>MM</div>
+							<div>
+								<dl><dt><strong>Massa Molestie Semper Nam Id Orci</strong></dt><dd>16/11/12</dd></dl>
+								<dl><dt>Varius Porta Velit Hac Quisque Magna Dictumst Auctor Aliquam Turpis Viverra Eget.</dt><dd>&#9872;</dd></dl>
+								<div>Morbi Fusce Inceptos Pretium Iaculis Dapibus Integer Eros Dignissim Sociosqu Porta Mattis Sodales</div>
+							</div>
+						</label>
+						<label class="select">
+							<input type="checkbox" name="item">
+							<div>DR</div>
+							<div>
+								<dl><dt><strong>Dui Rutrum Nibh Nisl Himenaeos Ante</strong></dt><dd>13/10/05</dd></dl>
+								<dl><dt>Curabitur Netus Ex Consectetur Litora Justo Augue Erat Malesuada Litora</dt><dd>&#9872;</dd></dl>
+								<div>Fermentum Sed Elementum Quam Lorem Scelerisque Praesent Fringilla Purus Iaculis Duis Aenean Id Conubia Nec.</div>
+							</div>
+						</label>
+						<label class="select">
+							<input type="checkbox" name="item">
+							<div>CP</div>
+							<div>
+								<dl><dt><strong>Curae Pharetra Rhoncus Nunc Fames Tellus Conubia Pretium Hac Dictum Lorem Id Viverra Massa Sapien</strong></dt><dd>13/09/13</dd></dl>
+								<dl><dt>Fermentum Gravida Urna Laoreet Orci Ex Netus/dt><dd>&#9872;</dd></dl>
+								<div>Justo Feugiat Vehicula Ultricies Rutrum Himenaeos Duis Urna Facilisis Dapibus Cras Semper</div>
 							</div>
 						</label>
 					</form>
@@ -1183,12 +1244,17 @@
 						if(input.name === 'item' && display($('#pathList')) === 'block'){
 							const labels = [...parentForm.querySelectorAll('label.select')];
 							const idx = labels.indexOf(parentLabel);
-							if(e.key === 'ArrowLeft' &&  (!(idx % 2 === 0 || (idx == labels.length-1)))) {
+							
+							const cols = isPhone?2:3;
+							const leftEdge = idx % cols !== 0;
+							const rightEdge = (idx + 1) % cols !== 0;
+							
+							if(e.key === 'ArrowLeft' && leftEdge) {
 								parentLabel.previousElementSibling && checkedFocus($('input', parentLabel.previousElementSibling));
 								return;								
 
-							}
-							if(e.key === 'ArrowRight' && idx % 2 === 0 && idx != labels.length-1) {
+							}							
+							else if(e.key === 'ArrowRight' && rightEdge) {
 								parentLabel.nextElementSibling && checkedFocus($('input', parentLabel.nextElementSibling));
 								return;
 							}
