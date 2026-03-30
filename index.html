@@ -1094,12 +1094,20 @@
 					else if(input.name=='filter' && loaded){
 						const isTiles = display($('#pathList'))==='block';
 						const filterName = input.closest('label').innerText.toLowerCase();
-						const isFirst = $('.filters label input',section) === input;
+						const firstFilter = $('.filters label input',section) === input;
+						let gotFirst = false;
+						[...$$('.rows label',section)].forEach(el=>{
+							el.classList.remove('checked');
+						});
 						[...$$('.rows label',section)].forEach(el=>{
 							if(isTiles){
-								if(el.dataset.filter === filterName || isFirst){
+								if(el.dataset.filter === filterName || firstFilter){
 									el.style.display = "block";
 									el.classList.add('tilesLabel');
+									if(!gotFirst){
+										el.classList.add('checked');
+										gotFirst = true;
+									}
 								}
 								else {
 									el.style.display = "none";
@@ -1108,8 +1116,12 @@
 							}
 							else {
 								el.classList.remove('tilesLabel');
-								if(el.dataset.filter === filterName || isFirst){
+								if(el.dataset.filter === filterName || firstFilter){
 									el.style.display = "flex";
+									if(!gotFirst){
+										el.classList.add('checked');
+										gotFirst = true;
+									}
 								}
 								else {
 									el.style.display = "none";
@@ -1191,21 +1203,40 @@
 							}
 						}
 						else if(holding){
-							const nextInput = $('input',parentLabel.nextElementSibling);
+							const labels = [...$$('label',parentForm)].filter(el => getComputedStyle(el).display !== 'none');
+							const index = labels.indexOf(parentLabel);
+							const nextLabel = labels[index + 1];
+							const nextInput = $('input',labels[index + 1]);
+
+							//const nextInput = $('input',parentLabel.nextElementSibling);
 							nextInput.checked = true; lastSection = parentSection;
 							nextInput.focus();
+
 							parentLabel.classList.add('focused');
-							parentLabel.nextElementSibling.classList.add('checked');
+							//parentLabel.nextElementSibling.classList.add('checked');
+							nextLabel.classList.add('checked');
 							totTextSel(parentSection);
 						}						
 						else {
 							const nextForm = parentForm.nextElementSibling;
 							if(!(parentForm && parentSection.id == 'pop')) e.preventDefault();
 							if(nextForm) {
-								checkedFocus($('input', nextForm));
+								if(nextForm.classList.contains('rows')){
+									const labels = [...$$('label',nextForm)].filter(el => getComputedStyle(el).display !== 'none');
+									checkedFocus($('input', labels[0]));
+								}
+								else if(nextForm.classList.contains('filters')){
+									checkedFocus($('label.checked input',nextForm));
+								}
+								else {
+									checkedFocus($('input', nextForm));
+								}
 							}
 							else if(parentLabel.classList.contains('select') && parentLabel.nextElementSibling) {
-								checkedFocus($('input',parentLabel.nextElementSibling));
+								const labels = [...$$('label',parentForm)].filter(el => getComputedStyle(el).display !== 'none');
+								const index = labels.indexOf(parentLabel);
+								const next = labels[index + 1];
+								checkedFocus($('input',next));
 								clearbyArrow(parentSection);
 								clrTextSel(parentSection);
 							}
@@ -1216,9 +1247,11 @@
 							const isFirstChild = (input === $('input', parentForm)) || parentForm.classList.contains('filters');
 							if(isFirstChild && $$('.rows .select.focused',parentSection).length > 1) {
 								multiSelect = false;
+								console.log(1);
 								clearbyClick(parentSection,$('.rows .select',parentSection));
 							}
-							else if(isFirstChild) {
+							//else if(isFirstChild) {
+							else if(isFirstChild && !parentForm.classList.contains('rows')) {
 								e.preventDefault();
 								multiSelect = false;
 								const inputTarget = $('input',
@@ -1242,11 +1275,17 @@
 								}
 							}
 							else if(holding){
-								const prevInput = $('input',parentLabel.previousElementSibling);
+								const labels = [...$$('label',parentForm)].filter(el => getComputedStyle(el).display !== 'none');
+								const index = labels.indexOf(parentLabel);
+								const prevLabel = labels[index - 1];
+								const prevInput = $('input',labels[index - 1]);
+
+								//const prevInput = $('input',parentLabel.previousElementSibling);
 								prevInput.checked = true;
 								prevInput.focus();
 								parentLabel.classList.add('focused');
-								parentLabel.previousElementSibling.classList.add('checked');
+								//parentLabel.previousElementSibling.classList.add('checked');
+								prevLabel.classList.add('checked');
 								selDown = false; lastSection = parentSection;
 								totTextSel(parentSection);
 							}
@@ -1254,7 +1293,27 @@
 								e.preventDefault();
 								clearbyArrow(parentSection);
 								clrTextSel(parentSection);
-								checkedFocus($('input',parentLabel.previousElementSibling));
+								
+								if(parentForm.classList.contains('rows')){
+									const labels = [...$$('label',parentForm)].filter(el => getComputedStyle(el).display !== 'none');
+									const index = labels.indexOf(parentLabel);
+									const prev = labels[index - 1];
+									if(index<1){
+										multiSelect = false;
+										checkedFocus($('label.checked input',parentForm.previousElementSibling));
+									}
+									else {
+										checkedFocus($('input',prev));
+									}
+								}
+								else {
+									checkedFocus($('input',parentLabel.previousElementSibling));
+								}
+							}
+							else if(parentForm.classList.contains('rows')) {
+								e.preventDefault();
+								multiSelect = false;
+								checkedFocus($('label.checked input',parentForm.previousElementSibling));
 							}
 						}
 						else if(input.name === 'iBtn') {
@@ -1273,20 +1332,28 @@
 							(input.type === 'search' && input.value.length < 1)
 						);
 						if(input.name === 'item' && display($('#pathList')) === 'block'){
-							const labels = [...parentForm.querySelectorAll('label.select')];
-							const idx = labels.indexOf(parentLabel);
+							const labels = [...$$('label',parentForm)].filter(el => getComputedStyle(el).display !== 'none');
+							const index = labels.indexOf(parentLabel);
 							
 							const cols = isPhone?2:3;
-							const leftEdge = idx % cols !== 0;
-							const rightEdge = (idx + 1) % cols !== 0;
+							const leftEdge = index % cols !== 0;
+							const rightEdge = (index + 1) % cols !== 0;
 							
 							if(e.key === 'ArrowLeft' && leftEdge) {
-								parentLabel.previousElementSibling && checkedFocus($('input', parentLabel.previousElementSibling));
-								return;								
-
+								if(parentLabel.previousElementSibling){
+									checkedFocus($('input',labels[index - 1]));
+								}
+								return;
+							}
+							else if(e.key === 'ArrowRight' && (labels.length-1 === index)){
+								const rowLabels = [...$$('#' + map[parentSection.id] + ' .rows label')].filter(el => getComputedStyle(el).display !== 'none');
+								checkedFocus($('input',rowLabels[0]));
+								return;
 							}							
 							else if(e.key === 'ArrowRight' && rightEdge) {
-								parentLabel.nextElementSibling && checkedFocus($('input', parentLabel.nextElementSibling));
+								if(parentLabel.nextElementSibling){
+									checkedFocus($('input',labels[index + 1]));
+								}
 								return;
 							}
 						}
@@ -1309,10 +1376,11 @@
 								}
 							}
 							else if(e.key === 'ArrowRight'){								
-								const labels = [...parentForm.querySelectorAll('label.select')];
-								const idx = labels.indexOf(parentLabel);
-								if (idx % 2 === 0 || (idx == labels.length-1)) {
-									checkedFocus($('#' + map[parentSection.id] + ' form.rows input:first-child'));
+								const navLabels = [...parentForm.querySelectorAll('label.select')];
+								const index = navLabels.indexOf(parentLabel);
+								if (index % 2 === 0 || (index == navLabels.length-1)) {
+									const rowLabels = [...$$('#' + map[parentSection.id] + ' .rows label')].filter(el => getComputedStyle(el).display !== 'none');
+									checkedFocus($('input',rowLabels[0]));
 								} else {
 									parentLabel.nextElementSibling && checkedFocus($('input', parentLabel.nextElementSibling));
 								}
@@ -1322,7 +1390,8 @@
 							e.preventDefault();
 							multiSelect = false;
 							clearbyArrow(parentSection);
-							checkedFocus($('#' + map[parentSection.id] + ' form.rows input:first-child'));
+							const labels = [...$$('#' + map[parentSection.id] + ' form.rows label')].filter(el => getComputedStyle(el).display !== 'none');
+							checkedFocus($('input',labels[0]));
 						}
 					break;
 					case 'Backspace':
