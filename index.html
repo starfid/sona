@@ -369,6 +369,7 @@
 						<label class="select"><input type="radio" name="filter">Eros</label>
 					</form>
 					<form class="rows" method="post" action="?">
+						<!---->
 						<label class="select" data-filter="nibh">
 							<input type="checkbox" name="item" checked>
 							<div style="background-image:url('_assets/people/0.jpg')"></div>
@@ -392,7 +393,7 @@
 							<div style="background-image:url('_assets/people/2.jpg')"></div>
 							<div>
 								<dl><dt><strong>Magna Dapibus Viverra Dictumst Consectetur Dignissim Semper Per Leo Vivamus Rutrum Tortor</strong></dt><dd>Yesterday</dd></dl>
-								<dl><dt>Metus Nibh Mollis</dt><dd><!--&#9872;--></dd></dl>
+								<dl><dt>Metus Nibh Mollis</dt><dd></dd></dl>
 								<div>Integer Senectus Est Cras Id Lacinia</div>
 							</div>
 						</label>
@@ -410,7 +411,7 @@
 							<div style="background-image:url('_assets/people/4.jpg')"></div>
 							<div>
 								<dl><dt><strong>Tempus Aptent Nulla Per Pretium Porta Nostra Elementum Eget Bibendum Urna Sagittis Cubilia</strong></dt><dd>25/09/13</dd></dl>
-								<dl><dt>Aliquet Amet Velit</dt><dd><!--&#9872;--></dd></dl>
+								<dl><dt>Aliquet Amet Velit</dt><dd></dd></dl>
 								<div>Phasellus Ac Id Purus Himenaeos Justo Feugiat Ullamcorper Consequat A Nisl Porta Vestibulum Dictum Interdum</div>
 							</div>
 						</label>
@@ -437,7 +438,7 @@
 							<div style="background-image:url('_assets/people/7.jpg')"></div>
 							<div>
 								<dl><dt><strong>Ex Litora Consequat Arcu Lacinia Libero Tortor</strong></dt><dd>25/09/13</dd></dl>
-								<dl><dt>Senectus Dapibus Nec Nisl Risus Justo Condimentum Orci Mattis Porttitor Conubia Aptent</dt><dd><!--&#9872;--></dd></dl>
+								<dl><dt>Senectus Dapibus Nec Nisl Risus Justo Condimentum Orci Mattis Porttitor Conubia Aptent</dt><dd></dd></dl>
 								<div>Vel Velit Pellentesque Hendrerit Himenaeos Et Id Blandit Eros Inceptos Potenti Class Auctor Placerat Molestie Sem</div>
 							</div>
 						</label>
@@ -450,6 +451,7 @@
 								<div>Est Sem Purus Tellus Sit Semper Fringilla Habitasse</div>
 							</div>
 						</label>
+						<!---->
 					</form>
 				</fieldset>
 			</section>
@@ -764,7 +766,6 @@
 				let target = null;
 				if (display(navSec) === 'none' && display(detSec) === 'none') {
 					target = listSec;
-					//target = (display(listSec) === 'block') ? listSec : detSec;
 				}
 				else if (display(navSec) === 'none' && display(listSec) === 'none') {
 					target = detSec;
@@ -774,15 +775,11 @@
 					$$('.rows .focused',detSec).forEach(fc=>{
 						fc.classList.remove('focused');
 					});
-					//multiSelect = false;
 				}
 				else {
 					target = lastSection||$('#listSection');
 				}
 				if(target) {
-					//listSec.classList.remove('listShowDetail');
-					//listSec.style.display = 'none';
-					//detSec.classList.remove('detailShowDetail');
 					backAnimating = false;
 					target.classList.remove('sectionZoom');
 					const inputDots = $('header input[data-btn=dots]',target);
@@ -793,7 +790,6 @@
 						checkedFocus($('header input[data-btn="new item"]',target));
 					}
 				}
-				//lastSection = null;
 			}
 			function buttonSend(input,focused = true) {
 				toggleLayer();
@@ -828,8 +824,6 @@
 				const section = input.closest('section');
 				if(section.id==='pop') buttonCancel(input);
 				if((input.name === 'item' || input.name === 'copy') || input.dataset.btn === 'delete') {					
-					//let selection = selections;
-					//const totSelection = selection.length || 1;
 					if(selections.length > 0 && section !== 'navSection' && confirm('Delete ' + selections.length + ' selected items')){
 						selections.forEach(label=>{
 							if(label && label.parentNode) label.parentNode.removeChild(label);
@@ -839,10 +833,15 @@
 					else if(isPhone){
 						multiSelect = false;
 					}
-					//selection = [];
 					cancelMulti(input);
-					checkedFocus($('.rows input',section));
-					selections = [$('.rows label',section)];
+					const labels = [...$$('.rows label',section)].filter(el => getComputedStyle(el).display !== 'none');
+					if(labels.length>0){
+						checkedFocus($('input',labels[0]));
+						selections = [labels[0]];
+					}
+					else {
+						if(!sideExist) checkedFocus($('header div label.btn input[data-btn=delete]',section));
+					}
 				}
 			}
 			function buttonSide(focused = true) {
@@ -859,9 +858,6 @@
 						lastSection = null;
 					});
 				}
-				//lastSection ??= listSec;
-				//clearbyClick(listSec, $('fieldset .rows input',listSec));
-				
 				listSec.classList.remove('listShowList');
 				navSec.style.display = showNav ? 'block' : 'none';
 				listSec.style.display = showNav ? 'none' : 'block';
@@ -891,28 +887,23 @@
 						el.classList.remove('tilesLabel');
 					});
 				}
-
 				[detSec, listSec].forEach(sec => {
 					$$('fieldset form.filters label', sec).forEach((el, index) => {
 						el.classList.toggle('checked', index === 0);
 					});
 				});
-
 			}
 			function buttonCam(section){
 				setPop('96%',true);
-				let tmp = "<form class=\"cams filters\">";
-						
+				let tmp = "<form class=\"cams filters\">";		
 				Object.keys(camLenses).forEach((key, index) => {
 					let checked = index == 0?"checked":"";
 					let camNum = index+1; 
 					tmp += "<label class=\"select "+checked+"\"><input type=\"radio\" value=\""+key+"\" name=\"filter\" "+checked+">Cam "+camNum+"</label>";
-				});				
-
+				});
 				tmp += "</form>";
 				tmp += "<form><video id=\"viewFinder\" autoplay=\"true\" muted=\"true\" playsinline=\"true\" width=\"100%\"></video></form>";
 				$('#pop fieldset').innerHTML = tmp;
-				
 				let getCam = $('#pop .cams .checked input').value;
 				if(!getCam || getCam === "undefined") getCam = null;
 				lastSection = section;
@@ -955,7 +946,7 @@
 						$('input', label).checked = false;
 					}
 				});
-				lastSection = null;//if(multiSelect) {lastSection = null;}
+				lastSection = null;
 				selDown = true; clrTextSel(section);
 			}
 			function getEnv(element){
@@ -1006,14 +997,12 @@
 					$('input', label).checked = false;
 				});
 				clrTextSel(section);
-				//selDown = true;lastSection = null;
 				if(multiSelect) {lastSection = null;}
 				if(input.name == 'iBtn'){
 					checkedFocus($('.rows input',section));
 				}
 				else {
 					lastSection = null;
-					//input.closest('label').classList.add('focused','checked');
 					input.closest('label').classList.add('checked');
 				}
 			}
@@ -1031,20 +1020,9 @@
 					h1 = capitalize($('fieldset .searchFrm .select input[type=hidden][name=app]',listSec).value);
 				}
 				else if(section.id == 'detailSection'){
-					//console.log($("fieldset .rows .select.checked div:nth-child(3) dl dt",listSec).innerText);
 					h1 = $("fieldset .rows .select.checked div:nth-child(3) dl dt",listSec).innerText;
 				}
 				$('h1',section).innerText = h1;
-				/*
-				const defText = section.id == 'listSection'?capitalize($('fieldset .searchFrm .select input[type=hidden][name=app]',listSec).value):'';
-				//if($('h1',section) && display(navSec)!=='none'){
-				if($('h1',section)){
-					$('h1',section).innerText = defText;
-					if(section.id==='listSection'){
-						//$('#detailSection header .hRight').style.visibility = 'visible';
-					}
-				}
-				*/
 			}
 			function cancelMulti(input) {
 				if(input.closest('section')) {					
@@ -1088,7 +1066,7 @@
 						e.preventDefault();
 					}
 					else if(input.type=='search'){
-						section.scrollTo(0,0);
+						$('fieldset',section).scrollTo(0,0);
 						if(sideExist) input.placeholder = 'Search';
 					}
 					else if(input.name=='filter' && loaded){
@@ -1153,13 +1131,11 @@
 						}
 						if(rows && loaded){
 							if(section === listSec) setDetH1();
-							//else if(section === detSec) clearDetH1();
 						}
 						else if(rows && !loaded && section === listSec){
 							setDetH1();
 						}
 					}
-					
 				}
 			}
 			function handleFocusOut(e) {
@@ -1207,13 +1183,11 @@
 							const index = labels.indexOf(parentLabel);
 							const nextLabel = labels[index + 1];
 							const nextInput = $('input',labels[index + 1]);
-
-							//const nextInput = $('input',parentLabel.nextElementSibling);
+							if(!nextLabel) return;
 							nextInput.checked = true; lastSection = parentSection;
 							nextInput.focus();
 
 							parentLabel.classList.add('focused');
-							//parentLabel.nextElementSibling.classList.add('checked');
 							nextLabel.classList.add('checked');
 							totTextSel(parentSection);
 						}						
@@ -1247,10 +1221,8 @@
 							const isFirstChild = (input === $('input', parentForm)) || parentForm.classList.contains('filters');
 							if(isFirstChild && $$('.rows .select.focused',parentSection).length > 1) {
 								multiSelect = false;
-								console.log(1);
 								clearbyClick(parentSection,$('.rows .select',parentSection));
 							}
-							//else if(isFirstChild) {
 							else if(isFirstChild && !parentForm.classList.contains('rows')) {
 								e.preventDefault();
 								multiSelect = false;
@@ -1279,12 +1251,10 @@
 								const index = labels.indexOf(parentLabel);
 								const prevLabel = labels[index - 1];
 								const prevInput = $('input',labels[index - 1]);
-
-								//const prevInput = $('input',parentLabel.previousElementSibling);
+								if(!prevLabel) return;
 								prevInput.checked = true;
 								prevInput.focus();
 								parentLabel.classList.add('focused');
-								//parentLabel.previousElementSibling.classList.add('checked');
 								prevLabel.classList.add('checked');
 								selDown = false; lastSection = parentSection;
 								totTextSel(parentSection);
@@ -1465,15 +1435,20 @@
 					break;
 				}
 			}
-			function handleClick(e) {				
+			function headClick(section) {
+				$('fieldset',section).scrollTo(0,0);
+			}
+			function handleClick(e) {
 				const input = e.target;
 				if(input.closest('section')===null) return;
 				const section = input.closest('section').id;
 				if(e.target.closest('.camIcon')) {e.preventDefault(); e.stopPropagation(); buttonCam(input.closest('section')); return;}
+				if(e.target.nodeName.toLowerCase()==='header'||'h1') headClick(input.closest('section'));
 				if(!input.matches(selector)) return;
 				if(e.clientX === 0 && e.clientY === 0) return;
 				const label = input.closest('label');
 
+				
 				if (label?.classList.contains('btn')) {
 					e.preventDefault();
 					const { btn } = input.dataset;
@@ -1592,8 +1567,7 @@
 			if(localStorage.getItem('sonaView') === 'tiles') buttonView();
 			[...$$('.searchFrm input[type=hidden]')].forEach(el=>{
 				el.value = getEnv()[el.name];
-			});
-			
+			});			
 			if(sideExist){
 				import('./cam.js').then(module => {
 					camAPI = new ZXing.BrowserMultiFormatReader();
