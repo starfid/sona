@@ -46,12 +46,11 @@
 			#navSection form div.head {color:var(--cl2);cursor:default;margin-left:/*0*/var(--mg);font-weight:bolder;grid-column: 1 / -1;}
 			#navSection form div.head:not(:first-of-type) {margin-top:calc(var(--mg) * 2)}
 			#navSection form div.head:first-of-type {margin-top:calc((var(--mg) * 1.9) + (var(--mg) / 2));animation:navToggle .2s forwards}
-
 			#listSection {border-left:1px solid var(--brC); border-right:1px solid var(--brC);}
 			
 			section header {
 				position:absolute; top:0; left:0; right:0; z-index:1;padding:var(--mg);
-				grid-template-columns:50% 50%;background-color:var(--bg);opacity:.97;
+				grid-template-columns:auto 48%;background-color:var(--bg);opacity:.97;
 			}
 			section header div label h1 {color:var(--cl2);margin:0 0 0 var(--mg);padding:0;font-size:calc(var(--fn2) * 0.94);height:var(--fn2);line-height: calc(var(--fn2) - 1px);}
 			section header div, .filters {display:flex;}
@@ -70,8 +69,6 @@
 				word-break:break-all;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;
 				
 			}
-			
-			#detailSection header {grid-template-columns: auto 60%}
 
 			.searchFrm, .searchFrm label, fieldset form.filters label, .rows label.checked, 
 				.rows label.focused, #navSection form label.select, #pop, video {border-radius:1vh;}
@@ -88,12 +85,10 @@
 			fieldset form label {display:block;padding:var(--mg);}
 			fieldset form.filters {margin-left:0;margin-right:0;width:var(--wdt);overflow:scroll;scrollbar-width:none;}
 			fieldset form.filters label {margin-right:var(--mg)}
-			
 			fieldset form.filters label:first-child {margin-left:var(--mg)}
 			fieldset form.filters label:last-child {margin-right:var(--mg)}
 			
 			fieldset form.rows label {border-bottom:solid 1px var(--nvB)}
-
 			fieldset .rows label.select {display:flex;align-items:stretch;gap:var(--mg);}
 			fieldset .rows label.select > div:first-of-type {
 				width:var(--cir);height:var(--cir);display:flex;align-items:center;justify-content:center;border-radius:50%;background-color:var(--cl2);color:var(--bg);flex-shrink:0;
@@ -118,6 +113,7 @@
 			.btn.focused svg.delBtn {stroke:red;}
 			.searchFrm label.focused {background-color:transparent;color:var(--cl)}
 			
+			#navSection header {grid-template-columns:auto 20%;}
 			#pathList {display:none;}
 			.tilesRow {display:grid;gap:1vh!important;}
 			.tilesRow {grid-template-columns:repeat(4, 1fr)!important;}
@@ -137,7 +133,6 @@
 				position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);animation:popRising .3s forwards;
 				background-color:var(--bg);width:38.2vw;height:80vh;box-sizing:border-box;
 			}
-
 			#pop header .focused {background-color:var(--bg);color:var(--bhg);font-weight:bolder}
 			#pop header {padding: calc(var(--mg)*1.5) calc(var(--mg)*2) 0 calc(var(--mg)*2);}
 			#pop fieldset {padding:var(--mg)}
@@ -157,6 +152,8 @@
 				section fieldset {padding-bottom:100px}
 				#navSection {border-right:1px solid var(--brC);}
 				#navSection form div.head, #navSection form label.select {color:var(--cl)}
+				#navSection .h1Hid {display: flex;margin: 0 auto;}
+				#navSection header {grid-template-columns: 10% auto 10%;}
 				#listSection header {grid-template-columns: 10% auto 46%;}
 				#listSection header .h1Hid label {margin:0 auto;text-align:center}
 				#listSection header .h1Hid label h1 {margin:0 auto;text-align:center}
@@ -195,20 +192,18 @@
 				#detailSection {display:none;position:absolute;z-index:1;top:0;width:var(--wdt)}
 				#listSection {display:block}
 				#listSection header {grid-template-columns: 20% auto 20%;}
-				section header div label h1 {margin:0;}
-				
 				#listSection .h1Hid {display:flex;margin:0 auto}
-				
+
+				section header div label h1 {margin:0;}
 				fieldset form {width:93.4vw;}				
-				
 				.detailShowDetail {animation:detailShowDetail .3s forwards}
 				.detailShowList {animation:detailShowList .35s forwards}
 				.listShowDetail {animation:listShowDetail .7s forwards}
 				.listShowList {animation:listShowList .3s forwards}
 				.mobHid {display:none}
+				
 				#pop header {padding: var(--mg) var(--mg) 0 var(--mg);}
 				#pop header div {padding:0 3vw}
-				/*#pop fieldset {padding: calc((2 * var(--mg)) + var(--fn2)) 0 0 0;}*/
 				#pop fieldset form.filters {display:flex}
 				#pop fieldset form.icons {display:block}
 				#pop fieldset form.icons label {
@@ -275,8 +270,11 @@
 							</svg>
 						</label>
 					</div>
+					<div class="h1Hid">
+						<label><h1>Administrator</h1></label>						
+					</div>
 					<div class="hRight">
-						<label class="btn tabHid last">
+						<label class="btn last">
 							<input type="radio" name="iBtn" data-btn="signout">
 							<svg viewBox="0 0 100 100">
 								<path d="M10 10 H60 V30 M60 70 V90 H10 V7.5" />
@@ -309,9 +307,6 @@
 						<label class="btn">
 							<input type="radio" name="iBtn" data-btn="side">
 							<svg viewbox="0 0 100 100">
-								<!--
-								<path d="M10 10h80v5H10zM10 40h80v5H10zM10 70h50v5H10z"/>
-								-->
 								<path d="M 10 26 H 90 V 31 H 10 Z M 10 47 H 90 V 52 H 10 Z M 10 68 H 60 V 73 H 10 Z" />
 							</svg>
 						</label>
@@ -474,13 +469,7 @@
 							<svg viewbox="0 0 100 100">
 								<path d="M50 10 A40 40 0 1 1 50 90 A40 40 0 1 1 50 10 M50 25 V75 M25 50 H75" />
 							</svg>
-						</label>
-						<label class="btn mobHid">
-							<input type="radio" name="iBtn" data-btn="save">
-							<svg viewbox="0 0 100 100">
-								<path d="M10,90 H90 V25 L75,10 H10Z M30,10 V35 H70 V10Z M20,90 V50 H80 V90Z M59,17 h3 v11 h-3Z" />
-							</svg>
-						</label>
+						</label>						
 						<label class="btn selIcon mobHid">
 							<input type="radio" name="iBtn" data-btn="select">
 							<svg viewbox="0 0 100 100">
@@ -499,6 +488,13 @@
 								<path d="M49 10 A40 40 0 1 1 48.9 10 M30 47 a3 3 0 1 0 0.1 0 M50 47 a3 3 0 1 0 0.1 0 M70 47 a3 3 0 1 0 0.1 0"/>
 							</svg>
 						</label>
+						<label class="btn mobHid last">
+							<input type="radio" name="iBtn" data-btn="save">
+							<svg viewbox="0 0 100 100">
+								<path d="M10,90 H90 V25 L75,10 H10Z M30,10 V35 H70 V10Z M20,90 V50 H80 V90Z M59,17 h3 v11 h-3Z" />
+							</svg>
+						</label>
+						<!--
 						<label class="btn last">
 							<input type="radio" name="iBtn" data-btn="signout">
 							<svg viewBox="0 0 100 100">
@@ -506,6 +502,7 @@
 								<path d="M30 50 H97 M83 35 L97 50 L83 65" />
 							</svg>
 						</label>
+						-->
 					</div>
 				</header>
 				<fieldset>
@@ -1054,7 +1051,7 @@
 				if(!e.target.matches(selector)) return;
 				const input = e.target;
 				const iconSec = [];
-				const clearDetH1 = () => {$('#detailSection header h1').innerText = "";}
+				
 				if(input.matches(selector)){
 					const rows = ['item','copy'].includes(input.name);
 					const section = input.closest('section');
@@ -1121,19 +1118,14 @@
 						) {
 							input.closest('label')?.classList.add('checked','focused');
 						}
-						clearDetH1();
+						$('#detailSection header h1').innerText = "";
 						totTextSel(section);
 					}
 					else if(!(multiSelect && !rows)){
 						input.closest('label')?.classList.add('focused');
-						const setDetH1 = () => {
+						if(section === listSec && rows){
 							$('#detailSection header h1').innerText = $('div:nth-child(3) dl dt',input.closest('label')).innerText;
-						}
-						if(rows && loaded){
-							if(section === listSec) setDetH1();
-						}
-						else if(rows && !loaded && section === listSec){
-							setDetH1();
+							sectionUp(detSec);
 						}
 					}
 				}
@@ -1435,7 +1427,7 @@
 					break;
 				}
 			}
-			function headClick(section) {
+			function sectionUp(section) {
 				$('fieldset',section).scrollTo(0,0);
 			}
 			function handleClick(e) {
@@ -1443,11 +1435,10 @@
 				if(input.closest('section')===null) return;
 				const section = input.closest('section').id;
 				if(e.target.closest('.camIcon')) {e.preventDefault(); e.stopPropagation(); buttonCam(input.closest('section')); return;}
-				if(e.target.nodeName.toLowerCase()==='header'||'h1') headClick(input.closest('section'));
+				if(['header', 'h1'].includes(e.target.nodeName.toLowerCase())) sectionUp(input.closest('section'));
 				if(!input.matches(selector)) return;
 				if(e.clientX === 0 && e.clientY === 0) return;
 				const label = input.closest('label');
-
 				
 				if (label?.classList.contains('btn')) {
 					e.preventDefault();
