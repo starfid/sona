@@ -695,16 +695,9 @@
 				let section = input.closest('section');
 				lastSection ??= section;
 
-				if(section.id==='pop'){
-					buttonCancel(input);
-				}
+				if(section.id==='pop') buttonCancel(input);
 				svg.classList.toggle('iconOn');				
-				
-				if(
-					!svg.classList.contains('iconOn') || 
-					$$('.rows .select.focused ',section).length > 1 ||
-					(display($('header input[data-btn=dots]',lastSection).closest('label'))=='flex' && multiSelect)
-				){
+				if(!svg.classList.contains('iconOn') || $$('.rows .select.focused ',section).length > 1 || (display($('header input[data-btn=dots]',lastSection).closest('label'))=='flex' && multiSelect)){
 					if(section.id==='pop') {
 						section = lastSection;
 					}
@@ -726,6 +719,11 @@
 						if(detSec && section.id==='listSection') focusMulti(detSec,true);
 						else if(section.id==='detailSection') focusMulti(listSec,true);
 					}
+					/*
+					if(isPhone){
+						$('header input[data-btn=dots]',lastSection).closest('label').classList.remove('focused');
+					}
+					*/
 				}
 			}
 			function buttonCompose(input){
@@ -770,7 +768,14 @@
 				if(target) {
 					backAnimating = false;
 					target.classList.remove('sectionZoom');
-					if(!isPhone) checkedFocus($('header input[data-btn="new item"]',target));
+					const inputDots = $('header input[data-btn=dots]',target);
+					if($('header input[data-btn=dots]',target) && isPhone && focused){
+						checkedFocus(inputDots);
+						$('header input[data-btn=dots]',target).closest('label').classList.remove('focused');
+					}
+					else {
+						checkedFocus($('header input[data-btn="new item"]',target));
+					}
 				}
 			}
 			function buttonSend(input,focused = true) {
