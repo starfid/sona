@@ -624,7 +624,6 @@
 			const navSec = $('#navSection');
 			const listSec = $('#listSection');
 			const detSec = $('#detailSection');
-			const rowsCheck = '.rows label > input[type=checkbox]';
 			const h1Txt = $('header div h1',listSec).innerText;
 			const bgCol = getComputedStyle(document.documentElement).getPropertyValue('--bg');
 			const capitalize = (str) => str.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
@@ -707,7 +706,7 @@
 					}
 					multiSelect = false;
 					svg.classList.remove('iconOn');
-					label.classList.remove('focused');					
+					label.classList.remove('focused');
 					const lastInp = $('.rows .focused input,.rows .checked input',section);
 					clearbyClick(section,lastInp);
 					checkedFocus(lastInp);
@@ -1026,9 +1025,11 @@
 			function handleChange(e) {
 				if(!e.target.matches(selector)) return;
 				const input = e.target;
-				if(input.matches(rowsCheck) && lastSection && !multiSelect) {
-					clearbyClick(lastSection,input);
-					clrTextSel(lastSection);
+				if(input.matches('.rows label > input[type=checkbox]') && lastSection && !multiSelect) {
+					if(!input.closest('label').classList.contains('focused')){
+						clearbyClick(lastSection,input);
+						clrTextSel(lastSection);
+					}
 				}
 				else {
 					checkedFocus(e.target);
@@ -1041,7 +1042,6 @@
 				if(!e.target.matches(selector)) return;
 				const input = e.target;
 				const iconSec = [];
-				
 				if(input.matches(selector)){
 					const rows = ['item','copy'].includes(input.name);
 					const section = input.closest('section');
@@ -1569,7 +1569,7 @@
 					})
         			});
 			}		
-			loaded = true;	
+			loaded = true;
 		</script>
 	</body>
 </html>
