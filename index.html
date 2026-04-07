@@ -758,9 +758,7 @@
 					listSec.classList.remove('listShowDetail');
 					listSec.style.display = 'none';
 					detSec.classList.remove('detailShowDetail');
-					$$('.rows .focused',detSec).forEach(fc=>{
-						fc.classList.remove('focused');
-					});
+					//$$('.rows .focused',detSec).forEach(fc=>{fc.classList.remove('focused');});
 				}
 				else {
 					target = lastSection||$('#listSection');
