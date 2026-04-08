@@ -29,8 +29,8 @@
 			html {-webkit-tap-highlight-color: transparent;}
 			body {margin:0;padding:0;font-family:arial;color:var(--cl);background:var(--bg)}
 			main, section header {display:grid}
-			main{grid-template-columns:22% auto;}
-			main:has(#detailSection:not(:empty)) {grid-template-columns: 22vw var(--wdt) auto;}
+			main{/*grid-template-columns:22% auto;*/grid-template-columns: 22vw var(--wdt) auto;}
+			/*main:has(#detailSection:not(:empty)) {grid-template-columns: 22vw var(--wdt) auto;}*/
 			section {position:relative; height:100vh; overflow:hidden;background:var(--bg)}
 			label, #navSection form div.head {cursor:pointer;user-select:none;font-size:var(--fn1);}
 
@@ -116,8 +116,8 @@
 			#navSection header {grid-template-columns:auto 20%;}
 			#pathList {display:none;}
 			.tilesRow {display:grid;gap:1vh!important;}
-			.tilesRow {grid-template-columns:repeat(4, 1fr)!important;}
-			main:has(#detailSection:not(:empty)) .tilesRow {grid-template-columns:repeat(3, 1fr)!important;}
+			.tilesRow {/*grid-template-columns:repeat(4, 1fr)!important;*/grid-template-columns:repeat(3, 1fr)!important;}
+			/*main:has(#detailSection:not(:empty)) .tilesRow {grid-template-columns:repeat(3, 1fr)!important;}*/
 			.tilesLabel {height:auto/*calc(var(--dmy) * 2.5)!important*/; display:block!important;border-bottom:none!important;}
 			.tilesPreview {
 				width: 100% !important; aspect-ratio: 1 / 1 !important; height: auto !important; object-fit: cover;
@@ -144,8 +144,8 @@
 					--fn1:2vw; 	--fn2:2.5vw;	--brC:#FAF9F7;	/*--bg:#FFFFFF;*/
 					--mg:1.1vw;	--mg2:calc(var(--fn2) / 2);	--cir:5.5vw;	--wdt:50vw;
 				}
-				main {grid-template-columns:auto}
-				main:has(#detailSection:not(:empty)) {grid-template-columns:auto var(--wdt)}
+				main {/*grid-template-columns:auto*/grid-template-columns:auto var(--wdt)}
+				/*main:has(#detailSection:not(:empty)) {grid-template-columns:auto var(--wdt)}*/
 				.searchFrm .deskHid {visibility:visible}
 				.searchFrm label {padding:var(--mg);}
 				.searchFrm label input {padding:0; appearance: none;}
@@ -175,7 +175,8 @@
 					--mg:3.2vw;	--mg2:calc(var(--fn2) / 2);	--tTop:50%;	--wdt:100vw;
 				}
 				main {display:block;background-color:#000000!important;min-height:60vh}
-				main:has(#detailSection:not(:empty)) .tilesRow {grid-template-columns:repeat(2, 1fr)!important;}
+				main .tilesRow {grid-template-columns:repeat(2, 1fr)!important;}
+				/*main:has(#detailSection:not(:empty)) .tilesRow {grid-template-columns:repeat(2, 1fr)!important;}*/
 				#listSection header div:last-child label:not(.deskHid):not(.tabHid).last svg
 				section header div label svg {margin-right:calc(var(--mg) * 2);}
 				section header .hRight label.secondLast svg {margin-right: calc(var(--mg) * 2);}
