@@ -1062,7 +1062,7 @@
 						const filterName = input.closest('label').innerText.toLowerCase();
 						const firstFilter = $('.filters label input',section) === input;
 						let gotFirst = false;
-						if(multiSelect) cancelMulti(input);
+						if(multiSelect && lastSection.id == section.id) cancelMulti(input);
 						[...$$('.rows label',section)].forEach(el=>{
 							el.classList.remove('checked');
 						});
