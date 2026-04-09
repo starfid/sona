@@ -1532,7 +1532,7 @@
 			const keyInp = $('#listSection .searchFrm input');
 			const params = new URLSearchParams(window.location.search);
 			if (params.get('q')) keyInp.placeholder = params.get('q');
-			if(!sideExist){
+			if(window.matchMedia("(hover: hover) and (pointer: fine)").matches){
 				keyInp.focus();
 			}
 			else {
