@@ -24,15 +24,17 @@
 			:root {
 				--cl:#000000;	--cl2:#858584;	--fn1:1.1vw;	--fn2:1.7vw;	--brC:#f3f3f2;		--nvB:#E1E0E1;
 				--wdt:39vw;	--cck:#000000;	--mg:.9vw;	--mg2:calc(var(--fn2) / 2);		--cir:3.1vw;
-				--fdC:#6a6a6a; 	
+				--fdC:#6a6a6a; 	--cir2:calc(var(--cir) * 2);
 			}
 			html {-webkit-tap-highlight-color: transparent;}
 			body {margin:0;padding:0;font-family:arial;color:var(--cl);background:var(--bg)}
+			textarea:focus {outline: none;}
 			main, section header {display:grid}
 			main{/*grid-template-columns:22% auto;*/grid-template-columns: 22vw var(--wdt) auto;}
 			/*main:has(#detailSection:not(:empty)) {grid-template-columns: 22vw var(--wdt) auto;}*/
 			section {position:relative; height:100vh; overflow:hidden;background:var(--bg)}
-			label, #navSection form div.head {cursor:pointer;user-select:none;font-size:var(--fn1);}
+			label, form div.head {user-select:none;font-size:var(--fn1);}
+			form div.head {color:var(--cl2);font-weight:bolder;}
 
 			section fieldset {
 				outline:none;border:none;scrollbar-width:none;margin:0;
@@ -42,8 +44,8 @@
 
 			#navSection form.rows {display: grid;grid-template-columns:repeat(2, 1fr);gap:1vh;color:var(--fdC)}
 			#navSection form * {display: block;box-sizing:border-box;}
-			#navSection form label.select {border:solid 1px var(--nvB)}
-			#navSection form div.head {color:var(--cl2);cursor:default;margin-left:/*0*/var(--mg);font-weight:bolder;grid-column: 1 / -1;}
+			#navSection form label.select, .wrap {border:solid 1px var(--nvB)}
+			#navSection form div.head {cursor:default;margin-left:/*0*/var(--mg);grid-column: 1 / -1;}
 			#navSection form div.head:not(:first-of-type) {margin-top:calc(var(--mg) * 2)}
 			#navSection form div.head:first-of-type {margin-top:calc((var(--mg) * 1.9) + (var(--mg) / 2));animation:navToggle .2s forwards}
 			#listSection {border-left:1px solid var(--brC); border-right:1px solid var(--brC);}
@@ -65,13 +67,10 @@
 			section header .hRight label.secondLast svg {margin-right: var(--mg);}	
 			section header .hRight {justify-content: flex-end;}
 			section header .deskHid, section header .tabHid {display:none}
-			section header h1 {
-				word-break:break-all;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;
-				
-			}
+			section header h1 {word-break:break-all;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;}
 
 			.searchFrm, .searchFrm label, fieldset form.filters label, .rows label.checked, 
-				.rows label.focused, #navSection form label.select, #pop, video {border-radius:1vh;}
+				.rows label.focused, #navSection form label.select, #pop, video, .tilesDetail div {border-radius:1vh;}
 			.searchFrm {border:solid 1px var(--brC)/*var(--nvB)*/;}
 			.searchFrm .deskHid {visibility:hidden}
 			.searchFrm label {padding:calc(var(--mg) * .68) var(--mg);display: flex;justify-content: space-between;}
@@ -82,7 +81,7 @@
 			.searchFrm label input::-webkit-search-cancel-button {display: none;}
 
 			fieldset form {margin:0 var(--mg) var(--mg) var(--mg);padding:0}
-			fieldset form label {display:block;padding:var(--mg);}
+			fieldset form label {/*cursor:pointer;*/display:block;padding:var(--mg);}
 			fieldset form.filters {margin-left:0;margin-right:0;width:var(--wdt);overflow:scroll;scrollbar-width:none;}
 			fieldset form.filters label {margin-right:var(--mg)}
 			fieldset form.filters label:first-child {margin-left:var(--mg)}
@@ -90,10 +89,11 @@
 			
 			fieldset form.rows label {border-bottom:solid 1px var(--nvB)}
 			fieldset .rows label.select {display:flex;align-items:stretch;gap:var(--mg);}
-			fieldset .rows label.select > div:first-of-type {
-				width:var(--cir);height:var(--cir);display:flex;align-items:center;justify-content:center;border-radius:50%;background-color:var(--brC)/*var(--cl2)*/;color:var(--bg);flex-shrink:0;
+			fieldset .rows label.select > div:first-of-type, .tilesDetail div {
+				width:var(--cir);height:var(--cir);display:flex;align-items:center;justify-content:center;background-color:var(--brC)/*var(--cl2)*/;color:var(--bg);flex-shrink:0;
 				background-size: cover !important;background-repeat: no-repeat;background-position: center;
 			}
+			fieldset .rows label.select > div:first-of-type {border-radius:50%;}
 			fieldset .rows label.select > div:last-of-type {display:flex;flex-direction:column;gap:2px;flex:1;min-width:0;}
 			fieldset .rows label.select > div:last-of-type > dl {margin:0;padding:0;display:grid;grid-template-columns:auto auto;}
 			fieldset .rows label.select > div:last-of-type > dl > dt {margin:0;padding:0;word-break:break-all;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;}
@@ -101,7 +101,7 @@
 			fieldset .rows label.select > div:last-of-type > dl:nth-child(2) > dd {line-height:calc(var(--fn1)*0.99);}
 			fieldset .rows label.select > div:last-of-type > div {color:var(--fdC);display:-webkit-box;-webkit-line-clamp:2;min-height:calc(var(--fn1) * 2.3);-webkit-box-orient:vertical;overflow:hidden;}
 			
-			.btn input[type=checkbox], .btn [type=radio], .select input[type=checkbox], .select input[type=radio]{position: absolute;left: -9999px;}
+			.btn input[type=checkbox], .btn [type=radio], .select input[type=checkbox], .select input[type=radio], .entry input{position: absolute;left: -9999px;}
 			.checked {background-color:var(--bck);color:var(--cck);}
 			
 			.rows .focused, .filters .focused,
@@ -126,6 +126,14 @@
 			}
 			.tilesBlock {display:block!important;}
 			.tilesNone {display:none!important;}
+			.tilesDetail {margin: 0 auto;background-color:transparent}
+			.tilesDetail, .tilesDetail div {width:var(--cir2);height:var(--cir2);border-radius:50%}			
+
+			.wrap {padding:var(--mg);border-radius:1vh;display:grid;word-break:break-word;}
+			.wrap > textarea {word-break:break-word;border:none;margin:0;padding:0;background-color:transparent;resize:none;overflow:hidden;}
+			.wrap::after {content:attr(data-clone) " ";white-space:pre-wrap;visibility:hidden;}
+			.wrap > textarea, .wrap::after {box-sizing:content-box;font:var(--fnBg);grid-area: 1 / 1 / 2 / 2;}
+			.entry label .head {margin-left:var(--mg);margin-bottom:calc(var(--mg)/2)}
 
 			.layerToggle {display:block!important}
 			#layer {position:absolute;z-index:1;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,0.6);display:none;}
@@ -162,6 +170,8 @@
 				#listSection .visible, #navSection {display:none}
 				#listSection header .deskHid, #navSection header .deskHid {display:flex}
 				#listSection {border-left:none;}
+				.tilesDetail {margin: 3vw auto}
+				.tilesDetail, .tilesDetail div {width:var(--cir2);height:var(--cir2);}
 				#pop {width:60vw}
 				#pop fieldset {padding: calc((2 * var(--mg)) + var(--fn2)) 0 0 0;}
 				@keyframes navToggle {
@@ -185,7 +195,10 @@
 				
 				#detailSection header {grid-template-columns:20% auto 20%;}
 				#detailSection div:first-child {display:flex}
+				
 				#detailSection div:nth-child(2) {display:flex;}
+				#detailSection .entry div:nth-child(2) {display:grid;}
+				
 				#detailSection div:nth-child(2) label {width:100%;text-align:center;display:inline-block}
 				#detailSection div.hRight label.last {display:none}
 				#detailSection div.hRight label.secondLast svg {margin-right:var(--mg)}
@@ -230,6 +243,9 @@
 				}
 				.sectionZoom {height:80vh;border-radius:var(--mg);animation:zooming .3s forwards}
 				.tilesPreview {width: 100% !important; aspect-ratio: 1 / 1 !important; height: auto !important; object-fit: cover;}
+				.tilesDetail {margin: 10vw auto}
+				.tilesDetail, .tilesDetail div {width:var(--cir2);height:var(--cir2);}
+				
 				@keyframes zooming { from {transform:scale(1);} to {transform:scale(.94);} }
 				@keyframes popRising { from {height:25%;} to {height:var(--tTop);} }
 				@keyframes detailShowDetail { from {left:150px;} to {left:0;} }
@@ -251,7 +267,7 @@
 				@media screen and (max-width: 1181px){
 					:root {	--bg:#000000;	--brC:#0a0a0a;	--bck:#232324; }
 				}
-				fieldset .rows label.select > div:first-of-type {color:var(--cl)}
+				fieldset .rows label.select > div:first-of-type, textarea {color:var(--cl)}
 				.btn.focused svg, .btn svg:hover, .btn.checked, .btn.checked, .iconOn {stroke:var(--cl);}
 				#layer {background-color: rgba(0,0,0,0.7);}
 				#pop, #pop header, #pop header .focused {background-color:var(--bck)}
@@ -365,7 +381,6 @@
 						<label class="select"><input type="radio" name="filter">Eros</label>
 					</form>
 					<form class="rows" method="post" action="?">
-						<!---->
 						<label class="select" data-filter="nibh">
 							<input type="checkbox" name="item" checked>
 							<div style="background-image:url('_assets/people/0.jpg')"></div>
@@ -465,6 +480,7 @@
 						<label><h1></h1></label>
 					</div>
 					<div class="hRight">
+						<!--
 						<label class="btn mobHid">
 							<input type="radio" name="iBtn" data-btn="new item">
 							<svg viewbox="0 0 100 100">
@@ -477,6 +493,7 @@
 								<path d="M10 20H80V90H10ZM20 60L35 75L70 30M20 20V10H90V80H80"/>
 							</svg>
 						</label>
+						-->
 						<label class="btn mobHid">
 							<input type="radio" name="iBtn" data-btn="delete">
 							<svg viewbox="0 0 100 100" class="delBtn">
@@ -498,6 +515,47 @@
 					</div>
 				</header>
 				<fieldset>
+					
+					<form class="entry" method="post" action="?">
+						<label class="tilesDetail">
+							<input type="checkbox" name="erat">
+							<div style="background-image:url('_assets/people/0.jpg')">&nbsp;</div>
+						</label>
+						<label>
+							<div class="head">Gravida Justo</div>
+							<div class="wrap" data-clone="Pellentesque egestas hendrerit fringilla netus porttitor aliquet elementum diam viverra luctus consequat mauris ullamcorper integer"><textarea rows="1" name="gravida justo" oninput="this.parentNode.dataset.clone=this.value">Pellentesque egestas hendrerit fringilla netus porttitor aliquet elementum diam viverra luctus consequat mauris ullamcorper integer</textarea></div>
+						</label>
+						<label>
+							<div class="head">Viverra Donec</div>
+							<div class="wrap" data-clone="Morbi tempor id pharetra ac dolor consectetur enim id porta diam quis"><textarea rows="1" name="viverra donec" oninput="this.parentNode.dataset.clone=this.value">Morbi tempor id pharetra ac dolor consectetur enim id porta diam quis</textarea></div>
+						</label>
+						<label>
+							<div class="head">Amet Blandit</div>
+							<div class="wrap" data-clone="Et luctus adipiscing"><textarea rows="1" name="amet blandit" oninput="this.parentNode.dataset.clone=this.value">Et luctus adipiscing</textarea></div>
+						</label>
+						<label>
+							<div class="head">Diam Est Aenean</div>
+							<div class="wrap" data-clone="Tincidunt"><textarea rows="1" name="diam est aenean" oninput="this.parentNode.dataset.clone=this.value">Tincidunt</textarea></div>
+						</label>
+						<label>
+							<div class="head">Nibh Luctus Ac Et</div>
+							<div class="wrap" data-clone="Vehicula consequat lorem habitant maecenas tristique justo euismod nulla lacus eget platea"><textarea rows="1" name="nibh luctus ac et" oninput="this.parentNode.dataset.clone=this.value">Vehicula consequat lorem habitant maecenas tristique justo euismod nulla lacus eget platea</textarea></div>
+						</label>
+						<label>
+							<div class="head">Orci Lectus</div>
+							<div class="wrap" data-clone="Augue hac viverra"><textarea rows="1" name="orci lectus" oninput="this.parentNode.dataset.clone=this.value">Augue hac viverra</textarea></div>
+						</label>
+						<label>
+							<div class="head">Neque Iaculis Enim</div>
+							<div class="wrap" data-clone="Consectetur"><textarea rows="1" name="neque iaculis enim" oninput="this.parentNode.dataset.clone=this.value">Consectetur</textarea></div>
+						</label>
+						<label>
+							<div class="head">Quis Ligula Lectus</div>
+							<div class="wrap" data-clone="Per fames luctus congue mi faucibus quam ad urna quis"><textarea rows="1" name="quis ligula lectus" oninput="this.parentNode.dataset.clone=this.value">Per fames luctus congue mi faucibus quam ad urna quis</textarea></div>
+						</label>
+					</form>
+					
+					<!--
 					<form class="searchFrm" method="get" action="?">
 						<label class="select">
 							<input type="search" name="q2" placeholder="Search" ondblclick="this.value=''" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off">
@@ -596,6 +654,7 @@
 							</div>
 						</label>
 					</form>
+					-->
 				</fieldset>
 			</section>			
 		</main>
@@ -976,6 +1035,7 @@
 				document.location = getEnv(label).query;
 			}
 			function clearbyClick(section, input){
+				if(!input) return;
 				const selection = $$('.rows .focused',section);
 				const totSelection = selection.length;	
 				selection.forEach(label=>{
@@ -1117,6 +1177,11 @@
 						input.closest('label')?.classList.add('focused');
 						if(section === listSec && rows){
 							$('#detailSection header h1').innerText = $('div:nth-child(3) dl dt',input.closest('label')).innerText;
+							if($('div',input.closest('label')).style.backgroundImage){
+								if($('.entry .tilesDetail div',detSec)){
+									$('.entry .tilesDetail div',detSec).style.backgroundImage = $('div',input.closest('label')).style.backgroundImage;
+								}
+							}
 							sectionUp(detSec);
 						}
 					}
@@ -1348,8 +1413,14 @@
 							e.preventDefault();
 							multiSelect = false;
 							clearbyArrow(parentSection);
-							const labels = [...$$('#' + map[parentSection.id] + ' form.rows label')].filter(el => getComputedStyle(el).display !== 'none');
-							checkedFocus($('input',labels[0]));
+							if($('#' + map[parentSection.id] + ' form.entry')){
+								const labels = [...$$('#' + map[parentSection.id] + ' form.entry label')].filter(el => getComputedStyle(el).display !== 'none');
+								//checkedFocus($('input',labels[0]));
+							}
+							else if($('#' + map[parentSection.id] + ' form.rows')){
+								const labels = [...$$('#' + map[parentSection.id] + ' form.rows label')].filter(el => getComputedStyle(el).display !== 'none');
+								checkedFocus($('input',labels[0]));
+							}
 						}
 					break;
 					case 'Backspace':
@@ -1473,7 +1544,7 @@
 						detSec.style.display = 'block';
 
 						checkedFocus($('.rows input',detSec));
-						$('.rows input',detSec).focus();
+						//$('.rows input',detSec).focus();
 						listSec.addEventListener('animationstart', () => {
 							backAnimating = true;
 						});
