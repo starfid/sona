@@ -28,10 +28,11 @@
 			}
 			html {-webkit-tap-highlight-color: transparent;}
 			body {margin:0;padding:0;font-family:arial;color:var(--cl);background:var(--bg)}
+			html, body {height:100%;overflow:hidden;position:fixed;width:100%;}
+
 			textarea:focus {outline: none;}
 			main, section header {display:grid}
-			main{/*grid-template-columns:22% auto;*/grid-template-columns: 22vw var(--wdt) auto;}
-			/*main:has(#detailSection:not(:empty)) {grid-template-columns: 22vw var(--wdt) auto;}*/
+			main{grid-template-columns: 22vw var(--wdt) auto;}
 			section {position:relative; height:100vh; overflow:hidden;background:var(--bg)}
 			label, form div.head {user-select:none;font-size:var(--fn1);}
 			form div.head {color:var(--cl2);font-weight:bolder;}
@@ -51,8 +52,9 @@
 			#listSection {border-left:1px solid var(--brC); border-right:1px solid var(--brC);}
 			
 			section header {
-				position:absolute; top:0; left:0; right:0; z-index:1;padding:var(--mg);
-				grid-template-columns:auto 48%;background-color:var(--bg);opacity:.97;
+				/*position:absolute; top:0; left:0; right:0; z-index:1;*/
+				position:sticky;z-index:1;
+				padding:var(--mg);grid-template-columns:auto 48%;background-color:var(--bg);xopacity:.97;
 			}
 			section header div label h1 {color:var(--cl2);margin:0 0 0 var(--mg);padding:0;font-size:calc(var(--fn2) * 0.94);height:var(--fn2);line-height: calc(var(--fn2) - 1px);}
 			section header div, .filters {display:flex;}
@@ -1424,6 +1426,7 @@
 						}
 					break;
 					case 'Backspace':
+					case 'Delete':
 						if(input.type==='search') input.placeholder = "Search";
 					break;
 					case 'Escape':
@@ -1589,6 +1592,21 @@
 			document.addEventListener('keyup', handleKeyUp);
 			document.addEventListener('click', handleClick);
 			document.addEventListener('visibilitychange', () => {if (document.hidden) multiSelect = false;});
+
+			if (window.visualViewport) {
+				const headerList = document.querySelectorAll('section header');
+
+				function adjustHeader() {
+					const offsetTop = window.visualViewport.offsetTop;
+
+					headerList.forEach(header => {
+					header.style.transform = `translateY(${offsetTop}px)`;
+					});
+				}
+
+				window.visualViewport.addEventListener('resize', adjustHeader);
+				window.visualViewport.addEventListener('scroll', adjustHeader);
+			}
 
 			const sideExist = display($('header input[data-btn=side]',listSec).closest('div'))!=='none';
 			const isPhone = display($('header input[data-btn=dots]',listSec).closest('label'))=='flex';
