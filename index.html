@@ -135,6 +135,7 @@
 			.wrap > textarea {word-break:break-word;border:none;margin:0;padding:0;background-color:transparent;resize:none;overflow:hidden;}
 			.wrap::after {content:attr(data-clone) " ";white-space:pre-wrap;visibility:hidden;}
 			.wrap > textarea, .wrap::after {box-sizing:content-box;font:var(--fnBg);grid-area: 1 / 1 / 2 / 2;}
+			.dual {display:none}
 			.entry label .head {margin-left:var(--mg);margin-bottom:calc(var(--mg)/2)}
 
 			.layerToggle {display:block!important}
@@ -383,7 +384,6 @@
 						<label class="select"><input type="radio" name="filter">Eros</label>
 					</form>
 					<form class="rows" method="post" action="?">
-						<!---->
 						<label class="select" data-filter="nibh">
 							<input type="checkbox" name="item" checked>
 							<div style="background-image:url('_assets/people/0.jpg')"></div>
@@ -465,7 +465,6 @@
 								<div>Est Sem Purus Tellus Sit Semper Fringilla Habitasse</div>
 							</div>
 						</label>
-						<!---->
 					</form>
 				</fieldset>
 			</section>
@@ -556,9 +555,7 @@
 						</label>
 					</form>
 					
-					
-					<!--
-					<form class="searchFrm" method="get" action="?">
+					<form class="searchFrm dual" method="get" action="?">
 						<label class="select">
 							<input type="search" name="q2" placeholder="Search" ondblclick="this.value=''" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off">
 							<input type="hidden" name="group" value=""><input type="hidden" name="app" value=""><input type="hidden" name="view" value="">
@@ -567,12 +564,12 @@
 							</svg>
 						</label>
 					</form>
-					<form class="filters" method="get" action="?">
+					<form class="filters dual" method="get" action="?">
 						<label class="select"><input type="radio" name="filter" checked>Nunc</label><label class="select"><input type="radio" name="filter">Aptent</label>
 						<label class="select"><input type="radio" name="filter">Aenean</label><label class="select"><input type="radio" name="filter">Dapibus</label>
 						<label class="select"><input type="radio" name="filter">Malesuada</label>
 					</form>
-					<form class="rows" method="post" action="?">
+					<form class="rows dual" method="post" action="?">
 						<label class="select" data-filter="aenean">
 							<input type="checkbox" name="item" checked>
 							<div style="background-image:url('_assets/foods/0.jpg')"></div>
@@ -656,7 +653,7 @@
 							</div>
 						</label>
 					</form>
-					-->
+					
 				</fieldset>
 			</section>			
 		</main>
@@ -1200,16 +1197,28 @@
 							sectionUp(detSec);
 						}
 					}
+					/*
+					else if(!(multiSelect && !rows)){
+						input.closest('label')?.classList.add('focused');
+						if(section === listSec && rows){
+							selections = [];
+							$('#detailSection header h1').innerText = $('div:nth-child(3) dl dt',input.closest('label')).innerText;
+							sectionUp(detSec);
+						}
+					}
+					*/
 				}
 			}
 			function handleFocusOut(e) {
 				const input = e.target;
 				if(input.matches(selector) && !multiSelect){
-					if(input.closest('label') !== null && input.closest('form') !== null){
+					if(input.closest('label') !== null){
 						const lbl = input.closest('label');
 						lbl.classList.remove('focused');
-						if(lbl.classList.contains('select') && input.closest('form').classList.contains('rows')){
-							lbl.classList.add('checked');
+						if(input.closest('form') !== null){
+							if(lbl.classList.contains('select') && input.closest('form').classList.contains('rows')){
+								lbl.classList.add('checked');
+							}
 						}
 					}
 				}
@@ -1595,7 +1604,7 @@
 					navSec.style.display = 'none';
 				}
 			}
-			
+						
 			window.addEventListener('resize', handleResize);
 			document.addEventListener('change', handleChange);
 			document.addEventListener('focusin', handleFocusIn);
@@ -1606,7 +1615,6 @@
 			document.addEventListener('visibilitychange', () => {if (document.hidden) multiSelect = false;});
 			if (window.visualViewport) {
 				const headerList = document.querySelectorAll('section header');
-
 				function adjustHeader() {
 					const offsetTop = window.visualViewport.offsetTop;
 
@@ -1614,13 +1622,13 @@
 					header.style.transform = `translateY(${offsetTop}px)`;
 					});
 				}
-
 				window.visualViewport.addEventListener('resize', adjustHeader);
 				window.visualViewport.addEventListener('scroll', adjustHeader);
 			}
 			
 			const sideExist = display($('header input[data-btn=side]',listSec).closest('div'))!=='none';
 			const isPhone = display($('header input[data-btn=dots]',listSec).closest('label'))=='flex';
+			if(localStorage.getItem('sonaView') === 'tiles') buttonView();
 
 			$('#layer').addEventListener('click', function (e) {
 				if (!e.target.closest('#pop')) buttonCancel($('#pop input'));
@@ -1650,11 +1658,17 @@
 						el.classList.remove('checked');
 					}
 				});
+				[...$$('.searchFrm input[type=hidden]')].forEach(el=>{
+					el.value = getEnv()[el.name];
+				});
+				if(['torquent','aptent','scelerisque'].includes(getEnv().app)){
+					$('.filters.dual').style.display = "flex";
+					$('.searchFrm.dual').style.display = "block";
+					$('.rows.dual').style.display = "grid";
+					$('.entry').style.display = "none";
+				}
 			}
-			if(localStorage.getItem('sonaView') === 'tiles') buttonView();
-			[...$$('.searchFrm input[type=hidden]')].forEach(el=>{
-				el.value = getEnv()[el.name];
-			});			
+			
 			if(sideExist){
 				import('./cam.js').then(module => {
 					camAPI = new ZXing.BrowserMultiFormatReader();
