@@ -83,7 +83,7 @@
 			.searchFrm label input::-webkit-search-cancel-button {display: none;}
 
 			fieldset form {margin:0 var(--mg) var(--mg) var(--mg);padding:0}
-			fieldset form label {/*cursor:pointer;*/display:block;padding:var(--mg);}
+			fieldset form label {cursor:pointer;display:block;padding:var(--mg);}
 			fieldset form.filters {margin-left:0;margin-right:0;width:var(--wdt);overflow:scroll;scrollbar-width:none;}
 			fieldset form.filters label {margin-right:var(--mg)}
 			fieldset form.filters label:first-child {margin-left:var(--mg)}
@@ -383,6 +383,7 @@
 						<label class="select"><input type="radio" name="filter">Eros</label>
 					</form>
 					<form class="rows" method="post" action="?">
+						<!---->
 						<label class="select" data-filter="nibh">
 							<input type="checkbox" name="item" checked>
 							<div style="background-image:url('_assets/people/0.jpg')"></div>
@@ -482,7 +483,6 @@
 						<label><h1></h1></label>
 					</div>
 					<div class="hRight">
-						<!--
 						<label class="btn mobHid">
 							<input type="radio" name="iBtn" data-btn="new item">
 							<svg viewbox="0 0 100 100">
@@ -495,7 +495,6 @@
 								<path d="M10 20H80V90H10ZM20 60L35 75L70 30M20 20V10H90V80H80"/>
 							</svg>
 						</label>
-						-->
 						<label class="btn mobHid">
 							<input type="radio" name="iBtn" data-btn="delete">
 							<svg viewbox="0 0 100 100" class="delBtn">
@@ -556,6 +555,7 @@
 							<div class="wrap" data-clone="Per fames luctus congue mi faucibus quam ad urna quis"><textarea rows="1" name="quis ligula lectus" oninput="this.parentNode.dataset.clone=this.value">Per fames luctus congue mi faucibus quam ad urna quis</textarea></div>
 						</label>
 					</form>
+					
 					
 					<!--
 					<form class="searchFrm" method="get" action="?">
@@ -871,11 +871,22 @@
 				const section = input.closest('section');
 				if(section.id==='pop') buttonCancel(input);
 				if((input.name === 'item' || input.name === 'copy') || input.dataset.btn === 'delete') {					
-					if(selections.length > 0 && section !== 'navSection' && confirm('Delete ' + selections.length + ' selected items')){
+					if(selections.length > 0 && section !== 'navSection'){
+						const newSelections = [];
 						selections.forEach(label=>{
-							if(label && label.parentNode) label.parentNode.removeChild(label);
+							if(label && label.parentNode && label.closest('section').id === section.id) {
+								newSelections.push(label);
+							}
 						});
-						multiSelect = false;
+						if(newSelections.length > 0 && confirm('Delete ' + newSelections.length + ' selected items')){
+							newSelections.forEach(label=>{
+								if(label && label.parentNode && label.closest('section').id == section.id) {
+									label.parentNode.removeChild(label);
+								}
+							});
+							multiSelect = false;
+							cancelMulti(input);
+						}
 					}
 					else if(isPhone){
 						multiSelect = false;
@@ -883,11 +894,11 @@
 					cancelMulti(input);
 					const labels = [...$$('.rows label',section)].filter(el => getComputedStyle(el).display !== 'none');
 					if(labels.length>0){
-						checkedFocus($('input',labels[0]));
-						selections = [labels[0]];
+						//checkedFocus($('input',labels[0]));
+						//selections = [labels[0]];
 					}
 					else {
-						if(!sideExist) checkedFocus($('header div label.btn input[data-btn=delete]',section));
+						//if(!sideExist) checkedFocus($('header div label.btn input[data-btn=delete]',section));
 					}
 				}
 			}
@@ -968,7 +979,9 @@
 				);
 				if(el.checked && notSearch) {
 					parentLabel.classList.add('checked');
-					if(!multiSelect) selections = [parentLabel];
+					if(!multiSelect && parentLabel.closest('section').id != "navSection"){
+						selections = [parentLabel];
+					}
 				}
 			}
 			function viewFinder(lense,section){
@@ -1034,7 +1047,7 @@
 				}
 			}
 			function navClick(label){
-				document.location = getEnv(label).query;
+				document.location = getEnv(label).query + '&r=' + Math.random();
 			}
 			function clearbyClick(section, input){
 				if(!input) return;
@@ -1047,7 +1060,7 @@
 				clrTextSel(section);
 				if(multiSelect) {lastSection = null;}
 				if(input.name == 'iBtn'){
-					checkedFocus($('.rows input',section));
+					$('.rows input',section).closest('label').classList.add('checked');
 				}
 				else {
 					lastSection = null;
@@ -1124,7 +1137,7 @@
 						const filterName = input.closest('label').innerText.toLowerCase();
 						const firstFilter = $('.filters label input',section) === input;
 						let gotFirst = false;
-						if(multiSelect && lastSection.id == section.id) cancelMulti(input);
+						cancelMulti(input);
 						[...$$('.rows label',section)].forEach(el=>{
 							el.classList.remove('checked');
 						});
@@ -1192,7 +1205,13 @@
 			function handleFocusOut(e) {
 				const input = e.target;
 				if(input.matches(selector) && !multiSelect){
-					input.closest('label')?.classList.remove('focused');
+					if(input.closest('label') !== null && input.closest('form') !== null){
+						const lbl = input.closest('label');
+						lbl.classList.remove('focused');
+						if(lbl.classList.contains('select') && input.closest('form').classList.contains('rows')){
+							lbl.classList.add('checked');
+						}
+					}
 				}
 			}
 			function handleKeyDown(e) {
@@ -1415,18 +1434,11 @@
 							e.preventDefault();
 							multiSelect = false;
 							clearbyArrow(parentSection);
-							if($('#' + map[parentSection.id] + ' form.entry')){
-								const labels = [...$$('#' + map[parentSection.id] + ' form.entry label')].filter(el => getComputedStyle(el).display !== 'none');
-								//checkedFocus($('input',labels[0]));
-							}
-							else if($('#' + map[parentSection.id] + ' form.rows')){
-								const labels = [...$$('#' + map[parentSection.id] + ' form.rows label')].filter(el => getComputedStyle(el).display !== 'none');
-								checkedFocus($('input',labels[0]));
-							}
+							const labels = [...$$('#' + map[parentSection.id] + ' form.rows label')].filter(el => getComputedStyle(el).display !== 'none');
+							checkedFocus($('input',labels[0]));
 						}
 					break;
 					case 'Backspace':
-					case 'Delete':
 						if(input.type==='search') input.placeholder = "Search";
 					break;
 					case 'Escape':
@@ -1592,7 +1604,6 @@
 			document.addEventListener('keyup', handleKeyUp);
 			document.addEventListener('click', handleClick);
 			document.addEventListener('visibilitychange', () => {if (document.hidden) multiSelect = false;});
-
 			if (window.visualViewport) {
 				const headerList = document.querySelectorAll('section header');
 
@@ -1607,7 +1618,7 @@
 				window.visualViewport.addEventListener('resize', adjustHeader);
 				window.visualViewport.addEventListener('scroll', adjustHeader);
 			}
-
+			
 			const sideExist = display($('header input[data-btn=side]',listSec).closest('div'))!=='none';
 			const isPhone = display($('header input[data-btn=dots]',listSec).closest('label'))=='flex';
 
@@ -1617,7 +1628,7 @@
 			$$(selector.split(',').map(s => s.trim()).map(s => /checkbox|radio/.test(s) ? s + ':checked' : s).join(', ')).forEach(input => {
 				if(input.checked) checkedFocus(input);
 			});
-			selections = [$('#listSection .rows label')];
+			selections = [];
 			const keyInp = $('#listSection .searchFrm input');
 			const params = new URLSearchParams(window.location.search);
 			if (params.get('q')) keyInp.placeholder = params.get('q');
