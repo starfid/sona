@@ -150,7 +150,8 @@
 
 			@keyframes popRising { from {top:51%;} to {top:50%;} }
 
-			@media screen and (max-width: 1181px), screen and (max-width: 1280px) and (hover: none) and (pointer: coarse) {
+			@media screen and (max-width: 1181px), screen and (hover: none) {
+/*			@media screen and (max-width: 1181px), screen and (max-width: 1280px) and (hover: none) and (pointer: coarse) {*/
 				:root {
 					--fn1:2vw; 	--fn2:2.5vw;	--brC:#FAF9F7;	/*--bg:#FFFFFF;*/
 					--mg:1.1vw;	--mg2:calc(var(--fn2) / 2);	--cir:5.5vw;	--wdt:50vw;
@@ -1305,15 +1306,24 @@
 							else if(isFirstChild && !parentForm.classList.contains('rows')) {
 								e.preventDefault();
 								multiSelect = false;
+								
+								/*
+								const frm = [...$$('form',parentSection)].filter(el => getComputedStyle(el).display !== 'none');
+								const index = frm.indexOf(parentForm);
+								console.log(frm);
+								*/
+
 								const inputTarget = $('input',
 									parentForm.previousElementSibling ||
 									input.closest('fieldset').previousElementSibling
 								);
-								checkedFocus(inputTarget);
-								const isHeader = inputTarget?.closest('div');								
+								if(inputTarget) checkedFocus(inputTarget);
+								
+								const isHeader = (inputTarget)?.closest('div');
 								if(isHeader && display(isHeader) === 'none') {
 									checkedFocus($('.hRight input', isHeader.closest('header')));
 								}
+							
 							}
 							else if(parentSection.id === 'navSection'){
 								e.preventDefault();
@@ -1665,7 +1675,7 @@
 					$('.filters.dual').style.display = "flex";
 					$('.searchFrm.dual').style.display = "block";
 					$('.rows.dual').style.display = "grid";
-					$('.entry').style.display = "none";
+					$('.entry').parentNode.removeChild($('.entry'));
 				}
 			}
 			
