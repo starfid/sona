@@ -115,7 +115,7 @@
 			.btn.focused svg.delBtn {stroke:red;}
 			.searchFrm label.focused {background-color:transparent;color:var(--cl)}
 			
-			#navSection header {grid-template-columns:auto 20%;}
+			#navSection header {grid-template-columns:auto 15%;}
 			#pathList {display:none;}
 			.tilesRow {display:grid;gap:1vh!important;}
 			.tilesRow {/*grid-template-columns:repeat(4, 1fr)!important;*/grid-template-columns:repeat(3, 1fr)!important;}
@@ -150,7 +150,8 @@
 
 			@keyframes popRising { from {top:51%;} to {top:50%;} }
 
-			@media screen and (max-width: 1181px), screen and (hover: none) {
+			@media screen and (max-width: 1281px), screen and (pointer: coarse), screen and (hover: none) {
+/*			@media screen and (max-width: 1181px), screen and (hover: none) {*/
 /*			@media screen and (max-width: 1181px), screen and (max-width: 1280px) and (hover: none) and (pointer: coarse) {*/
 				:root {
 					--fn1:2vw; 	--fn2:2.5vw;	--brC:#FAF9F7;	/*--bg:#FFFFFF;*/
@@ -165,7 +166,7 @@
 				#navSection {border-right:1px solid var(--brC);}
 				#navSection form div.head, #navSection form label.select {color:var(--cl)}
 				#navSection .h1Hid {display: flex;margin: 0 auto;}
-				#navSection header {grid-template-columns: 10% auto 10%;}
+				#navSection header {grid-template-columns: 15% auto 15%;}
 				#listSection header {grid-template-columns: 10% auto 46%;}
 				#listSection header .h1Hid label {margin:0 auto;text-align:center}
 				#listSection header .h1Hid label h1 {margin:0 auto;text-align:center}
@@ -197,7 +198,7 @@
 				.searchFrm label {padding:calc(var(--mg) * .92) var(--mg);}
 				#navSection, #listSection {border-right:none;}
 				
-				#detailSection header {grid-template-columns:20% auto 20%;}
+				#navSection header, #detailSection header, #listSection header {grid-template-columns:15% auto 15%;}
 				#detailSection div:first-child {display:flex}
 				
 				#detailSection div:nth-child(2) {display:flex;}
@@ -209,7 +210,7 @@
 				#navSection form div.head:first-of-type {margin-top:calc((var(--mg) * 2) + (var(--mg) / 2))}
 				#detailSection {display:none;position:absolute;z-index:1;top:0;width:var(--wdt)}
 				#listSection {display:block}
-				#listSection header {grid-template-columns: 20% auto 20%;}
+				/*#listSection header {grid-template-columns: 20% auto 20%;}*/
 				#listSection .h1Hid {display:flex;margin:0 auto}
 
 				section header div label h1 {margin:0;}
@@ -292,14 +293,18 @@
 						</label>
 					</div>
 					<div class="h1Hid">
-						<label><h1>Administrator</h1></label>						
+						<label><h1>Aliquam</h1></label>						
 					</div>
 					<div class="hRight">
 						<label class="btn last">
 							<input type="radio" name="iBtn" data-btn="login">
 							<svg viewBox="0 0 100 100">
-								<path d="M10 10 H60 V30 M60 70 V90 H10 V7.5" />
-								<path d="M30 50 H97 M83 35 L97 50 L83 65" />
+								<circle cx="50" cy="29" r="19"  />
+								<path d="M 10 90 A 41 40 0 0 1 90 90" />
+								<polygon points="10,90 90,90" />
+								<!--
+								<path d="M10 10 H60 V30 M60 70 V90 H10 V7.5" /><path d="M30 50 H97 M83 35 L97 50 L83 65" />
+								-->
 							</svg>
 						</label>
 					</div>
@@ -519,7 +524,7 @@
 					
 					<form class="entry" method="post" action="?">
 						<label class="tilesDetail">
-							<input type="checkbox" name="erat">
+							<input type="file" name="erat">
 							<div style="background-image:url('_assets/people/0.jpg')">&nbsp;</div>
 						</label>
 						<label>
@@ -1454,7 +1459,13 @@
 							multiSelect = false;
 							clearbyArrow(parentSection);
 							const labels = [...$$('#' + map[parentSection.id] + ' form.rows label')].filter(el => getComputedStyle(el).display !== 'none');
-							checkedFocus($('input',labels[0]));
+							if(parentSection === listSec && labels.length<1 && display($('form.entry',detSec)) === 'block'){
+								e.preventDefault();
+								$('form.entry textarea',detSec).focus();
+							}
+							else {
+								checkedFocus($('input',labels[0]));
+							}
 						}
 					break;
 					case 'Backspace':
@@ -1481,6 +1492,7 @@
 							switch (btn) {
 								case 'side':		buttonSide(); break;
 								case 'new item':	buttonCompose(input); break;
+								case 'login':		buttonCompose(input); break;
 								case 'dots':		buttonDots(); break;
 								case 'back':		buttonBack(input); break;
 								case 'change view':	buttonView(); break;
@@ -1550,6 +1562,7 @@
 						case 'change view':	buttonView(); break;
 						case 'delete':		buttonDelete(input); break;
 						case 'new item':	buttonCompose(input); break;
+						case 'login':		buttonCompose(input); break;
 						case 'dots':		buttonDots(); break;
 						case 'select':		buttonMulti(e); break;
 						case 'popCancel':	buttonCancel(input); break;
@@ -1614,7 +1627,10 @@
 					navSec.style.display = 'none';
 				}
 			}
-						
+
+			const sideExist = display($('header input[data-btn=side]',listSec).closest('div'))!=='none';
+			const isPhone = display($('header input[data-btn=dots]',listSec).closest('label'))=='flex';
+
 			window.addEventListener('resize', handleResize);
 			document.addEventListener('change', handleChange);
 			document.addEventListener('focusin', handleFocusIn);
@@ -1636,8 +1652,6 @@
 				window.visualViewport.addEventListener('scroll', adjustHeader);
 			}
 			
-			const sideExist = display($('header input[data-btn=side]',listSec).closest('div'))!=='none';
-			const isPhone = display($('header input[data-btn=dots]',listSec).closest('label'))=='flex';
 			if(localStorage.getItem('sonaView') === 'tiles') buttonView();
 
 			$('#layer').addEventListener('click', function (e) {
@@ -1677,6 +1691,11 @@
 					$('.rows.dual').style.display = "grid";
 					$('.entry').parentNode.removeChild($('.entry'));
 				}
+				else {
+					$('.filters.dual').parentNode.removeChild($('.filters.dual'));
+					$('.searchFrm.dual').parentNode.removeChild($('.searchFrm.dual'));
+					$('.rows.dual').parentNode.removeChild($('.rows.dual'));
+				}
 			}
 			
 			if(sideExist){
@@ -1693,7 +1712,36 @@
 						console.error(err);
 					})
         			});
-			}		
+			}
+			if(!isPhone) {
+				const textArea = [...$$('form.entry textarea')];
+				textArea.forEach((el,index)=>{
+					let justFocused = false;
+						el.addEventListener('focus', ()=>{
+						justFocused = true;
+						setTimeout(()=> justFocused = false, 100);
+					});
+
+					el.addEventListener('keyup', (e)=>{
+						if(justFocused) return;
+						const start = el.selectionStart;
+						const end = el.selectionEnd;
+						const len = el.value.length;
+
+						if(start !== end) return;
+
+						if(start === 0 && e.key === 'ArrowUp' && index > 0){
+							textArea[index-1].focus();
+						}
+						else if(start === len && e.key === 'ArrowDown' && index < (textArea.length-1)){
+							textArea[index+1].focus();
+						}
+						else if(start === 0 && e.key === 'ArrowLeft' && index > -1){
+							checkedFocus($('form.rows input',listSec));
+						}
+					});
+				});
+			}
 			loaded = true;
 		</script>
 	</body>
