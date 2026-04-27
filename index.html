@@ -138,6 +138,16 @@
 			.dual {display:none}
 			.entry label .head {margin-left:var(--mg);margin-bottom:calc(var(--mg)/2)}
 
+			.toggle {margin-left:calc(var(--mg) - 2px);position: relative;display: inline-block;width: 60px;height: 34px;}
+			.switch input {opacity: 0;width: 0;height: 0;}
+			.slider {position: absolute;cursor: pointer;top: 0;left: 0;right: 0;bottom: 0;background-color: var(--bck);-webkit-transition: .4s;transition: .4s;}
+			.slider:before {position: absolute;content: "";height: 26px;width: 26px;left: 4px;bottom: 4px;background-color: white;-webkit-transition: .4s;transition: .4s;}
+			input:checked + .slider {background-color: var(--bhg);}
+			input:focus + .slider {box-shadow: 0 0 1px var(--bhg);}
+			input:checked + .slider:before {-webkit-transform: translateX(26px);-ms-transform: translateX(26px);transform: translateX(26px);}
+			.slider.round {border-radius: 34px;}
+			.slider.round:before {border-radius: 50%;}
+
 			.layerToggle {display:block!important}
 			#layer {position:absolute;z-index:1;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,0.6);display:none;}
 			#pop {
@@ -533,7 +543,14 @@
 						</label>
 						<label>
 							<div class="head">Viverra Donec</div>
+							<!--
 							<div class="wrap" data-clone="Morbi tempor id pharetra ac dolor consectetur enim id porta diam quis"><textarea rows="1" name="viverra donec" oninput="this.parentNode.dataset.clone=this.value">Morbi tempor id pharetra ac dolor consectetur enim id porta diam quis</textarea></div>
+							-->
+							<!--<div><input type="checkbox" />xx</div>-->
+							<div class="toggle">
+								<input type="checkbox" checked>
+								<span class="slider round"></span>
+							</div>
 						</label>
 						<label>
 							<div class="head">Amet Blandit</div>
@@ -685,7 +702,7 @@
 		<script>
 			const $$ = (s, c = document) => [...c.querySelectorAll(s)];
 			const $ = (s, c = document) => c.querySelector(s);
-			const selector = 'form label > input[type=checkbox], form label > input[type=radio], .searchFrm label > input[type=search], header label > input[type=radio]';
+			const selector = '.rows label > input[type=checkbox], form label > input[type=radio], .searchFrm label > input[type=search], header label > input[type=radio]';
 			const navSec = $('#navSection');
 			const listSec = $('#listSection');
 			const detSec = $('#detailSection');
@@ -793,7 +810,7 @@
 			}
 			function buttonCompose(input){
 				const cancelFocus = () => checkedFocus($('#pop input'));
-				if(input.closest('section').id==='pop'){//compose inside pop
+				if(input.closest('section').id==='pop'){
 					buttonCancel(input);
 					setTimeout(()=>{
 						setPop('96%',false);
@@ -804,7 +821,7 @@
 				}
 				else {
 					lastSection = input.closest('section');
-					$('#pop header .hRight label').style.visibility = 'visible';
+					$('#pop header .hRight label').style.visibility = input.closest('section')===navSec?'hidden':'visible';
 					toggleLayer();
 					cancelFocus();
 				}
@@ -873,12 +890,14 @@
 			function buttonDelete(input){
 				const section = input.closest('section');
 				if(section.id==='pop') buttonCancel(input);
-				if((input.name === 'item' || input.name === 'copy') || input.dataset.btn === 'delete') {					
+				if((input.name === 'item' || input.name === 'copy') || input.dataset.btn === 'delete') {
 					if(selections.length > 0 && section !== 'navSection'){
 						const newSelections = [];
 						selections.forEach(label=>{
-							if(label && label.parentNode && label.closest('section').id === section.id) {
-								newSelections.push(label);
+							if (label && label.parentNode) {
+								if (isPhone || (label.closest('section')?.id === section.id)) {
+									newSelections.push(label);
+								}
 							}
 						});
 						if(newSelections.length > 0 && confirm('Delete ' + newSelections.length + ' selected items')){
@@ -1101,6 +1120,9 @@
 					checkedFocus($((lastSection?'#'+lastSection.id:'#listSection') + ' .rows input'));
 				}
 			}
+			function sectionUp(section) {
+				$('fieldset',section).scrollTo(0,0);
+			}
 			function handleChange(e) {
 				if(!e.target.matches(selector)) return;
 				const input = e.target;
@@ -1203,16 +1225,6 @@
 							sectionUp(detSec);
 						}
 					}
-					/*
-					else if(!(multiSelect && !rows)){
-						input.closest('label')?.classList.add('focused');
-						if(section === listSec && rows){
-							selections = [];
-							$('#detailSection header h1').innerText = $('div:nth-child(3) dl dt',input.closest('label')).innerText;
-							sectionUp(detSec);
-						}
-					}
-					*/
 				}
 			}
 			function handleFocusOut(e) {
@@ -1221,6 +1233,7 @@
 					if(input.closest('label') !== null){
 						const lbl = input.closest('label');
 						lbl.classList.remove('focused');
+						input.checked = false;
 						if(input.closest('form') !== null){
 							if(lbl.classList.contains('select') && input.closest('form').classList.contains('rows')){
 								lbl.classList.add('checked');
@@ -1540,9 +1553,6 @@
 					break;
 				}
 			}
-			function sectionUp(section) {
-				$('fieldset',section).scrollTo(0,0);
-			}
 			function handleClick(e) {
 				const input = e.target;
 				if(input.closest('section')===null) return;
@@ -1714,14 +1724,17 @@
         			});
 			}
 			if(!isPhone) {
-				const textArea = [...$$('form.entry textarea')];
-				textArea.forEach((el,index)=>{
+				const entry = [...$$('form.entry textarea, form.entry input')];
+				entry.forEach((el,index)=>{
 					let justFocused = false;
-						el.addEventListener('focus', ()=>{
+					el.addEventListener('focus', ()=>{
 						justFocused = true;
+						el.closest('div').classList.add('checked');
 						setTimeout(()=> justFocused = false, 100);
 					});
-
+					el.addEventListener('blur', ()=>{
+						el.closest('div').classList.remove('checked');
+					});
 					el.addEventListener('keyup', (e)=>{
 						if(justFocused) return;
 						const start = el.selectionStart;
@@ -1729,14 +1742,17 @@
 						const len = el.value.length;
 
 						if(start !== end) return;
-
+						
 						if(start === 0 && e.key === 'ArrowUp' && index > 0){
-							textArea[index-1].focus();
+							e.preventDefault();
+							entry[index-1].focus();
 						}
-						else if(start === len && e.key === 'ArrowDown' && index < (textArea.length-1)){
-							textArea[index+1].focus();
+						else if(start === len && e.key === 'ArrowDown' && index < (entry.length-1)){
+							e.preventDefault();
+							entry[index+1].focus();
 						}
 						else if(start === 0 && e.key === 'ArrowLeft' && index > -1){
+							e.preventDefault();
 							checkedFocus($('form.rows input',listSec));
 						}
 					});
