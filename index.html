@@ -138,10 +138,10 @@
 			.dual {display:none}
 			.entry label .head {margin-left:var(--mg);margin-bottom:calc(var(--mg)/2)}
 
-			.toggle {margin-left:calc(var(--mg) - 2px);position: relative;display: inline-block;width: 60px;height: 34px;}
+			.toggle {border-radius: 50%!important;margin-left:calc(var(--mg) - 2px);position: relative;display: inline-block;width: 60px;height: 34px;}
 			.switch input {opacity: 0;width: 0;height: 0;}
-			.slider {position: absolute;cursor: pointer;top: 0;left: 0;right: 0;bottom: 0;background-color: var(--bck);-webkit-transition: .4s;transition: .4s;}
-			.slider:before {position: absolute;content: "";height: 26px;width: 26px;left: 4px;bottom: 4px;background-color: white;-webkit-transition: .4s;transition: .4s;}
+			.slider {position: absolute;cursor: pointer;top: 0;left: 0;right: 0;bottom: 0;background-color: var(--bck);-webkit-transition: .2s;transition: .2s;}
+			.slider:before {position: absolute;content: "";height: 26px;width: 26px;left: 4px;bottom: 4px;background-color: white;-webkit-transition: .2s;transition: .2s;}
 			input:checked + .slider {background-color: var(--bhg);}
 			input:focus + .slider {box-shadow: 0 0 1px var(--bhg);}
 			input:checked + .slider:before {-webkit-transform: translateX(26px);-ms-transform: translateX(26px);transform: translateX(26px);}
@@ -720,24 +720,6 @@
 			let backAnimating = false;
 			let loaded = false;
 
-			function setPop(percent,cancelBut){
-				$('#pop header .hRight label').style.visibility = cancelBut?'hidden':'visible';
-				$('meta[name="theme-color"]').setAttribute('content','#000000');
-				document.documentElement.style.setProperty("--tTop", percent);
-				toggleLayer();
-				if(leftPos(listSec)==='0px'){
-					listSec.style.display = 'block';
-					listSec.classList.add('sectionZoom');
-					listSec.classList.remove('listShowList');
-					section = listSec;
-				}
-				else {
-					listSec.style.display = 'none';
-					detSec.classList.add('sectionZoom');
-					detSec.classList.remove('detailShowDetail');
-					section = detSec;
-				}
-			}
 			function setDetailTitle(input){
 				$('#detailSection h1').innerText = $('div:last-child dl dt',input.closest('label')).innerText;
 			}
@@ -821,9 +803,32 @@
 				}
 				else {
 					lastSection = input.closest('section');
-					$('#pop header .hRight label').style.visibility = input.closest('section')===navSec?'hidden':'visible';
-					toggleLayer();
-					cancelFocus();
+					if(input.closest('section')===navSec){
+						setPop('96%',true);
+					}
+					else {
+						$('#pop header .hRight label').style.visibility = 'visible';
+						toggleLayer();
+						cancelFocus();
+					}
+				}
+			}
+			function setPop(percent,cancelBut){
+				$('#pop header .hRight label').style.visibility = cancelBut?'hidden':'visible';
+				$('meta[name="theme-color"]').setAttribute('content','#000000');
+				document.documentElement.style.setProperty("--tTop", percent);
+				toggleLayer();
+				if(leftPos(listSec)==='0px'){
+					listSec.style.display = 'block';
+					listSec.classList.add('sectionZoom');
+					listSec.classList.remove('listShowList');
+					section = listSec;
+				}
+				else {
+					listSec.style.display = 'none';
+					detSec.classList.add('sectionZoom');
+					detSec.classList.remove('detailShowDetail');
+					section = detSec;
 				}
 			}
 			function cancelPop(input,focused){
@@ -894,16 +899,18 @@
 					if(selections.length > 0 && section !== 'navSection'){
 						const newSelections = [];
 						selections.forEach(label=>{
-							if (label && label.parentNode) {
-								if (isPhone || (label.closest('section')?.id === section.id)) {
+							if(label && label.parentNode) {
+								if(isPhone || (label.closest('section')?.id === section.id)) {
 									newSelections.push(label);
 								}
 							}
 						});
 						if(newSelections.length > 0 && confirm('Delete ' + newSelections.length + ' selected items')){
 							newSelections.forEach(label=>{
-								if(label && label.parentNode && label.closest('section').id == section.id) {
-									label.parentNode.removeChild(label);
+								if(label && label.parentNode) {
+									if(isPhone || (label.closest('section')?.id === section.id)) {
+										label.parentNode.removeChild(label);
+									}
 								}
 							});
 							multiSelect = false;
