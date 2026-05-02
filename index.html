@@ -10,6 +10,7 @@
 		<meta content="#FFFFFF" name="msapplication-navbutton-color">
 		<meta content="white" name="apple-mobile-web-app-status-bar-style">
 		<meta content="light" name="color-scheme">
+		<meta content="Starfid Sona. All-purpose UI kit built for keyboard-first operation" name="description">
 		<meta content="width=device-width,initial-scale=1,maximum-scale=1,shrink-to-fit=no,user-scalable=0,viewport-fit=cover" name="viewport">
 		<link rel="icon" href="./favicon.png">
 		<link rel="manifest" href="./manifest.json">
@@ -293,8 +294,8 @@
 			<section id="navSection">
 				<header>
 					<div class="deskHid">
-						<label class="btn">
-							<input type="radio" name="iBtn" data-btn="side">
+						<label class="btn" for="navSide">
+							<input type="radio" name="iBtn" data-btn="side" id="navSide" aria-label="Open sidebar menu">
 							<svg viewbox="0 0 100 100">
 								<path d="M 10 26 H 90 V 31 H 10 Z M 10 47 H 90 V 52 H 10 Z M 10 68 H 60 V 73 H 10 Z" />
 							</svg>
@@ -338,8 +339,8 @@
 			<section id="listSection">
 				<header>
 					<div class="deskHid">
-						<label class="btn">
-							<input type="radio" name="iBtn" data-btn="side">
+						<label class="btn" for="listSide">
+							<input type="radio" name="iBtn" data-btn="side" id="listSide" aria-label="Open sidebar menu">
 							<svg viewbox="0 0 100 100">
 								<path d="M 10 26 H 90 V 31 H 10 Z M 10 47 H 90 V 52 H 10 Z M 10 68 H 60 V 73 H 10 Z" />
 							</svg>
@@ -374,8 +375,8 @@
 								<path id="pathList" d="M10 20H30V40H10Z M40 20H90V25H40Z M40 35H90V40H40Z M10 60H30V80H10Z M40 60H90V65H40Z M40 75H90V80H40Z"/>
 							</svg>
 						</label>
-						<label class="btn tabHid last">
-							<input type="radio" name="iBtn" data-btn="dots">
+						<label class="btn tabHid last" for="listDots">
+							<input type="radio" name="iBtn" data-btn="dots" id="listDots" aria-label="Open action menu">
 							<svg viewbox="0 0 100 100">
 								<path d="M49 10 A40 40 0 1 1 48.9 10 M30 47 a3 3 0 1 0 0.1 0 M50 47 a3 3 0 1 0 0.1 0 M70 47 a3 3 0 1 0 0.1 0"/>
 							</svg>
@@ -514,8 +515,8 @@
 								<path d="M33 10 H68 V20 H33 Z M20 20 H80 L75 90 H25 Z M10 20 H90 M33 30 L39 80 M50 30 V80 M67 30 L62 80" />
 							</svg>
 						</label>
-						<label class="btn tabHid secondLast">
-							<input type="radio" name="iBtn" data-btn="dots">
+						<label class="btn tabHid secondLast" for="detDots">
+							<input type="radio" name="iBtn" data-btn="dots" id="detDots" aria-label="Open action menu">
 							<svg viewbox="0 0 100 100">
 								<path d="M49 10 A40 40 0 1 1 48.9 10 M30 47 a3 3 0 1 0 0.1 0 M50 47 a3 3 0 1 0 0.1 0 M70 47 a3 3 0 1 0 0.1 0"/>
 							</svg>
