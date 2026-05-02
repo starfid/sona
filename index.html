@@ -24,7 +24,7 @@
 			:root {
 				--cl:#000000;	--cl2:#858584;	--fn1:1.1vw;	--fn2:1.7vw;	--brC:#f3f3f2;		--nvB:#E1E0E1;
 				--wdt:39vw;	--cck:#000000;	--mg:.9vw;	--mg2:calc(var(--fn2) / 2);		--cir:3.1vw;
-				--fdC:#6a6a6a; 	--cir2:calc(var(--cir) * 2);
+				--fdC:#6a6a6a; 	--cir2:calc(var(--cir) * 1.96);
 			}
 			html {-webkit-tap-highlight-color: transparent;}
 			body {margin:0;padding:0;font-family:arial;color:var(--cl);background:var(--bg)}
@@ -52,7 +52,6 @@
 			#listSection {border-left:1px solid var(--brC); border-right:1px solid var(--brC);}
 			
 			section header {
-				/*position:absolute; top:0; left:0; right:0; z-index:1;*/
 				position:sticky;z-index:1;
 				padding:var(--mg);grid-template-columns:auto 48%;background-color:var(--bg);xopacity:.97;
 			}
@@ -138,12 +137,12 @@
 			.dual {display:none}
 			.entry label .head {margin-left:var(--mg);margin-bottom:calc(var(--mg)/2)}
 
-			.toggle {border-radius: 50%!important;margin-left:calc(var(--mg) - 2px);position: relative;display: inline-block;width: 60px;height: 34px;}
+			.toggle {background-color:transparent;margin-left:calc(var(--mg) - 2px);position: relative;display: inline-block;width: 60px;height: 34px;}
 			.switch input {opacity: 0;width: 0;height: 0;}
 			.slider {position: absolute;cursor: pointer;top: 0;left: 0;right: 0;bottom: 0;background-color: var(--bck);-webkit-transition: .2s;transition: .2s;}
 			.slider:before {position: absolute;content: "";height: 26px;width: 26px;left: 4px;bottom: 4px;background-color: white;-webkit-transition: .2s;transition: .2s;}
 			input:checked + .slider {background-color: var(--bhg);}
-			input:focus + .slider {box-shadow: 0 0 1px var(--bhg);}
+			input:focus + .slider {box-shadow: 0 0 10px var(--bhg);}
 			input:checked + .slider:before {-webkit-transform: translateX(26px);-ms-transform: translateX(26px);transform: translateX(26px);}
 			.slider.round {border-radius: 34px;}
 			.slider.round:before {border-radius: 50%;}
@@ -161,8 +160,6 @@
 			@keyframes popRising { from {top:51%;} to {top:50%;} }
 
 			@media screen and (max-width: 1281px), screen and (pointer: coarse), screen and (hover: none) {
-/*			@media screen and (max-width: 1181px), screen and (hover: none) {*/
-/*			@media screen and (max-width: 1181px), screen and (max-width: 1280px) and (hover: none) and (pointer: coarse) {*/
 				:root {
 					--fn1:2vw; 	--fn2:2.5vw;	--brC:#FAF9F7;	/*--bg:#FFFFFF;*/
 					--mg:1.1vw;	--mg2:calc(var(--fn2) / 2);	--cir:5.5vw;	--wdt:50vw;
@@ -209,6 +206,7 @@
 				#navSection, #listSection {border-right:none;}
 				
 				#navSection header, #detailSection header, #listSection header {grid-template-columns:15% auto 15%;}
+				#detailSection fieldset {animation:none}
 				#detailSection div:first-child {display:flex}
 				
 				#detailSection div:nth-child(2) {display:flex;}
@@ -534,7 +532,7 @@
 					
 					<form class="entry" method="post" action="?">
 						<label class="tilesDetail">
-							<input type="file" name="erat">
+							<input onchange="previewImage(event)" type="file" name="erat">
 							<div style="background-image:url('_assets/people/0.jpg')">&nbsp;</div>
 						</label>
 						<label>
@@ -543,10 +541,6 @@
 						</label>
 						<label>
 							<div class="head">Viverra Donec</div>
-							<!--
-							<div class="wrap" data-clone="Morbi tempor id pharetra ac dolor consectetur enim id porta diam quis"><textarea rows="1" name="viverra donec" oninput="this.parentNode.dataset.clone=this.value">Morbi tempor id pharetra ac dolor consectetur enim id porta diam quis</textarea></div>
-							-->
-							<!--<div><input type="checkbox" />xx</div>-->
 							<div class="toggle">
 								<input type="checkbox" checked>
 								<span class="slider round"></span>
@@ -824,6 +818,9 @@
 					listSec.classList.remove('listShowList');
 					section = listSec;
 				}
+				else if(display(navSec) === 'block'){
+					navSec.classList.add('sectionZoom');
+				}
 				else {
 					listSec.style.display = 'none';
 					detSec.classList.add('sectionZoom');
@@ -835,17 +832,15 @@
 				const frm = $('#pop fieldset form');
 				if(frm) frm.parentNode.removeChild(frm);
 				const metaTheme = document.querySelector('meta[name="theme-color"]');
-				if (metaTheme) metaTheme.setAttribute('content', bgCol);
-				let target = null;
-				if (display(navSec) === 'none' && display(detSec) === 'none') {
+				if(metaTheme) metaTheme.setAttribute('content', bgCol);
+				if(display(navSec) === 'none' && display(detSec) === 'none') {
 					target = listSec;
 				}
-				else if (display(navSec) === 'none' && display(listSec) === 'none') {
+				else if(display(navSec) === 'none' && display(listSec) === 'none') {
 					target = detSec;
 					listSec.classList.remove('listShowDetail');
 					listSec.style.display = 'none';
 					detSec.classList.remove('detailShowDetail');
-					//$$('.rows .focused',detSec).forEach(fc=>{fc.classList.remove('focused');});
 				}
 				else {
 					target = lastSection||$('#listSection');
@@ -1030,7 +1025,7 @@
 				const selection = $$('.rows .focused',section);
 				const totSelection = selection.length;
 				selection.forEach((label,index)=>{
-					if ((index < totSelection - 1 && selDown) || (index > 0 && !selDown)) {
+					if((index < totSelection - 1 && selDown) || (index > 0 && !selDown)) {
 						label.classList.remove('focused','checked');
 						$('input', label).checked = false;
 					}
@@ -1038,11 +1033,21 @@
 				lastSection = null;
 				selDown = true; clrTextSel(section);
 			}
+			function previewImage(event) {
+				const input = event.target;
+				if (input.files && input.files[0]) {
+					const reader = new FileReader();
+					reader.onload = function(e) {
+						$('.entry .tilesDetail div',detSec).style.backgroundImage = "url("+e.target.result+")";
+					};
+					reader.readAsDataURL(input.files[0]);
+				}
+			}
 			function getEnv(element){
 				function getPreviousHead(element) {
 					let sibling = element.previousElementSibling;
 					while (sibling) {
-						if (sibling.matches('.head')) return sibling.innerText.toLowerCase();
+						if(sibling.matches('.head')) return sibling.innerText.toLowerCase();
 						sibling = sibling.previousElementSibling;
 					}
 					return null;
@@ -1080,7 +1085,7 @@
 			}
 			function clearbyClick(section, input){
 				if(!input) return;
-				const selection = $$('.rows .focused',section);
+				const selection = $$('.rows .focused,.rows .checked',section);
 				const totSelection = selection.length;	
 				selection.forEach(label=>{
 					label.classList.remove('focused','checked');
@@ -1089,7 +1094,9 @@
 				clrTextSel(section);
 				if(multiSelect) {lastSection = null;}
 				if(input.name == 'iBtn'){
-					$('.rows input',section).closest('label').classList.add('checked');
+					if($('.rows input',section)){
+						$('.rows input',section).closest('label').classList.add('checked');
+					}
 				}
 				else {
 					lastSection = null;
@@ -1110,7 +1117,9 @@
 					h1 = capitalize($('fieldset .searchFrm .select input[type=hidden][name=app]',listSec).value);
 				}
 				else if(section.id == 'detailSection'){
-					h1 = $("fieldset .rows .select.checked div:nth-child(3) dl dt",listSec).innerText;
+					if($("fieldset .rows .select.checked div:nth-child(3) dl dt",listSec)){
+						h1 = $("fieldset .rows .select.checked div:nth-child(3) dl dt",listSec).innerText;
+					}
 				}
 				$('h1',section).innerText = h1;
 			}
@@ -1223,6 +1232,7 @@
 					else if(!(multiSelect && !rows)){
 						input.closest('label')?.classList.add('focused');
 						if(section === listSec && rows){
+							selections.push(input.closest('label'));
 							$('#detailSection header h1').innerText = $('div:nth-child(3) dl dt',input.closest('label')).innerText;
 							if($('div',input.closest('label')).style.backgroundImage){
 								if($('.entry .tilesDetail div',detSec)){
@@ -1276,10 +1286,10 @@
 						else if(parentSection.id === 'navSection'){
 							e.preventDefault();
 							const next = parentLabel.nextElementSibling;
-							if (next?.nodeName === 'DIV') {
+							if(next?.nodeName === 'DIV') {
 								next.nextElementSibling && checkedFocus($('input', next.nextElementSibling));
 							}
-							else if (next) {
+							else if(next) {
 								checkedFocus($('input', next));
 							}
 						}
@@ -1332,12 +1342,6 @@
 								e.preventDefault();
 								multiSelect = false;
 								
-								/*
-								const frm = [...$$('form',parentSection)].filter(el => getComputedStyle(el).display !== 'none');
-								const index = frm.indexOf(parentForm);
-								console.log(frm);
-								*/
-
 								const inputTarget = $('input',
 									parentForm.previousElementSibling ||
 									input.closest('fieldset').previousElementSibling
@@ -1353,7 +1357,7 @@
 							else if(parentSection.id === 'navSection'){
 								e.preventDefault();
 								const prev = parentLabel.previousElementSibling;
-								if (prev?.nodeName.toLowerCase() === 'div') {
+								if(prev?.nodeName.toLowerCase() === 'div') {
 									if(prev.previousElementSibling){
 										checkedFocus($('input', prev.previousElementSibling));
 									}
@@ -1361,7 +1365,7 @@
 										checkedFocus($('input[data-btn=login]',navSection));
 									}
 								}
-								else if (prev) {
+								else if(prev) {
 									checkedFocus($('input', prev));
 								}
 							}
@@ -1456,17 +1460,17 @@
 							e.preventDefault();
 							if(e.key === 'ArrowLeft'){
 								const prev = parentLabel.previousElementSibling;
-								if (prev?.nodeName === 'DIV') {
+								if(prev?.nodeName === 'DIV') {
 									prev.previousElementSibling && checkedFocus($('input', prev.previousElementSibling));
 								}
-								else if (prev) {
+								else if(prev) {
 									checkedFocus($('input', prev));
 								}
 							}
 							else if(e.key === 'ArrowRight'){								
 								const navLabels = [...parentForm.querySelectorAll('label.select')];
 								const index = navLabels.indexOf(parentLabel);
-								if (index % 2 === 0 || (index == navLabels.length-1)) {
+								if(index % 2 === 0 || (index == navLabels.length-1)) {
 									const rowLabels = [...$$('#' + map[parentSection.id] + ' .rows label')].filter(el => getComputedStyle(el).display !== 'none');
 									checkedFocus($('input',rowLabels[0]));
 								} else {
@@ -1507,7 +1511,7 @@
 						}
 					break;
 					case 'Enter':
-						if (input.name === 'iBtn') {
+						if(input.name === 'iBtn') {
 							const { btn } = input.dataset;
 							switch (btn) {
 								case 'side':		buttonSide(); break;
@@ -1570,7 +1574,7 @@
 				if(e.clientX === 0 && e.clientY === 0) return;
 				const label = input.closest('label');
 				
-				if (label?.classList.contains('btn')) {
+				if(label?.classList.contains('btn')) {
 					e.preventDefault();
 					const { btn } = input.dataset;
 					switch (btn) {
@@ -1585,8 +1589,11 @@
 						case 'popCancel':	buttonCancel(input); break;
 						case 'popSend':		buttonSend(input,false); break;
 					}
+					setTimeout(()=>{
+						label.classList.remove('focused');
+					},100);
 				}
-				else if (input.closest('form.rows')){
+				else if(input.closest('form.rows')){
 					function clearCheck(){
 						const sect = input.closest('section');
 						$$('.rows .checked',sect).forEach(chk=>{
@@ -1594,10 +1601,10 @@
 						});
 						selections = $$('.rows .focused',sect);
 					}
-					if (section === 'navSection') {
+					if(section === 'navSection') {
 						navClick(label);
 					}
-					else if (!multiSelect && detSec && (display(detSec) === 'none' || leftPos(detSec) > '200px')) {
+					else if(!multiSelect && detSec && (display(detSec) === 'none' || leftPos(detSec) > '200px')) {
 						if(display(listSec)==='block'){
 							clearCheck();
 						}
@@ -1655,8 +1662,8 @@
 			document.addEventListener('keydown', handleKeyDown);
 			document.addEventListener('keyup', handleKeyUp);
 			document.addEventListener('click', handleClick);
-			document.addEventListener('visibilitychange', () => {if (document.hidden) multiSelect = false;});
-			if (window.visualViewport) {
+			document.addEventListener('visibilitychange', () => {if(document.hidden) multiSelect = false;});
+			if(window.visualViewport) {
 				const headerList = document.querySelectorAll('section header');
 				function adjustHeader() {
 					const offsetTop = window.visualViewport.offsetTop;
@@ -1672,7 +1679,7 @@
 			if(localStorage.getItem('sonaView') === 'tiles') buttonView();
 
 			$('#layer').addEventListener('click', function (e) {
-				if (!e.target.closest('#pop')) buttonCancel($('#pop input'));
+				if(!e.target.closest('#pop')) buttonCancel($('#pop input'));
 			});
 			$$(selector.split(',').map(s => s.trim()).map(s => /checkbox|radio/.test(s) ? s + ':checked' : s).join(', ')).forEach(input => {
 				if(input.checked) checkedFocus(input);
@@ -1680,7 +1687,7 @@
 			selections = [];
 			const keyInp = $('#listSection .searchFrm input');
 			const params = new URLSearchParams(window.location.search);
-			if (params.get('q')) keyInp.placeholder = params.get('q');
+			if(params.get('q')) keyInp.placeholder = params.get('q');
 			if(window.matchMedia("(hover: hover) and (pointer: fine)").matches){
 				keyInp.focus();
 			}
@@ -1690,6 +1697,7 @@
 				});
 			}
 
+			//dummy dual mode (showing copies)
 			if(getEnv().app!==null && getEnv().group!==null){
 				[...$$('#navSection fieldset .rows label')].forEach(el=>{
 					if(el.innerText.toLowerCase() == getEnv().app.toLowerCase()){
@@ -1702,24 +1710,27 @@
 				[...$$('.searchFrm input[type=hidden]')].forEach(el=>{
 					el.value = getEnv()[el.name];
 				});
-				if(['torquent','aptent','scelerisque'].includes(getEnv().app)){
+				if(['torquent','aptent','scelerisque'].includes(getEnv().app)){//dual
 					$('.filters.dual').style.display = "flex";
 					$('.searchFrm.dual').style.display = "block";
 					$('.rows.dual').style.display = "grid";
 					$('.entry').parentNode.removeChild($('.entry'));
 				}
 				else {
-					$('.filters.dual').parentNode.removeChild($('.filters.dual'));
-					$('.searchFrm.dual').parentNode.removeChild($('.searchFrm.dual'));
-					$('.rows.dual').parentNode.removeChild($('.rows.dual'));
+					$$('.filters.dual,.searchFrm.dual,.rows.dual',detSec).forEach(el=>{
+						el.parentNode.removeChild(el);
+					});
+					['new item','select'].forEach(btn=>{
+						const label = $('input[data-btn="'+btn+'"]',detSec).closest('label');
+						label.parentNode.removeChild(label);
+					});
 				}
 			}
-			
 			if(sideExist){
 				import('./cam.js').then(module => {
 					camAPI = new ZXing.BrowserMultiFormatReader();
 					camAPI.listVideoInputDevices().then((videoInputDevices) => {
-						if (videoInputDevices.length >= 1) {
+						if(videoInputDevices.length >= 1) {
 							videoInputDevices.forEach((el) => {
 								camLenses[el.deviceId] = el.label;
 							});
@@ -1732,35 +1743,44 @@
 			}
 			if(!isPhone) {
 				const entry = [...$$('form.entry textarea, form.entry input')];
-				entry.forEach((el,index)=>{
+				entry.forEach((el, index) => {
 					let justFocused = false;
-					el.addEventListener('focus', ()=>{
+					el.addEventListener('focus', () => {
 						justFocused = true;
-						el.closest('div').classList.add('checked');
-						setTimeout(()=> justFocused = false, 100);
+						setTimeout(() => justFocused = false, 100);
+						if (el.closest('div')) el.closest('div').classList.add('checked');
 					});
-					el.addEventListener('blur', ()=>{
-						el.closest('div').classList.remove('checked');
-					});
-					el.addEventListener('keyup', (e)=>{
-						if(justFocused) return;
-						const start = el.selectionStart;
-						const end = el.selectionEnd;
-						const len = el.value.length;
 
-						if(start !== end) return;
-						
-						if(start === 0 && e.key === 'ArrowUp' && index > 0){
+					el.addEventListener('blur', () => {
+						if (el.closest('div')) el.closest('div').classList.remove('checked');
+					});
+
+					el.addEventListener('keydown', (e) => {
+						if (justFocused) return;
+						const isTextarea = el.nodeName.toLowerCase() === 'textarea';
+						const isInput = el.nodeName.toLowerCase() === 'input';
+						const isCheckbox = el.type === 'checkbox';
+						const { selectionStart: start, value: val } = el;
+						const len = val ? val.length : 0;
+
+						if (e.key === 'Enter' && isCheckbox) {
 							e.preventDefault();
-							entry[index-1].focus();
+							el.checked = !el.checked;
+							return;
 						}
-						else if(start === len && e.key === 'ArrowDown' && index < (entry.length-1)){
+
+						if (e.key === 'ArrowUp' && (isCheckbox || start === 0)) {
 							e.preventDefault();
-							entry[index+1].focus();
-						}
-						else if(start === 0 && e.key === 'ArrowLeft' && index > -1){
+							if (index > 0) entry[index - 1].focus();
+							else checkedFocus($('header .hRight input', detSec));
+						} 
+						else if (e.key === 'ArrowDown' && (isCheckbox || start === len)) {
 							e.preventDefault();
-							checkedFocus($('form.rows input',listSec));
+							if (index < entry.length - 1) entry[index + 1].focus();
+						} 
+						else if (e.key === 'ArrowLeft' && (isCheckbox || start === 0)) {
+							e.preventDefault();
+							checkedFocus($('form.rows input', listSec));
 						}
 					});
 				});
