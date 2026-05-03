@@ -130,6 +130,7 @@
 			.tilesNone {display:none!important;}
 			.tilesDetail {margin: 0 auto;background-color:transparent}
 			.tilesDetail, .tilesDetail div {width:var(--cir2);height:var(--cir2);border-radius:50%}			
+			.tilesDetail input[type="file"]:focus + div {box-shadow: 0 0 10px var(--bhg);}
 
 			.wrap {padding:var(--mg);border-radius:1vh;display:grid;word-break:break-word;}
 			.wrap > textarea {word-break:break-word;border:none;margin:0;padding:0;background-color:transparent;resize:none;overflow:hidden;}
@@ -295,7 +296,7 @@
 				<header>
 					<div class="deskHid">
 						<label class="btn" for="navSide">
-							<input type="radio" name="iBtn" data-btn="side" id="navSide" aria-label="Open sidebar menu">
+							<input type="radio" name="iBtn" data-btn="side" id="navSide">
 							<svg viewbox="0 0 100 100">
 								<path d="M 10 26 H 90 V 31 H 10 Z M 10 47 H 90 V 52 H 10 Z M 10 68 H 60 V 73 H 10 Z" />
 							</svg>
@@ -340,7 +341,7 @@
 				<header>
 					<div class="deskHid">
 						<label class="btn" for="listSide">
-							<input type="radio" name="iBtn" data-btn="side" id="listSide" aria-label="Open sidebar menu">
+							<input type="radio" name="iBtn" data-btn="side" id="listSide">
 							<svg viewbox="0 0 100 100">
 								<path d="M 10 26 H 90 V 31 H 10 Z M 10 47 H 90 V 52 H 10 Z M 10 68 H 60 V 73 H 10 Z" />
 							</svg>
@@ -350,33 +351,33 @@
 						<label><h1>Starfid</h1></label>						
 					</div>
 					<div class="hRight">
-						<label class="btn mobHid">
-							<input type="radio" name="iBtn" data-btn="new item">
+						<label class="btn mobHid" for="listNew">
+							<input type="radio" name="iBtn" data-btn="new item" id="listNew">
 							<svg viewbox="0 0 100 100">
 								<path d="M50 10 A40 40 0 1 1 50 90 A40 40 0 1 1 50 10 M50 25 V75 M25 50 H75" />
 							</svg>
 						</label>
-						<label class="btn selIcon mobHid">
-							<input type="radio" name="iBtn" data-btn="select">
+						<label class="btn selIcon mobHid" for="listSel">
+							<input type="radio" name="iBtn" data-btn="select" id="listSel">
 							<svg viewbox="0 0 100 100">
 								<path d="M10 20H80V90H10ZM20 60L35 75L70 30M20 20V10H90V80H80"/>
 							</svg>
 						</label>
-						<label class="btn mobHid">
-							<input type="radio" name="iBtn" data-btn="delete">
+						<label class="btn mobHid" for="listDel">
+							<input type="radio" name="iBtn" data-btn="delete" id="listDel">
 							<svg viewbox="0 0 100 100" class="delBtn">
 								<path d="M33 10 H68 V20 H33 Z M20 20 H80 L75 90 H25 Z M10 20 H90 M33 30 L39 80 M50 30 V80 M67 30 L62 80" />
 							</svg>
 						</label>
-						<label class="btn mobHid secondLast">
-							<input type="radio" name="iBtn" data-btn="change view">
+						<label class="btn mobHid secondLast" for="listView">
+							<input type="radio" name="iBtn" data-btn="change view" id="listView">
 							<svg viewbox="0 0 100 100">
 								<path id="pathTile" d="M10 10 H40 V40 H10 Z M60 10 H90 V40 H60 Z M10 60 H40 V90 H10 Z M60 60 H90 V90 H60 Z" />
 								<path id="pathList" d="M10 20H30V40H10Z M40 20H90V25H40Z M40 35H90V40H40Z M10 60H30V80H10Z M40 60H90V65H40Z M40 75H90V80H40Z"/>
 							</svg>
 						</label>
 						<label class="btn tabHid last" for="listDots">
-							<input type="radio" name="iBtn" data-btn="dots" id="listDots" aria-label="Open action menu">
+							<input type="radio" name="iBtn" data-btn="dots" id="listDots">
 							<svg viewbox="0 0 100 100">
 								<path d="M49 10 A40 40 0 1 1 48.9 10 M30 47 a3 3 0 1 0 0.1 0 M50 47 a3 3 0 1 0 0.1 0 M70 47 a3 3 0 1 0 0.1 0"/>
 							</svg>
@@ -497,26 +498,26 @@
 						<label><h1></h1></label>
 					</div>
 					<div class="hRight">
-						<label class="btn mobHid">
-							<input type="radio" name="iBtn" data-btn="new item">
+						<label class="btn mobHid" for="detNew">
+							<input type="radio" name="iBtn" data-btn="new item" id="detNew">
 							<svg viewbox="0 0 100 100">
 								<path d="M50 10 A40 40 0 1 1 50 90 A40 40 0 1 1 50 10 M50 25 V75 M25 50 H75" />
 							</svg>
 						</label>						
-						<label class="btn selIcon mobHid">
-							<input type="radio" name="iBtn" data-btn="select">
+						<label class="btn selIcon mobHid" for="detSel">
+							<input type="radio" name="iBtn" data-btn="select" id="detSel">
 							<svg viewbox="0 0 100 100">
 								<path d="M10 20H80V90H10ZM20 60L35 75L70 30M20 20V10H90V80H80"/>
 							</svg>
 						</label>
-						<label class="btn mobHid">
-							<input type="radio" name="iBtn" data-btn="delete">
+						<label class="btn mobHid" for="detDel">
+							<input type="radio" name="iBtn" data-btn="delete" id="detDel">
 							<svg viewbox="0 0 100 100" class="delBtn">
 								<path d="M33 10 H68 V20 H33 Z M20 20 H80 L75 90 H25 Z M10 20 H90 M33 30 L39 80 M50 30 V80 M67 30 L62 80" />
 							</svg>
 						</label>
 						<label class="btn tabHid secondLast" for="detDots">
-							<input type="radio" name="iBtn" data-btn="dots" id="detDots" aria-label="Open action menu">
+							<input type="radio" name="iBtn" data-btn="dots" id="detDots">
 							<svg viewbox="0 0 100 100">
 								<path d="M49 10 A40 40 0 1 1 48.9 10 M30 47 a3 3 0 1 0 0.1 0 M50 47 a3 3 0 1 0 0.1 0 M70 47 a3 3 0 1 0 0.1 0"/>
 							</svg>
@@ -821,6 +822,7 @@
 				}
 				else if(display(navSec) === 'block'){
 					navSec.classList.add('sectionZoom');
+					checkedFocus($('#pop input'));
 				}
 				else {
 					listSec.style.display = 'none';
@@ -853,6 +855,9 @@
 					if($('header input[data-btn=dots]',target) && isPhone && focused){
 						checkedFocus(inputDots);
 						$('header input[data-btn=dots]',target).closest('label').classList.remove('focused');
+					}
+					else if(display(navSec)==='block'||display(listSec)==='none'){
+						checkedFocus($('header input[data-btn="login"]',navSec));
 					}
 					else {
 						checkedFocus($('header input[data-btn="new item"]',target));
@@ -1440,8 +1445,10 @@
 							}
 							else if(e.key === 'ArrowRight' && (labels.length-1 === index)){
 								const rowLabels = [...$$('#' + map[parentSection.id] + ' .rows label')].filter(el => getComputedStyle(el).display !== 'none');
-								checkedFocus($('input',rowLabels[0]));
-								return;
+								if(rowLabels[0]){
+									checkedFocus($('input',rowLabels[0]));
+									return;
+								}
 							}							
 							else if(e.key === 'ArrowRight' && rightEdge) {
 								if(parentLabel.nextElementSibling){
@@ -1461,7 +1468,7 @@
 							e.preventDefault();
 							if(e.key === 'ArrowLeft'){
 								const prev = parentLabel.previousElementSibling;
-								if(prev?.nodeName === 'DIV') {
+								if(prev?.nodeName.toLowerCase() === 'div') {
 									prev.previousElementSibling && checkedFocus($('input', prev.previousElementSibling));
 								}
 								else if(prev) {
@@ -1751,37 +1758,35 @@
 						setTimeout(() => justFocused = false, 100);
 						if (el.closest('div')) el.closest('div').classList.add('checked');
 					});
-
 					el.addEventListener('blur', () => {
 						if (el.closest('div')) el.closest('div').classList.remove('checked');
 					});
-
 					el.addEventListener('keydown', (e) => {
 						if (justFocused) return;
 						const isTextarea = el.nodeName.toLowerCase() === 'textarea';
 						const isInput = el.nodeName.toLowerCase() === 'input';
-						const isCheckbox = el.type === 'checkbox';
+						const checkOrFile = (el.type === 'checkbox' || el.type === 'file');
 						const { selectionStart: start, value: val } = el;
 						const len = val ? val.length : 0;
 
-						if (e.key === 'Enter' && isCheckbox) {
-							e.preventDefault();
+						if (e.key === 'Enter' && checkOrFile) {
+							if(el.type === 'checkbox') e.preventDefault();
 							el.checked = !el.checked;
 							return;
 						}
-
-						if (e.key === 'ArrowUp' && (isCheckbox || start === 0)) {
+						if (e.key === 'ArrowUp' && (checkOrFile || start === 0)) {
 							e.preventDefault();
 							if (index > 0) entry[index - 1].focus();
 							else checkedFocus($('header .hRight input', detSec));
 						} 
-						else if (e.key === 'ArrowDown' && (isCheckbox || start === len)) {
+						else if (e.key === 'ArrowDown' && (checkOrFile || start === len)) {
 							e.preventDefault();
 							if (index < entry.length - 1) entry[index + 1].focus();
 						} 
-						else if (e.key === 'ArrowLeft' && (isCheckbox || start === 0)) {
+						else if (e.key === 'ArrowLeft' && (checkOrFile || start === 0)) {
 							e.preventDefault();
-							checkedFocus($('form.rows input', listSec));
+							const labels = [...$$('.rows label',listSec)].filter(el => getComputedStyle(el).display !== 'none');
+							checkedFocus(labels[0]);
 						}
 					});
 				});
