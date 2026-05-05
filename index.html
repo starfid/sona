@@ -858,14 +858,14 @@
 					target.classList.remove('sectionZoom');
 					const inputDots = $('header input[data-btn=dots]',target);
 					if($('header input[data-btn=dots]',target) && isPhone && focused){
-						checkedFocus(inputDots);
+						if(!isPhone) checkedFocus(inputDots);
 						$('header input[data-btn=dots]',target).closest('label').classList.remove('focused');
 					}
-					else if(display(navSec)==='block'||display(listSec)==='none'){
-						checkedFocus($('header input[data-btn="login"]',navSec));
+					else if(target===navSec){
+						if(!isPhone) checkedFocus($('header input[data-btn="login"]',target));
 					}
 					else {
-						checkedFocus($('header input[data-btn="new item"]',target));
+						if(!isPhone) checkedFocus($('header input[data-btn="new item"]',target));
 					}
 				}
 			}
@@ -1242,8 +1242,8 @@
 					}
 					else if(!(multiSelect && !rows)){
 						input.closest('label')?.classList.add('focused');
+						if(rows) selections.push(input.closest('label'));
 						if(section === listSec && rows){
-							selections.push(input.closest('label'));
 							$('#detailSection header h1').innerText = $('div:nth-child(3) dl dt',input.closest('label')).innerText;
 							if($('div',input.closest('label')).style.backgroundImage){
 								if($('.entry .tilesDetail div',detSec)){
@@ -1431,7 +1431,7 @@
 						const map = e.key === 'ArrowLeft' ? mapLeft : mapRight;
 						const atSelectable = parentForm && parentLabel.classList.contains('select') && (
 							input.type === 'checkbox' ||
-							(input.type === 'radio' && parentForm.classList.contains('rows')) ||
+							(input.type === 'radio' && parentForm.classList.contains('rows')) || 
 							(input.type === 'search' && input.value.length < 1)
 						);
 						if(input.name === 'item' && display($('#pathList')) === 'block'){
@@ -1480,7 +1480,7 @@
 									checkedFocus($('input', prev));
 								}
 							}
-							else if(e.key === 'ArrowRight'){								
+							else if(e.key === 'ArrowRight'){
 								const navLabels = [...parentForm.querySelectorAll('label.select')];
 								const index = navLabels.indexOf(parentLabel);
 								if(index % 2 === 0 || (index == navLabels.length-1)) {
@@ -1617,10 +1617,8 @@
 					if(section === 'navSection') {
 						navClick(label);
 					}
-					else if(!multiSelect && detSec && (display(detSec) === 'none' || leftPos(detSec) > '200px')) {
-						if(display(listSec)==='block'){
-							clearCheck();
-						}
+					else if(!multiSelect && (display(detSec) === 'none' || leftPos(detSec) > '200px')) {
+						if(display(listSec)==='block') clearCheck();
 						listSec.classList.remove('listShowList');
 						listSec.classList.add('listShowDetail');
 						detSec.classList.remove('detailShowList');
