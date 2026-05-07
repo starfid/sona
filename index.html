@@ -753,7 +753,7 @@
 				const label = input.closest('label');
 				const svg = input.nextElementSibling;
 				let section = input.closest('section');
-				lastSection ??= section;
+				if(section) {lastSection = section;}
 
 				if(section.id==='pop') buttonCancel(input);
 				svg.classList.toggle('iconOn');
@@ -1794,8 +1794,8 @@
 			loaded = true;
 
 			//apple device debug
-			window.onerror = function(msg, src, line, col, err){alert('ERROR:\n' + msg + '\n' + 'line: ' + line + '\n' + 'col: ' + col);};
-			window.onunhandledrejection = function(e){alert('PROMISE ERROR: ' + e.reason);};
+			window.onerror = function(msg, src, line, col, err){alert(msg + '. ' + 'Line: ' + line + '. Col: ' + col);};
+			window.onunhandledrejection = function(e){alert(e.reason);};
 		</script>
 	</body>
 </html>
