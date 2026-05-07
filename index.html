@@ -756,8 +756,9 @@
 				lastSection ??= section;
 
 				if(section.id==='pop') buttonCancel(input);
-				svg.classList.toggle('iconOn');				
-				if(!svg.classList.contains('iconOn') || $$('.rows .select.focused ',section).length > 1 || (display($('header input[data-btn=dots]',lastSection).closest('label'))=='flex' && multiSelect)){
+				svg.classList.toggle('iconOn');
+
+				if(!svg.classList.contains('iconOn') || $$('.rows .select.focused ',section).length > 1 || (display($('header input[data-btn=dots]',lastSection).closest('label'))=='flex' && multiSelect) ){
 					if(section.id==='pop') {
 						section = lastSection;
 					}
@@ -779,11 +780,6 @@
 						if(detSec && section.id==='listSection') focusMulti(detSec,true);
 						else if(section.id==='detailSection') focusMulti(listSec,true);
 					}
-					/*
-					if(isPhone){
-						$('header input[data-btn=dots]',lastSection).closest('label').classList.remove('focused');
-					}
-					*/
 				}
 			}
 			function buttonCompose(input){
@@ -858,14 +854,14 @@
 					target.classList.remove('sectionZoom');
 					const inputDots = $('header input[data-btn=dots]',target);
 					if($('header input[data-btn=dots]',target) && isPhone && focused){
-						if(!isPhone) checkedFocus(inputDots);
+						checkedFocus(inputDots);
 						$('header input[data-btn=dots]',target).closest('label').classList.remove('focused');
 					}
 					else if(target===navSec){
-						if(!isPhone) checkedFocus($('header input[data-btn="login"]',target));
+						checkedFocus($('header input[data-btn="login"]',target));
 					}
 					else {
-						if(!isPhone) checkedFocus($('header input[data-btn="new item"]',target));
+						checkedFocus($('header input[data-btn="login"]',target));
 					}
 				}
 			}
@@ -1094,6 +1090,19 @@
 			function navClick(label){
 				document.location = getEnv(label).query + '&r=' + Math.random();
 			}
+			function clrTextSel(section) {
+				if(!section) return;
+				let h1 = "";
+				if(section.id == 'listSection'){
+					h1 = capitalize($('fieldset .searchFrm .select input[type=hidden][name=app]',listSec).value);
+				}
+				else if(section.id == 'detailSection'){
+					if($("fieldset .rows .select.checked div:nth-child(3) dl dt",listSec)){
+						h1 = $("fieldset .rows .select.checked div:nth-child(3) dl dt",listSec).innerText;
+					}
+				}
+				$('h1',section).innerText = h1;
+			}
 			function clearbyClick(section, input){
 				if(!input) return;
 				const selection = $$('.rows .focused,.rows .checked',section);
@@ -1120,28 +1129,16 @@
 				const totLen = totSelection.length;
 				selections = totSelection;
 				$('h1',section).innerText = (totLen>0)?totLen + ' Selected':'Please Select';
-			}
-			function clrTextSel(section) {
-				if(!section) return;
-				let h1 = "";
-				if(section.id == 'listSection'){
-					h1 = capitalize($('fieldset .searchFrm .select input[type=hidden][name=app]',listSec).value);
-				}
-				else if(section.id == 'detailSection'){
-					if($("fieldset .rows .select.checked div:nth-child(3) dl dt",listSec)){
-						h1 = $("fieldset .rows .select.checked div:nth-child(3) dl dt",listSec).innerText;
-					}
-				}
-				$('h1',section).innerText = h1;
-			}
+			}			
 			function cancelMulti(input) {
-				if(input.closest('section')) {
-					focusMulti(input.closest('section'),false);
-					const lbl = $('.selIcon',input.closest('section'));
+				const section = input.closest('section') || lastSection;
+				if(section) {
+					focusMulti(section,false);
+					const lbl = $('.selIcon',section);
 					$('svg',lbl).classList.remove('iconOn');
 					multiSelect = false;
 					lbl.classList.remove('focused');
-					clearbyClick(input.closest('section'),input);
+					clearbyClick(section,input);
 				}
 				else {
 					checkedFocus($((lastSection?'#'+lastSection.id:'#listSection') + ' .rows input'));
@@ -1795,6 +1792,10 @@
 				});
 			}
 			loaded = true;
+
+			//apple device debug
+			window.onerror = function(msg, src, line, col, err){alert('ERROR:\n' + msg + '\n' + 'line: ' + line + '\n' + 'col: ' + col);};
+			window.onunhandledrejection = function(e){alert('PROMISE ERROR: ' + e.reason);};
 		</script>
 	</body>
 </html>
