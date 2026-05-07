@@ -859,9 +859,10 @@
 					}
 					else if(target===navSec){
 						checkedFocus($('header input[data-btn="login"]',target));
+						if(isPhone) $('header input[data-btn="login"]',target).closest('label').classList.remove('focused');
 					}
 					else {
-						checkedFocus($('header input[data-btn="login"]',target));
+						checkedFocus($('header input[data-btn="new item"]',target));
 					}
 				}
 			}
@@ -897,7 +898,10 @@
 			function buttonDelete(input){
 				const section = input.closest('section');
 				if(section.id==='pop') buttonCancel(input);
-				if((input.name === 'item' || input.name === 'copy') || input.dataset.btn === 'delete') {
+				if($('.entry',detSec)!==null){
+					//future dev
+				}
+				else if((input.name === 'item' || input.name === 'copy') || input.dataset.btn === 'delete') {
 					if(selections.length > 0 && section !== 'navSection'){
 						const newSelections = [];
 						selections.forEach(label=>{
@@ -1457,6 +1461,17 @@
 									checkedFocus($('input',labels[index + 1]));
 								}
 								return;
+							}
+						}
+						else if(input.name==='iBtn' && input.closest('header')!==null && input.closest('section').id==='pop'){
+							const txt = input.closest('label').innerText;
+							const sendLabel = $$('div label',input.closest('header'))[1];
+							if(
+								(txt==='Cancel' && e.key === 'ArrowLeft') ||
+								(txt==='Send' && e.key === 'ArrowRight') ||
+								(e.key === 'ArrowRight' && sendLabel.style.visibility==='hidden')
+							){
+								e.preventDefault();
 							}
 						}
 						if(holding){
