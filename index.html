@@ -898,7 +898,7 @@
 			function buttonDelete(input){
 				const section = input.closest('section');
 				if(section.id==='pop') buttonCancel(input);
-				if($('.entry',detSec)!==null){
+				if($('.entry',detSec)!==null && section === detSec){
 					//future dev
 				}
 				else if((input.name === 'item' || input.name === 'copy') || input.dataset.btn === 'delete') {
@@ -1687,12 +1687,10 @@
 			document.addEventListener('click', handleClick);
 			document.addEventListener('visibilitychange', () => {if(document.hidden) multiSelect = false;});
 			if(window.visualViewport) {
-				const headerList = document.querySelectorAll('section header');
 				function adjustHeader() {
 					const offsetTop = window.visualViewport.offsetTop;
-
-					headerList.forEach(header => {
-					header.style.transform = `translateY(${offsetTop}px)`;
+					document.querySelectorAll('section header').forEach(header => {
+						header.style.transform = `translateY(${offsetTop}px)`;
 					});
 				}
 				window.visualViewport.addEventListener('resize', adjustHeader);
@@ -1808,7 +1806,7 @@
 			}
 			loaded = true;
 
-			//apple device debug
+			//quality assurance
 			window.onerror = function(msg, src, line, col, err){alert(msg + '. ' + 'Line: ' + line + '. Col: ' + col);};
 			window.onunhandledrejection = function(e){alert(e.reason);};
 		</script>
