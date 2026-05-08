@@ -898,7 +898,8 @@
 			function buttonDelete(input){
 				const section = input.closest('section');
 				if(section.id==='pop') buttonCancel(input);
-				if($('.entry',detSec)!==null && section === detSec){
+				
+				if ($('.entry', detSec) !== null && ((section.id === 'pop' && display(detSec) === 'block') || section === detSec)) {
 					//future dev
 				}
 				else if((input.name === 'item' || input.name === 'copy') || input.dataset.btn === 'delete') {
