@@ -1152,7 +1152,7 @@
 				}
 			}
 			function sectionUp(section) {
-				$('fieldset',section).scrollTo(0,0);
+				$('fieldset',section).scrollTo(0,0,);
 			}
 			function handleChange(e) {
 				if(!e.target.matches(selector)) return;
@@ -1185,7 +1185,7 @@
 						e.preventDefault();
 					}
 					else if(input.type=='search'){
-						$('fieldset',section).scrollTo(0,0);
+						sectionUp(section);
 						if(sideExist) input.placeholder = 'Search';
 					}
 					else if(input.name=='filter' && loaded){
@@ -1254,7 +1254,7 @@
 									$('.entry .tilesDetail div',detSec).style.backgroundImage = $('div',input.closest('label')).style.backgroundImage;
 								}
 							}
-							sectionUp(detSec);
+							setTimeout(()=>{$('fieldset',detSec).scrollTop = 0;}, 0);
 						}
 					}
 				}
@@ -1637,7 +1637,6 @@
 						detSec.style.display = 'block';
 
 						checkedFocus($('.rows input',detSec));
-						//$('.rows input',detSec).focus();
 						listSec.addEventListener('animationstart', () => {
 							backAnimating = true;
 						});
