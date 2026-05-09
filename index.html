@@ -927,14 +927,15 @@
 					else if(isPhone){
 						multiSelect = false;
 					}
-					cancelMulti(input);
-					const labels = [...$$('.rows label',section)].filter(el => getComputedStyle(el).display !== 'none');
-					if(labels.length>0){
-						//checkedFocus($('input',labels[0]));
-						//selections = [labels[0]];
+					if(input.name==='iBtn') {
+						cancelMulti(input);
 					}
-					else {
-						//if(!sideExist) checkedFocus($('header div label.btn input[data-btn=delete]',section));
+					else if(input.name==='item') {
+						const labels = [...$$('.rows label',section)].filter(el => getComputedStyle(el).display !== 'none');
+						if(labels.length>0){
+							checkedFocus($('input',labels[0]));
+							selections = [labels[0]];
+						}
 					}
 				}
 			}
@@ -1119,8 +1120,9 @@
 				clrTextSel(section);
 				if(multiSelect) {lastSection = null;}
 				if(input.name == 'iBtn'){
-					if($('.rows input',section)){
-						$('.rows input',section).closest('label').classList.add('checked');
+					const labels = [...$$('.rows label',section)].filter(el => getComputedStyle(el).display !== 'none');
+					if(labels.length>0){
+						labels[0].classList.add('checked');
 					}
 				}
 				else {
@@ -1467,11 +1469,7 @@
 						else if(input.name==='iBtn' && input.closest('header')!==null && input.closest('section').id==='pop'){
 							const txt = input.closest('label').innerText;
 							const sendLabel = $$('div label',input.closest('header'))[1];
-							if(
-								(txt==='Cancel' && e.key === 'ArrowLeft') ||
-								(txt==='Send' && e.key === 'ArrowRight') ||
-								(e.key === 'ArrowRight' && sendLabel.style.visibility==='hidden')
-							){
+							if((txt==='Cancel' && e.key === 'ArrowLeft') || (txt==='Send' && e.key === 'ArrowRight') || (e.key === 'ArrowRight' && sendLabel.style.visibility==='hidden')){
 								e.preventDefault();
 							}
 						}
@@ -1799,6 +1797,7 @@
 						} 
 						else if (e.key === 'ArrowLeft' && (checkOrFile || start === 0)) {
 							e.preventDefault();
+							[...$$('.rows label.checked',listSec)].forEach(el=>{el.classList.remove('checked');});
 							const labels = [...$$('.rows label',listSec)].filter(el => getComputedStyle(el).display !== 'none');
 							checkedFocus(labels[0]);
 						}
