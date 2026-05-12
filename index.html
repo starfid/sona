@@ -16,7 +16,7 @@
 		<link rel="manifest" href="./manifest.json">
 		<style>
 			:root {
-				--bg:#FFFFFF;		--bck:#EBF2FA;
+				--bg:#FFFFFF;		--bck:/*#EBF2FA;*/#E3E3E3;
 
 				/*--bhg:#000000;	--thg:#d5d5d5;*/
 				--bhg:#0059CF;		--thg:#E6EFFC;
@@ -108,7 +108,7 @@
 			
 			.rows .focused, .filters .focused,
 			.rows .focused dd,
-			.rows .focused div:last-of-type > div {background-color:var(--bhg);color:var(--thg)!important;}
+			.rows .focused div:last-of-type > div {/*background-color:var(--bhg);*/animation:animFocused .4s forwards;color:var(--thg)!important;}
 			.btn.checked, .btn.focused {background-color:transparent;}
 			.btn.focused svg, .btn svg:hover, .btn.checked, .btn.checked, .iconOn {stroke:var(--bhg);stroke-width:8}
 			.btn.focused svg.delBtn, .btn svg.delBtn:hover {stroke:red;stroke-width:8}
@@ -159,6 +159,7 @@
 			#pop header {padding: calc(var(--mg)*1.5) calc(var(--mg)*2) 0 calc(var(--mg)*2);}
 			#pop fieldset {padding:var(--mg)}
 
+			@keyframes animFocused { from {background-color:var(--bg);} to {background-color:var(--bhg);} }
 			@keyframes popRising { from {top:51%;} to {top:50%;} }
 
 			@media screen and (max-width: 1281px), screen and (pointer: coarse), screen and (hover: none) {
@@ -899,7 +900,7 @@
 				const section = input.closest('section');
 				if(section.id==='pop') buttonCancel(input);
 				
-				if ($('.entry', detSec) !== null && ((section.id === 'pop' && display(detSec) === 'block') || section === detSec)) {
+				if($('.entry', detSec) !== null && ((section.id === 'pop' && display(detSec) === 'block') || section === detSec)) {
 					//future dev
 				}
 				else if((input.name === 'item' || input.name === 'copy') || input.dataset.btn === 'delete') {
@@ -1048,7 +1049,7 @@
 			}
 			function previewImage(event) {
 				const input = event.target;
-				if (input.files && input.files[0]) {
+				if(input.files && input.files[0]) {
 					const reader = new FileReader();
 					reader.onload = function(e) {
 						$('.entry .tilesDetail div',detSec).style.backgroundImage = "url("+e.target.result+")";
@@ -1056,42 +1057,48 @@
 					reader.readAsDataURL(input.files[0]);
 				}
 			}
-			function getEnv(element){
-				function getPreviousHead(element) {
-					let sibling = element.previousElementSibling;
-					while (sibling) {
-						if(sibling.matches('.head')) return sibling.innerText.toLowerCase();
-						sibling = sibling.previousElementSibling;
+			function getGroup(element) {
+				if(!element) return null;
+				let sibling = element.previousElementSibling;
+				while (sibling) {
+					if(sibling.matches('.head')) {
+						return sibling.innerText.toLowerCase();
 					}
-					return null;
+					sibling = sibling.previousElementSibling;
 				}
-				let label; //let viewAs;
-				if(element instanceof HTMLElement){
+				return null;
+			}
+			function getEnv(element) {
+				let label = null;
+				let group = null;
+
+				if(element instanceof HTMLElement) {
 					label = element;
 				}
-				else if(!(element instanceof HTMLElement) && params.get('app')!==null){
-					let appQuery = params.get('app').toLowerCase();
-					let appLabel;
-					if(appQuery!==null && appQuery.length > 2) {
-						[...$$('#navSection fieldset .rows label')].forEach(el=>{
-							if(el.innerText.toLowerCase() === appQuery){
-								appLabel = el;
-							}
-						});
-					}
-					label = appLabel;
+				else if(params.get('group') && params.get('app')) {
+					const appQuery = params.get('app').toLowerCase();
+					const groupQuery = params.get('group').toLowerCase();
+					const allLabels = [...$$('#navSection fieldset .rows label')];
+					label = allLabels.find(el => 
+						el.innerText.toLowerCase() === appQuery && 
+						getGroup(el) === groupQuery
+					);
+					if(label) group = groupQuery;
 				}
-				else {
-					label = $('#navSection .rows label.select.checked');
-				}
-				const group = getPreviousHead(label);
+				if(!label) {label = $('#navSection .rows label.select.checked');}
+				if(!label) return null;
+
+				group = group || getGroup(label);
 				const app = label.innerText.toLowerCase();
-				$('#listSection h1').innerText = capitalize(app);
-				return {
-					'query':'?group='+group+'&app='+app,
-					'group':group,
-					'app':app
+				const header = $('#listSection h1');
+				if(header) {
+					header.innerText = capitalize(app);
 				}
+				return {
+					query: `?group=${group}&app=${app}`,
+					group: group,
+					app: app
+				};
 			}
 			function navClick(label){
 				document.location = getEnv(label).query + '&r=' + Math.random();
@@ -1438,6 +1445,7 @@
 							(input.type === 'radio' && parentForm.classList.contains('rows')) || 
 							(input.type === 'search' && input.value.length < 1)
 						);
+						const rowLabels = [...$$('#' + map[parentSection.id] + ' .rows label')].filter(el => getComputedStyle(el).display !== 'none');
 						if(input.name === 'item' && display($('#pathList')) === 'block'){
 							const labels = [...$$('label',parentForm)].filter(el => getComputedStyle(el).display !== 'none');
 							const index = labels.indexOf(parentLabel);
@@ -1453,7 +1461,6 @@
 								return;
 							}
 							else if(e.key === 'ArrowRight' && (labels.length-1 === index)){
-								const rowLabels = [...$$('#' + map[parentSection.id] + ' .rows label')].filter(el => getComputedStyle(el).display !== 'none');
 								if(rowLabels[0]){
 									checkedFocus($('input',rowLabels[0]));
 									return;
@@ -1465,6 +1472,10 @@
 								}
 								return;
 							}
+						}
+						else if(input.name === 'filter' && e.key === 'ArrowLeft' && $('label',parentForm) === parentLabel){
+							checkedFocus(rowLabels[0]);
+							e.preventDefault();
 						}
 						else if(input.name==='iBtn' && input.closest('header')!==null && input.closest('section').id==='pop'){
 							const txt = input.closest('label').innerText;
@@ -1494,9 +1505,19 @@
 							else if(e.key === 'ArrowRight'){
 								const navLabels = [...parentForm.querySelectorAll('label.select')];
 								const index = navLabels.indexOf(parentLabel);
-								if(index % 2 === 0 || (index == navLabels.length-1)) {
-									const rowLabels = [...$$('#' + map[parentSection.id] + ' .rows label')].filter(el => getComputedStyle(el).display !== 'none');
+								if(index % 2 === 0 || (index == navLabels.length-1)) {									
 									checkedFocus($('input',rowLabels[0]));
+									if(envApp && envGroup){
+										if(!(parentLabel.innerText.toLowerCase() === envApp && getGroup(parentLabel) === envGroup)){
+											parentLabel.classList.remove('checked');
+											[...$$('#navSection fieldset .rows label')].forEach(el=>{
+												if(getGroup(el) == envGroup && el.innerText.toLowerCase() == envApp.toLowerCase()){
+													checkedFocus($('input',el),false);
+												}
+											});
+										}
+									}
+									
 								} else {
 									parentLabel.nextElementSibling && checkedFocus($('input', parentLabel.nextElementSibling));
 								}
@@ -1506,13 +1527,12 @@
 							e.preventDefault();
 							multiSelect = false;
 							clearbyArrow(parentSection);
-							const labels = [...$$('#' + map[parentSection.id] + ' form.rows label')].filter(el => getComputedStyle(el).display !== 'none');
-							if(parentSection === listSec && labels.length<1 && display($('form.entry',detSec)) === 'block'){
+							if(parentSection === listSec && rowLabels.length<1 && display($('form.entry',detSec)) === 'block'){
 								e.preventDefault();
 								$('form.entry textarea',detSec).focus();
 							}
 							else {
-								checkedFocus($('input',labels[0]));
+								checkedFocus($('input',rowLabels[0]));
 							}
 						}
 					break;
@@ -1716,10 +1736,11 @@
 				});
 			}
 
-			//dummy dual mode (showing copies)
-			if(getEnv().app!==null && getEnv().group!==null){
+			const env = getEnv();
+			const envApp = env.app; const envGroup = env.group;
+			if(envApp!==null && envGroup!==null){
 				[...$$('#navSection fieldset .rows label')].forEach(el=>{
-					if(el.innerText.toLowerCase() == getEnv().app.toLowerCase()){
+					if(getGroup(el) == envGroup && el.innerText.toLowerCase() == envApp.toLowerCase()){
 						checkedFocus($('input',el),false);
 					}
 					else if(el.classList.contains('checked')) {
@@ -1727,9 +1748,11 @@
 					}
 				});
 				[...$$('.searchFrm input[type=hidden]')].forEach(el=>{
-					el.value = getEnv()[el.name];
+					el.value = env[el.name];
 				});
-				if(['torquent','aptent','scelerisque'].includes(getEnv().app)){//dual
+
+				//dummy dual mode (showing copies)
+				if(['torquent','aptent','scelerisque'].includes(envApp)){
 					$('.filters.dual').style.display = "flex";
 					$('.searchFrm.dual').style.display = "block";
 					$('.rows.dual').style.display = "grid";
@@ -1767,38 +1790,38 @@
 					el.addEventListener('focus', () => {
 						justFocused = true;
 						setTimeout(() => justFocused = false, 100);
-						if (el.closest('div')) el.closest('div').classList.add('checked');
+						if(el.closest('div')) el.closest('div').classList.add('checked');
 					});
 					el.addEventListener('blur', () => {
-						if (el.closest('div')) el.closest('div').classList.remove('checked');
+						if(el.closest('div')) el.closest('div').classList.remove('checked');
 					});
 					el.addEventListener('keydown', (e) => {
-						if (justFocused) return;
+						if(justFocused) return;
 						const isTextarea = el.nodeName.toLowerCase() === 'textarea';
 						const isInput = el.nodeName.toLowerCase() === 'input';
 						const checkOrFile = (el.type === 'checkbox' || el.type === 'file');
 						const { selectionStart: start, value: val } = el;
 						const len = val ? val.length : 0;
 
-						if (e.key === 'Enter' && checkOrFile) {
+						if(e.key === 'Enter' && checkOrFile) {
 							if(el.type === 'checkbox') e.preventDefault();
 							el.checked = !el.checked;
 							return;
 						}
-						if (e.key === 'ArrowUp' && (checkOrFile || start === 0)) {
+						if(e.key === 'ArrowUp' && (checkOrFile || start === 0)) {
 							e.preventDefault();
-							if (index > 0) entry[index - 1].focus();
+							if(index > 0) entry[index - 1].focus();
 							else checkedFocus($('header .hRight input', detSec));
 						} 
-						else if (e.key === 'ArrowDown' && (checkOrFile || start === len)) {
+						else if(e.key === 'ArrowDown' && (checkOrFile || start === len)) {
 							e.preventDefault();
-							if (index < entry.length - 1) entry[index + 1].focus();
+							if(index < entry.length - 1) entry[index + 1].focus();
 						} 
-						else if (e.key === 'ArrowLeft' && (checkOrFile || start === 0)) {
+						else if(e.key === 'ArrowLeft' && (checkOrFile || start === 0)) {
 							e.preventDefault();
 							[...$$('.rows label.checked',listSec)].forEach(el=>{el.classList.remove('checked');});
 							const labels = [...$$('.rows label',listSec)].filter(el => getComputedStyle(el).display !== 'none');
-							checkedFocus(labels[0]);
+							checkedFocus(labels[0]); $('input',labels[0]).checked = true;
 						}
 					});
 				});
