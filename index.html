@@ -729,11 +729,16 @@
 				checkedFocus($('#pop input'));
 				$('#pop fieldset').innerHTML = "<form class=\"icons\"></form>";
 				$$('header .hRight .mobHid',section).forEach(lbl=>{
-					$('#pop fieldset form').appendChild(lbl.cloneNode(true));
+					if(!($('input',lbl).dataset.btn==='delete' && !multiSelect)){
+						$('#pop fieldset form').appendChild(lbl.cloneNode(true));
+					}
 				});
 				$$('#pop fieldset form label').forEach(lbl=>{
 					const label = document.createElement('span');
 					label.innerText = $('input',lbl).dataset.btn;
+					if(label.innerText==='select' && multiSelect){
+						label.innerText = 'Unselect'
+					}
 					if(label.innerText==='select' && multiSelect) label.innerText = 'Unselect';
 					lbl.appendChild(label);
 				});
@@ -1770,7 +1775,6 @@
 					['new item','select'].forEach(btn=>{
 						const label = $('input[data-btn="'+btn+'"]',detSec).closest('label');
 						label.parentNode.removeChild(label);
-						$('input[data-btn="save"]',detSec).closest('label').style.display = isPhone?'none':'flex';
 					});
 				}
 			}
