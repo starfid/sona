@@ -46,12 +46,12 @@
 
 			#navSection form.rows {display: grid;grid-template-columns:repeat(2, 1fr);gap:1vh;color:var(--fdC)}
 			#navSection form * {display: block;box-sizing:border-box;}
-			#navSection form label.select, .wrap {border:solid 1px var(--nvB)}
+			#navSection form label.select {border:solid 1px var(--nvB)}
 			#navSection form div.head {cursor:default;margin-left:/*0*/var(--mg);grid-column: 1 / -1;}
 			#navSection form div.head:not(:first-of-type) {margin-top:calc(var(--mg) * 2)}
 			#navSection form div.head:first-of-type {margin-top:calc((var(--mg) * 1.9) + (var(--mg) / 2));animation:navToggle .2s forwards}
 			#listSection {border-left:1px solid var(--brC); border-right:1px solid var(--brC);}
-			
+
 			section header {
 				position:sticky;z-index:1;
 				padding:var(--mg);grid-template-columns:auto 48%;background-color:var(--bg);xopacity:.97;
@@ -72,8 +72,9 @@
 			section header h1 {word-break:break-all;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;}
 
 			.searchFrm, .searchFrm label, fieldset form.filters label, .rows label.checked, 
-				.rows label.focused, #navSection form label.select, #pop, video, .tilesDetail div {border-radius:1vh;}
-			.searchFrm {border:solid 1px var(--brC)/*var(--nvB)*/;}
+				.rows label.focused, #navSection form label.select, #pop, video, .tilesDetail div,
+				.entry {border-radius:1vh;}
+			.searchFrm, .wrap, .entry {border:solid 1px var(--brC)/*var(--nvB)*/;}
 			.searchFrm .deskHid {visibility:hidden}
 			.searchFrm label {padding:calc(var(--mg) * .68) var(--mg);display: flex;justify-content: space-between;}
 			.searchFrm label input {
@@ -138,6 +139,7 @@
 			.wrap > textarea, .wrap::after {box-sizing:content-box;font:var(--fnBg);grid-area: 1 / 1 / 2 / 2;}
 			.dual {display:none}
 			.entry label .head {margin-left:var(--mg);margin-bottom:calc(var(--mg)/2)}
+			.entry {box-shadow: rgba(30, 30, 30, 0.06) 2px 5px 5px 0px;border: solid 1px rgba(0, 0, 0, 0.06);}
 
 			.toggle {background-color:transparent;margin-left:calc(var(--mg) - 2px);position: relative;display: inline-block;width: 60px;height: 34px;}
 			.switch input {opacity: 0;width: 0;height: 0;}
@@ -212,6 +214,7 @@
 				#detailSection div:first-child {display:flex}
 				
 				#detailSection div:nth-child(2) {display:flex;}
+				#detailSection .entry {border:none;margin:0;width:auto}
 				#detailSection .entry div:nth-child(2) {display:grid;}
 				
 				#detailSection div:nth-child(2) label {width:100%;text-align:center;display:inline-block}
@@ -287,6 +290,7 @@
 				#layer {background-color: rgba(0,0,0,0.7);}
 				#pop, #pop header, #pop header .focused {background-color:var(--bck)}
 				#pop header .focused, #pop .focused {color:#FFFFFF}
+				.entry {box-shadow: rgba(20, 20, 20, 0.9) 2px 5px 5px 0px;border: solid 1px rgba(150, 150, 150, 0.1);}
 			}
 		</style>
 	</head>
@@ -352,6 +356,13 @@
 					</div>
 					<div class="hRight">
 						<label class="btn mobHid">
+							<input type="radio" name="iBtn" data-btn="change view">
+							<svg viewbox="0 0 100 100">
+								<path id="pathTile" d="M10 10 H40 V40 H10 Z M60 10 H90 V40 H60 Z M10 60 H40 V90 H10 Z M60 60 H90 V90 H60 Z" />
+								<path id="pathList" d="M10 20H30V40H10Z M40 20H90V25H40Z M40 35H90V40H40Z M10 60H30V80H10Z M40 60H90V65H40Z M40 75H90V80H40Z"/>
+							</svg>
+						</label>
+						<label class="btn mobHid">
 							<input type="radio" name="iBtn" data-btn="new item">
 							<svg viewbox="0 0 100 100">
 								<path d="M50 10 A40 40 0 1 1 50 90 A40 40 0 1 1 50 10 M50 25 V75 M25 50 H75" />
@@ -363,19 +374,13 @@
 								<path d="M10 20H80V90H10ZM20 60L35 75L70 30M20 20V10H90V80H80"/>
 							</svg>
 						</label>
-						<label class="btn mobHid">
+						<label class="btn mobHid secondLast">
 							<input type="radio" name="iBtn" data-btn="delete">
 							<svg viewbox="0 0 100 100" class="delBtn">
 								<path d="M33 10 H68 V20 H33 Z M20 20 H80 L75 90 H25 Z M10 20 H90 M33 30 L39 80 M50 30 V80 M67 30 L62 80" />
 							</svg>
 						</label>
-						<label class="btn mobHid secondLast">
-							<input type="radio" name="iBtn" data-btn="change view">
-							<svg viewbox="0 0 100 100">
-								<path id="pathTile" d="M10 10 H40 V40 H10 Z M60 10 H90 V40 H60 Z M10 60 H40 V90 H10 Z M60 60 H90 V90 H60 Z" />
-								<path id="pathList" d="M10 20H30V40H10Z M40 20H90V25H40Z M40 35H90V40H40Z M10 60H30V80H10Z M40 60H90V65H40Z M40 75H90V80H40Z"/>
-							</svg>
-						</label>
+
 						<label class="btn tabHid last">
 							<input type="radio" name="iBtn" data-btn="dots">
 							<svg viewbox="0 0 100 100">
@@ -499,6 +504,12 @@
 					</div>
 					<div class="hRight">
 						<label class="btn mobHid">
+							<input type="radio" name="iBtn" data-btn="save">
+							<svg viewbox="0 0 100 100">
+								<path d="M10,90 H90 V25 L75,10 H10Z M30,10 V35 H70 V10Z M20,90 V50 H80 V90Z M59,17 h3 v11 h-3Z" />
+							</svg>
+						</label>
+						<label class="btn mobHid">
 							<input type="radio" name="iBtn" data-btn="new item">
 							<svg viewbox="0 0 100 100">
 								<path d="M50 10 A40 40 0 1 1 50 90 A40 40 0 1 1 50 10 M50 25 V75 M25 50 H75" />
@@ -510,12 +521,6 @@
 								<path d="M10 20H80V90H10ZM20 60L35 75L70 30M20 20V10H90V80H80"/>
 							</svg>
 						</label>
-						<label class="btn mobHid">
-							<input type="radio" name="iBtn" data-btn="delete">
-							<svg viewbox="0 0 100 100" class="delBtn">
-								<path d="M33 10 H68 V20 H33 Z M20 20 H80 L75 90 H25 Z M10 20 H90 M33 30 L39 80 M50 30 V80 M67 30 L62 80" />
-							</svg>
-						</label>
 						<label class="btn tabHid secondLast">
 							<input type="radio" name="iBtn" data-btn="dots">
 							<svg viewbox="0 0 100 100">
@@ -523,9 +528,9 @@
 							</svg>
 						</label>
 						<label class="btn mobHid last">
-							<input type="radio" name="iBtn" data-btn="save">
-							<svg viewbox="0 0 100 100">
-								<path d="M10,90 H90 V25 L75,10 H10Z M30,10 V35 H70 V10Z M20,90 V50 H80 V90Z M59,17 h3 v11 h-3Z" />
+							<input type="radio" name="iBtn" data-btn="delete">
+							<svg viewbox="0 0 100 100" class="delBtn">
+								<path d="M33 10 H68 V20 H33 Z M20 20 H80 L75 90 H25 Z M10 20 H90 M33 30 L39 80 M50 30 V80 M67 30 L62 80" />
 							</svg>
 						</label>
 					</div>
@@ -1754,6 +1759,8 @@
 					$('.filters.dual').style.display = "flex";
 					$('.searchFrm.dual').style.display = "block";
 					$('.rows.dual').style.display = "grid";
+					$('input[data-btn="save"]',detSec).closest('label').style.display = 'none';
+					$('input[data-btn="new item"]',listSec).closest('label').style.display = 'none';
 					$('.entry').parentNode.removeChild($('.entry'));
 				}
 				else {
@@ -1763,6 +1770,7 @@
 					['new item','select'].forEach(btn=>{
 						const label = $('input[data-btn="'+btn+'"]',detSec).closest('label');
 						label.parentNode.removeChild(label);
+						$('input[data-btn="save"]',detSec).closest('label').style.display = isPhone?'none':'flex';
 					});
 				}
 			}
