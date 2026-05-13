@@ -108,7 +108,7 @@
 			
 			.rows .focused, .filters .focused,
 			.rows .focused dd,
-			.rows .focused div:last-of-type > div {/*background-color:var(--bhg);*/animation:animFocused .4s forwards;color:var(--thg)!important;}
+			.rows .focused div:last-of-type > div {background-color:var(--bhg);color:var(--thg)!important;}
 			.btn.checked, .btn.focused {background-color:transparent;}
 			.btn.focused svg, .btn svg:hover, .btn.checked, .btn.checked, .iconOn {stroke:var(--bhg);stroke-width:8}
 			.btn.focused svg.delBtn, .btn svg.delBtn:hover {stroke:red;stroke-width:8}
@@ -159,7 +159,6 @@
 			#pop header {padding: calc(var(--mg)*1.5) calc(var(--mg)*2) 0 calc(var(--mg)*2);}
 			#pop fieldset {padding:var(--mg)}
 
-			@keyframes animFocused { from {background-color:var(--bg);} to {background-color:var(--bhg);} }
 			@keyframes popRising { from {top:51%;} to {top:50%;} }
 
 			@media screen and (max-width: 1281px), screen and (pointer: coarse), screen and (hover: none) {
@@ -388,7 +387,7 @@
 				<fieldset>
 					<form class="searchFrm" method="get" action="?">
 						<label class="select">
-							<input type="search" name="q" placeholder="Search" ondblclick="this.placeholder='Search'" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off">
+							<input type="search" name="q" placeholder="Search" ondblclick="this.placeholder='Search'" spellcheck="false" autocorrect="off" spellcheck="false" autocapitalize="off">
 							<input type="hidden" name="group" value=""><input type="hidden" name="app" value=""><input type="hidden" name="view" value="">
 							<svg viewbox="0 0 100 100" class="deskHid camIcon">
 								<path d="M10 80H90V30H70L60 20H40L30 30H10Z M50 38a15 15 0 1 0 0 30a15 15 0 1 0 0-30z M70 40h1" />
@@ -540,7 +539,7 @@
 						</label>
 						<label>
 							<div class="head">Gravida Justo</div>
-							<div class="wrap" data-clone="Pellentesque egestas hendrerit fringilla netus porttitor aliquet elementum diam viverra luctus consequat mauris ullamcorper integer"><textarea rows="1" name="gravida justo" oninput="this.parentNode.dataset.clone=this.value">Pellentesque egestas hendrerit fringilla netus porttitor aliquet elementum diam viverra luctus consequat mauris ullamcorper integer</textarea></div>
+							<div class="wrap" data-clone="Pellentesque egestas hendrerit fringilla netus porttitor aliquet elementum diam viverra luctus consequat mauris ullamcorper integer"><textarea spellcheck="false" rows="1" name="gravida justo" oninput="this.parentNode.dataset.clone=this.value">Pellentesque egestas hendrerit fringilla netus porttitor aliquet elementum diam viverra luctus consequat mauris ullamcorper integer</textarea></div>
 						</label>
 						<label>
 							<div class="head">Viverra Donec</div>
@@ -551,33 +550,33 @@
 						</label>
 						<label>
 							<div class="head">Amet Blandit</div>
-							<div class="wrap" data-clone="Et luctus adipiscing"><textarea rows="1" name="amet blandit" oninput="this.parentNode.dataset.clone=this.value">Et luctus adipiscing</textarea></div>
+							<div class="wrap" data-clone="Et luctus adipiscing"><textarea spellcheck="false" rows="1" name="amet blandit" oninput="this.parentNode.dataset.clone=this.value">Et luctus adipiscing</textarea></div>
 						</label>
 						<label>
 							<div class="head">Diam Est Aenean</div>
-							<div class="wrap" data-clone="Tincidunt"><textarea rows="1" name="diam est aenean" oninput="this.parentNode.dataset.clone=this.value">Tincidunt</textarea></div>
+							<div class="wrap" data-clone="Tincidunt"><textarea spellcheck="false" rows="1" name="diam est aenean" oninput="this.parentNode.dataset.clone=this.value">Tincidunt</textarea></div>
 						</label>
 						<label>
 							<div class="head">Nibh Luctus Ac Et</div>
-							<div class="wrap" data-clone="Vehicula consequat lorem habitant maecenas tristique justo euismod nulla lacus eget platea"><textarea rows="1" name="nibh luctus ac et" oninput="this.parentNode.dataset.clone=this.value">Vehicula consequat lorem habitant maecenas tristique justo euismod nulla lacus eget platea</textarea></div>
+							<div class="wrap" data-clone="Vehicula consequat lorem habitant maecenas tristique justo euismod nulla lacus eget platea"><textarea spellcheck="false" rows="1" name="nibh luctus ac et" oninput="this.parentNode.dataset.clone=this.value">Vehicula consequat lorem habitant maecenas tristique justo euismod nulla lacus eget platea</textarea></div>
 						</label>
 						<label>
 							<div class="head">Orci Lectus</div>
-							<div class="wrap" data-clone="Augue hac viverra"><textarea rows="1" name="orci lectus" oninput="this.parentNode.dataset.clone=this.value">Augue hac viverra</textarea></div>
+							<div class="wrap" data-clone="Augue hac viverra"><textarea spellcheck="false" rows="1" name="orci lectus" oninput="this.parentNode.dataset.clone=this.value">Augue hac viverra</textarea></div>
 						</label>
 						<label>
 							<div class="head">Neque Iaculis Enim</div>
-							<div class="wrap" data-clone="Consectetur"><textarea rows="1" name="neque iaculis enim" oninput="this.parentNode.dataset.clone=this.value">Consectetur</textarea></div>
+							<div class="wrap" data-clone="Consectetur"><textarea spellcheck="false" rows="1" name="neque iaculis enim" oninput="this.parentNode.dataset.clone=this.value">Consectetur</textarea></div>
 						</label>
 						<label>
 							<div class="head">Quis Ligula Lectus</div>
-							<div class="wrap" data-clone="Per fames luctus congue mi faucibus quam ad urna quis"><textarea rows="1" name="quis ligula lectus" oninput="this.parentNode.dataset.clone=this.value">Per fames luctus congue mi faucibus quam ad urna quis</textarea></div>
+							<div class="wrap" data-clone="Per fames luctus congue mi faucibus quam ad urna quis"><textarea spellcheck="false" rows="1" name="quis ligula lectus" oninput="this.parentNode.dataset.clone=this.value">Per fames luctus congue mi faucibus quam ad urna quis</textarea></div>
 						</label>
 					</form>
 					
 					<form class="searchFrm dual" method="get" action="?">
 						<label class="select">
-							<input type="search" name="q2" placeholder="Search" ondblclick="this.value=''" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off">
+							<input type="search" name="q2" placeholder="Search" ondblclick="this.value=''" spellcheck="false" autocorrect="off" spellcheck="false" autocapitalize="off">
 							<input type="hidden" name="group" value=""><input type="hidden" name="app" value=""><input type="hidden" name="view" value="">
 							<svg viewbox="0 0 100 100" class="deskHid camIcon">
 								<path d="M10 80H90V30H70L60 20H40L30 30H10Z M50 38a15 15 0 1 0 0 30a15 15 0 1 0 0-30z M70 40h1" />
@@ -723,7 +722,7 @@
 			function buttonDots(){
 				setPop('50%',true);
 				checkedFocus($('#pop input'));
-				$('#pop fieldset').innerHTML = "<form class=\"icons\"><form>";
+				$('#pop fieldset').innerHTML = "<form class=\"icons\"></form>";
 				$$('header .hRight .mobHid',section).forEach(lbl=>{
 					$('#pop fieldset form').appendChild(lbl.cloneNode(true));
 				});
@@ -741,7 +740,7 @@
 			}
 			function focusMulti(section,val){
 				if(!val) section = document.body;
-				[...$$('header input[data-btn=select],header input[data-btn=delete',section)].forEach(el=>{
+				[...$$('header input[data-btn=select],header input[data-btn=delete]',section)].forEach(el=>{
 					el.disabled = val;
 				});
 				[...$$('header input[data-btn="new item"],header input[data-btn="change view"],header input[data-btn=save],header input[data-btn=login]')].forEach(el=>{
@@ -1373,8 +1372,7 @@
 								const isHeader = (inputTarget)?.closest('div');
 								if(isHeader && display(isHeader) === 'none') {
 									checkedFocus($('.hRight input', isHeader.closest('header')));
-								}
-							
+								}							
 							}
 							else if(parentSection.id === 'navSection'){
 								e.preventDefault();
