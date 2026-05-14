@@ -138,10 +138,10 @@
 			.wrap::after {content:attr(data-clone) " ";white-space:pre-wrap;visibility:hidden;}
 			.wrap > textarea, .wrap::after {box-sizing:content-box;font:var(--fnBg);grid-area: 1 / 1 / 2 / 2;}
 			.dual {display:none}
-			.entry label .head {margin-left:var(--mg);margin-bottom:calc(var(--mg)/2)}
+			.entry label .head {margin-left:var(--mg);margin-bottom:0}
 			.entry {box-shadow: rgba(30, 30, 30, 0.06) 2px 5px 5px 0px;border: solid 1px rgba(0, 0, 0, 0.06);}
 
-			.toggle {background-color:transparent;margin-left:calc(var(--mg) - 2px);position: relative;display: inline-block;width: 60px;height: 34px;}
+			.toggle {background-color:transparent;margin-top:2px;margin-left:calc(var(--mg) - 1px);position: relative;display: inline-block;width: 60px;height: 34px;}
 			.switch input {opacity: 0;width: 0;height: 0;}
 			.slider {position: absolute;cursor: pointer;top: 0;left: 0;right: 0;bottom: 0;background-color: var(--bck);-webkit-transition: .2s;transition: .2s;}
 			.slider:before {position: absolute;content: "";height: 26px;width: 26px;left: 4px;bottom: 4px;background-color: white;-webkit-transition: .2s;transition: .2s;}
@@ -356,16 +356,16 @@
 					</div>
 					<div class="hRight">
 						<label class="btn mobHid">
+							<input type="radio" name="iBtn" data-btn="new item">
+							<svg viewbox="0 0 100 100">
+								<path d="M50 10 A40 40 0 1 1 50 90 A40 40 0 1 1 50 10 M50 25 V75 M25 50 H75" />
+							</svg>
+						</label>
+						<label class="btn mobHid">
 							<input type="radio" name="iBtn" data-btn="change view">
 							<svg viewbox="0 0 100 100">
 								<path id="pathTile" d="M10 10 H40 V40 H10 Z M60 10 H90 V40 H60 Z M10 60 H40 V90 H10 Z M60 60 H90 V90 H60 Z" />
 								<path id="pathList" d="M10 20H30V40H10Z M40 20H90V25H40Z M40 35H90V40H40Z M10 60H30V80H10Z M40 60H90V65H40Z M40 75H90V80H40Z"/>
-							</svg>
-						</label>
-						<label class="btn mobHid">
-							<input type="radio" name="iBtn" data-btn="new item">
-							<svg viewbox="0 0 100 100">
-								<path d="M50 10 A40 40 0 1 1 50 90 A40 40 0 1 1 50 10 M50 25 V75 M25 50 H75" />
 							</svg>
 						</label>
 						<label class="btn selIcon mobHid">
@@ -725,12 +725,13 @@
 			function setDetailTitle(input){
 				$('#detailSection h1').innerText = $('div:last-child dl dt',input.closest('label')).innerText;
 			}
-			function buttonDots(){
+			function buttonDots(input){
+				const section = input.closest('section');
 				setPop('50%',true);
 				checkedFocus($('#pop input'));
 				$('#pop fieldset').innerHTML = "<form class=\"icons\"></form>";
-				$$('header .hRight .mobHid',lastSection).forEach(lbl=>{
-					if(!($('input',lbl).dataset.btn==='delete' && !multiSelect && $('.entry',lastSection)===null)){
+				$$('header .hRight .mobHid',section).forEach(lbl=>{
+					if(!($('input',lbl).dataset.btn==='delete' && !multiSelect && $('.rows',section)!==null)){
 						$('#pop fieldset form').appendChild(lbl.cloneNode(true));
 					}
 				});
@@ -1567,7 +1568,7 @@
 								case 'side':		buttonSide(); break;
 								case 'new item':	buttonCompose(input); break;
 								case 'login':		buttonCompose(input); break;
-								case 'dots':		buttonDots(); break;
+								case 'dots':		buttonDots(input); break;
 								case 'back':		buttonBack(input); break;
 								case 'change view':	buttonView(); break;
 								case 'popCancel':	buttonCancel(input); break;
@@ -1634,7 +1635,7 @@
 						case 'delete':		buttonDelete(input); break;
 						case 'new item':	buttonCompose(input); break;
 						case 'login':		buttonCompose(input); break;
-						case 'dots':		buttonDots(); break;
+						case 'dots':		buttonDots(input); break;
 						case 'select':		buttonMulti(e); break;
 						case 'popCancel':	buttonCancel(input); break;
 						case 'popSend':		buttonSend(input,false); break;
