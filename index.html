@@ -139,7 +139,7 @@
 			.wrap > textarea, .wrap::after {box-sizing:content-box;font:var(--fnBg);grid-area: 1 / 1 / 2 / 2;}
 			.dual {display:none}
 			.entry label .head {margin-left:var(--mg);margin-bottom:0}
-			.entry {box-shadow: rgba(30, 30, 30, 0.06) 2px 5px 5px 0px;border: solid 1px rgba(0, 0, 0, 0.06);}
+			.entry {xbox-shadow: rgba(30, 30, 30, 0.06) 2px 5px 5px 0px;border: solid 1px rgba(0, 0, 0, 0.06);}
 
 			.toggle {background-color:transparent;margin-top:2px;margin-left:calc(var(--mg) - 1px);position: relative;display: inline-block;width: 60px;height: 34px;}
 			.switch input {opacity: 0;width: 0;height: 0;}
@@ -162,6 +162,19 @@
 			#pop fieldset {padding:var(--mg)}
 
 			@keyframes popRising { from {top:51%;} to {top:50%;} }
+			@keyframes sending {
+				0% {zoom:normal;margin:var(--mg) var(--mg) var(--mg) var(--mg);}
+				10% {zoom:0.9848;margin:calc(var(--mg) * 2.111) calc(var(--mg) * 2.390) 0 calc(var(--mg) * 2.390);}
+				20% {zoom:0.9697;margin:calc(var(--mg) * 1.778) calc(var(--mg) * 2.559) 0 calc(var(--mg) * 2.559);}
+				30% {zoom:0.9545;margin:calc(var(--mg) * 1.556) calc(var(--mg) * 2.727) 0 calc(var(--mg) * 2.727);}
+				40% {zoom:0.9394;margin:calc(var(--mg) * 1.333) calc(var(--mg) * 2.896) 0 calc(var(--mg) * 2.896);}
+				50% {zoom:0.9242;margin:calc(var(--mg) * 1.111) calc(var(--mg) * 3.064) 0 calc(var(--mg) * 3.064);}
+				60% {zoom:0.9091;margin:calc(var(--mg) * 0.889) calc(var(--mg) * 3.232) 0 calc(var(--mg) * 3.232);}
+				66% {zoom:0.9;margin:calc(var(--mg) * 0.667) calc(var(--mg) * 3.333) 0 calc(var(--mg) * 3.333);}
+				67% {zoom:0.9;margin:calc(var(--mg) * -1.111) calc(var(--mg) * 3.333) 0 calc(var(--mg) * 3.333);}
+				100% {zoom:0.9;margin:calc(var(--mg) * -333.333) calc(var(--mg) * 3.333) 0 calc(var(--mg) * 3.333);}
+			}
+
 
 			@media screen and (max-width: 1281px), screen and (pointer: coarse), screen and (hover: none) {
 				:root {
@@ -908,24 +921,18 @@
 				if(section.id==='pop') buttonCancel(input);
 				
 				if($('.entry', detSec) !== null && ((section.id === 'pop' && display(detSec) === 'block') || section === detSec)) {
-					//future dev
+					$('.entry').style.animation = "sending .5s forwards ease-in";
+					$('.entry').addEventListener('animationend', () => {
+						navClick($('.checked',navSec));
+					});
 				}
 				else if((input.name === 'item' || input.name === 'copy') || input.dataset.btn === 'delete') {
 					if(selections.length > 0 && section !== 'navSection'){
-						const newSelections = [];
-						selections.forEach(label=>{
-							if(label && label.parentNode) {
-								if(isPhone || (label.closest('section')?.id === section.id)) {
-									newSelections.push(label);
-								}
-							}
-						});
+						const newSelections = selections.filter(label => label && label.parentNode && (isPhone || label.closest('section')?.id === section.id));
 						if(newSelections.length > 0 && confirm('Delete ' + newSelections.length + ' selected items')){
 							newSelections.forEach(label=>{
-								if(label && label.parentNode) {
-									if(isPhone || (label.closest('section')?.id === section.id)) {
-										label.parentNode.removeChild(label);
-									}
+								if(label && label.parentNode && (isPhone || (label.closest('section')?.id === section.id))) {
+									label.parentNode.removeChild(label);
 								}
 							});
 							multiSelect = false;
@@ -1566,6 +1573,8 @@
 							const { btn } = input.dataset;
 							switch (btn) {
 								case 'side':		buttonSide(); break;
+								case 'save':		buttonSave(input); break;
+								case 'delete':		buttonDelete(input); break;
 								case 'new item':	buttonCompose(input); break;
 								case 'login':		buttonCompose(input); break;
 								case 'dots':		buttonDots(input); break;
@@ -1615,6 +1624,13 @@
 					break;
 				}
 			}
+			function buttonSave(input){
+				buttonCancel(input);
+				$('.entry').style.animation = "sending .5s forwards ease-in";
+				$('.entry').addEventListener('animationend', () => {
+					navClick($('.checked',navSec));
+				});
+			}
 			function handleClick(e) {
 				const input = e.target;
 				if(input.closest('section')===null) return;
@@ -1633,6 +1649,7 @@
 						case 'side':		buttonSide(false); break;
 						case 'change view':	buttonView(); break;
 						case 'delete':		buttonDelete(input); break;
+						case 'save':		buttonSave(input); break;
 						case 'new item':	buttonCompose(input); break;
 						case 'login':		buttonCompose(input); break;
 						case 'dots':		buttonDots(input); break;
