@@ -392,7 +392,7 @@
 				<fieldset>
 					<form class="searchFrm" method="get" action="?">
 						<label class="select">
-							<input type="search" name="q" placeholder="Search" ondblclick="this.placeholder='Search'" spellcheck="false" autocorrect="off" spellcheck="false" autocapitalize="off">
+							<input type="search" name="q" placeholder="Search" ondblclick="this.placeholder='Search'" autocorrect="off" spellcheck="false" autocapitalize="off">
 							<input type="hidden" name="group" value=""><input type="hidden" name="app" value=""><input type="hidden" name="view" value="">
 							<svg viewbox="0 0 100 100" class="deskHid camIcon">
 								<path d="M10 80H90V30H70L60 20H40L30 30H10Z M50 38a15 15 0 1 0 0 30a15 15 0 1 0 0-30z M70 40h1" />
@@ -581,7 +581,7 @@
 					
 					<form class="searchFrm dual" method="get" action="?">
 						<label class="select">
-							<input type="search" name="q2" placeholder="Search" ondblclick="this.value=''" spellcheck="false" autocorrect="off" spellcheck="false" autocapitalize="off">
+							<input type="search" name="q2" placeholder="Search" ondblclick="this.value=''" autocorrect="off" spellcheck="false" autocapitalize="off">
 							<input type="hidden" name="group" value=""><input type="hidden" name="app" value=""><input type="hidden" name="view" value="">
 							<svg viewbox="0 0 100 100" class="deskHid camIcon">
 								<path d="M10 80H90V30H70L60 20H40L30 30H10Z M50 38a15 15 0 1 0 0 30a15 15 0 1 0 0-30z M70 40h1" />
@@ -701,6 +701,7 @@
 			</section>
 		</div>
 		<script>
+			const $$$ = (s, c = document) => [...c.querySelectorAll(s)].filter(el => el.offsetParent !== null);
 			const $$ = (s, c = document) => [...c.querySelectorAll(s)];
 			const $ = (s, c = document) => c.querySelector(s);
 			const selector = '.rows label > input[type=checkbox], form label > input[type=radio], .searchFrm label > input[type=search], header label > input[type=radio]';
@@ -941,7 +942,8 @@
 						cancelMulti(input);
 					}
 					else if(input.name==='item') {
-						const labels = [...$$('.rows label',section)].filter(el => getComputedStyle(el).display !== 'none');
+						//const labels = [...$$('.rows label',section)].filter(el => getComputedStyle(el).display !== 'none');
+						const labels = $$$('.rows label',section);
 						if(labels.length>0){
 							checkedFocus($('input',labels[0]));
 							selections = [labels[0]];
@@ -1136,7 +1138,8 @@
 				clrTextSel(section);
 				if(multiSelect) {lastSection = null;}
 				if(input.name == 'iBtn'){
-					const labels = [...$$('.rows label',section)].filter(el => getComputedStyle(el).display !== 'none');
+					//const labels = [...$$('.rows label',section)].filter(el => getComputedStyle(el).display !== 'none');
+					const labels = $$$('.rows label',section);
 					if(labels.length>0){
 						labels[0].classList.add('checked');
 					}
@@ -1325,7 +1328,8 @@
 							}
 						}
 						else if(holding){
-							const labels = [...$$('label',parentForm)].filter(el => getComputedStyle(el).display !== 'none');
+							//const labels = [...$$('label',parentForm)].filter(el => getComputedStyle(el).display !== 'none');
+							const labels = $$$('label',parentForm);
 							const index = labels.indexOf(parentLabel);
 							const nextLabel = labels[index + 1];
 							const nextInput = $('input',labels[index + 1]);
@@ -1342,7 +1346,8 @@
 							if(!(parentForm && parentSection.id == 'pop')) e.preventDefault();
 							if(nextForm) {
 								if(nextForm.classList.contains('rows')){
-									const labels = [...$$('label',nextForm)].filter(el => getComputedStyle(el).display !== 'none');
+									//const labels = [...$$('label',nextForm)].filter(el => getComputedStyle(el).display !== 'none');
+									const labels = $$$('label',nextForm);
 									checkedFocus($('input', labels[0]));
 								}
 								else if(nextForm.classList.contains('filters')){
@@ -1353,7 +1358,8 @@
 								}
 							}
 							else if(parentLabel.classList.contains('select') && parentLabel.nextElementSibling) {
-								const labels = [...$$('label',parentForm)].filter(el => getComputedStyle(el).display !== 'none');
+								//const labels = [...$$('label',parentForm)].filter(el => getComputedStyle(el).display !== 'none');
+								const labels = $$$('label',parentForm);
 								const index = labels.indexOf(parentLabel);
 								const next = labels[index + 1];
 								checkedFocus($('input',next));
@@ -1381,7 +1387,8 @@
 								
 								const isHeader = (inputTarget)?.closest('div');
 								if(isHeader && display(isHeader) === 'none') {
-									checkedFocus($('.hRight input', isHeader.closest('header')));
+									const labels = $$$('.hRight label', isHeader.closest('header'));
+									checkedFocus($('input', labels[0]));
 								}							
 							}
 							else if(parentSection.id === 'navSection'){
@@ -1400,7 +1407,8 @@
 								}
 							}
 							else if(holding){
-								const labels = [...$$('label',parentForm)].filter(el => getComputedStyle(el).display !== 'none');
+								//const labels = [...$$('label',parentForm)].filter(el => getComputedStyle(el).display !== 'none');
+								const labels = $$$('label',parentForm);
 								const index = labels.indexOf(parentLabel);
 								const prevLabel = labels[index - 1];
 								const prevInput = $('input',labels[index - 1]);
@@ -1417,7 +1425,8 @@
 								clearbyArrow(parentSection);
 								clrTextSel(parentSection);								
 								if(parentForm.classList.contains('rows')){
-									const labels = [...$$('label',parentForm)].filter(el => getComputedStyle(el).display !== 'none');
+									//const labels = [...$$('label',parentForm)].filter(el => getComputedStyle(el).display !== 'none');
+									const labels = $$$('label',parentForm);
 									const index = labels.indexOf(parentLabel);
 									const prev = labels[index - 1];
 									if(index<1){
@@ -1453,9 +1462,11 @@
 							(input.type === 'radio' && parentForm.classList.contains('rows')) || 
 							(input.type === 'search' && input.value.length < 1)
 						);
-						const rowLabels = [...$$('#' + map[parentSection.id] + ' .rows label')].filter(el => getComputedStyle(el).display !== 'none');
+						//const rowLabels = [...$$('#' + map[parentSection.id] + ' .rows label')].filter(el => getComputedStyle(el).display !== 'none');
+						const rowLabels = $$$('#' + map[parentSection.id] + ' .rows label');
 						if(input.name === 'item' && display($('#pathList')) === 'block'){
-							const labels = [...$$('label',parentForm)].filter(el => getComputedStyle(el).display !== 'none');
+							//const labels = [...$$('label',parentForm)].filter(el => getComputedStyle(el).display !== 'none');
+							const labels = $$$('label',parentForm);
 							const index = labels.indexOf(parentLabel);
 							
 							const cols = isPhone?2:3;
@@ -1830,7 +1841,8 @@
 						else if(e.key === 'ArrowLeft' && (checkOrFile || start === 0)) {
 							e.preventDefault();
 							[...$$('.rows label.checked',listSec)].forEach(el=>{el.classList.remove('checked');});
-							const labels = [...$$('.rows label',listSec)].filter(el => getComputedStyle(el).display !== 'none');
+							//const labels = [...$$('.rows label',listSec)].filter(el => getComputedStyle(el).display !== 'none');
+							const labels = $$$('.rows label',listSec);
 							checkedFocus(labels[0]); $('input',labels[0]).checked = true;
 						}
 					});
