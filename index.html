@@ -729,8 +729,8 @@
 				setPop('50%',true);
 				checkedFocus($('#pop input'));
 				$('#pop fieldset').innerHTML = "<form class=\"icons\"></form>";
-				$$('header .hRight .mobHid',section).forEach(lbl=>{
-					if(!($('input',lbl).dataset.btn==='delete' && !multiSelect)){
+				$$('header .hRight .mobHid',lastSection).forEach(lbl=>{
+					if(!($('input',lbl).dataset.btn==='delete' && !multiSelect && $('.entry',lastSection)===null)){
 						$('#pop fieldset form').appendChild(lbl.cloneNode(true));
 					}
 				});
@@ -797,10 +797,6 @@
 				const cancelFocus = () => checkedFocus($('#pop input'));
 				if(input.closest('section').id==='pop'){
 					buttonCancel(input);
-					//$('#pop fieldset').innerHTML = "<form class=\"icons\">xx<form>";
-					//$$('header .hRight .mobHid',section).forEach(lbl=>{
-					//	$('#pop fieldset form').appendChild(lbl.cloneNode(true));
-					//});
 					setTimeout(()=>{
 						setPop('96%',false);
 						cancelFocus();
@@ -942,7 +938,6 @@
 						cancelMulti(input);
 					}
 					else if(input.name==='item') {
-						//const labels = [...$$('.rows label',section)].filter(el => getComputedStyle(el).display !== 'none');
 						const labels = $$$('.rows label',section);
 						if(labels.length>0){
 							checkedFocus($('input',labels[0]));
@@ -1138,7 +1133,6 @@
 				clrTextSel(section);
 				if(multiSelect) {lastSection = null;}
 				if(input.name == 'iBtn'){
-					//const labels = [...$$('.rows label',section)].filter(el => getComputedStyle(el).display !== 'none');
 					const labels = $$$('.rows label',section);
 					if(labels.length>0){
 						labels[0].classList.add('checked');
@@ -1328,7 +1322,6 @@
 							}
 						}
 						else if(holding){
-							//const labels = [...$$('label',parentForm)].filter(el => getComputedStyle(el).display !== 'none');
 							const labels = $$$('label',parentForm);
 							const index = labels.indexOf(parentLabel);
 							const nextLabel = labels[index + 1];
@@ -1346,7 +1339,6 @@
 							if(!(parentForm && parentSection.id == 'pop')) e.preventDefault();
 							if(nextForm) {
 								if(nextForm.classList.contains('rows')){
-									//const labels = [...$$('label',nextForm)].filter(el => getComputedStyle(el).display !== 'none');
 									const labels = $$$('label',nextForm);
 									checkedFocus($('input', labels[0]));
 								}
@@ -1358,7 +1350,6 @@
 								}
 							}
 							else if(parentLabel.classList.contains('select') && parentLabel.nextElementSibling) {
-								//const labels = [...$$('label',parentForm)].filter(el => getComputedStyle(el).display !== 'none');
 								const labels = $$$('label',parentForm);
 								const index = labels.indexOf(parentLabel);
 								const next = labels[index + 1];
@@ -1407,7 +1398,6 @@
 								}
 							}
 							else if(holding){
-								//const labels = [...$$('label',parentForm)].filter(el => getComputedStyle(el).display !== 'none');
 								const labels = $$$('label',parentForm);
 								const index = labels.indexOf(parentLabel);
 								const prevLabel = labels[index - 1];
@@ -1425,7 +1415,6 @@
 								clearbyArrow(parentSection);
 								clrTextSel(parentSection);								
 								if(parentForm.classList.contains('rows')){
-									//const labels = [...$$('label',parentForm)].filter(el => getComputedStyle(el).display !== 'none');
 									const labels = $$$('label',parentForm);
 									const index = labels.indexOf(parentLabel);
 									const prev = labels[index - 1];
@@ -1462,10 +1451,8 @@
 							(input.type === 'radio' && parentForm.classList.contains('rows')) || 
 							(input.type === 'search' && input.value.length < 1)
 						);
-						//const rowLabels = [...$$('#' + map[parentSection.id] + ' .rows label')].filter(el => getComputedStyle(el).display !== 'none');
 						const rowLabels = $$$('#' + map[parentSection.id] + ' .rows label');
 						if(input.name === 'item' && display($('#pathList')) === 'block'){
-							//const labels = [...$$('label',parentForm)].filter(el => getComputedStyle(el).display !== 'none');
 							const labels = $$$('label',parentForm);
 							const index = labels.indexOf(parentLabel);
 							
@@ -1841,7 +1828,6 @@
 						else if(e.key === 'ArrowLeft' && (checkOrFile || start === 0)) {
 							e.preventDefault();
 							[...$$('.rows label.checked',listSec)].forEach(el=>{el.classList.remove('checked');});
-							//const labels = [...$$('.rows label',listSec)].filter(el => getComputedStyle(el).display !== 'none');
 							const labels = $$$('.rows label',listSec);
 							checkedFocus(labels[0]); $('input',labels[0]).checked = true;
 						}
