@@ -163,7 +163,7 @@
 
 			@keyframes popRising { from {top:51%;} to {top:50%;} }
 			@keyframes sending {
-				0% {zoom:normal;margin:var(--mg) var(--mg) var(--mg) var(--mg);}
+				0% {zoom:normal;margin:var(--mg) var(--mg) var(--mg) var(--mg);background-color:var(--bg)}
 				10% {zoom:0.9848;margin:calc(var(--mg) * 2.111) calc(var(--mg) * 2.390) 0 calc(var(--mg) * 2.390);}
 				20% {zoom:0.9697;margin:calc(var(--mg) * 1.778) calc(var(--mg) * 2.559) 0 calc(var(--mg) * 2.559);}
 				30% {zoom:0.9545;margin:calc(var(--mg) * 1.556) calc(var(--mg) * 2.727) 0 calc(var(--mg) * 2.727);}
@@ -172,7 +172,7 @@
 				60% {zoom:0.9091;margin:calc(var(--mg) * 0.889) calc(var(--mg) * 3.232) 0 calc(var(--mg) * 3.232);}
 				66% {zoom:0.9;margin:calc(var(--mg) * 0.667) calc(var(--mg) * 3.333) 0 calc(var(--mg) * 3.333);}
 				67% {zoom:0.9;margin:calc(var(--mg) * -1.111) calc(var(--mg) * 3.333) 0 calc(var(--mg) * 3.333);}
-				100% {zoom:0.9;margin:calc(var(--mg) * -333.333) calc(var(--mg) * 3.333) 0 calc(var(--mg) * 3.333);}
+				100% {zoom:0.9;margin:calc(var(--mg) * -333.333) calc(var(--mg) * 3.333) 0 calc(var(--mg) * 3.333);background-color:var(--bg)}
 			}
 
 
@@ -405,7 +405,7 @@
 				<fieldset>
 					<form class="searchFrm" method="get" action="?">
 						<label class="select">
-							<input type="search" name="q" placeholder="Search" ondblclick="this.placeholder='Search'" autocorrect="off" spellcheck="false" autocapitalize="off">
+							<input type="search" name="q" placeholder="Search" ondblclick="this.placeholder='Search'" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off">
 							<input type="hidden" name="group" value=""><input type="hidden" name="app" value=""><input type="hidden" name="view" value="">
 							<svg viewbox="0 0 100 100" class="deskHid camIcon">
 								<path d="M10 80H90V30H70L60 20H40L30 30H10Z M50 38a15 15 0 1 0 0 30a15 15 0 1 0 0-30z M70 40h1" />
@@ -594,7 +594,7 @@
 					
 					<form class="searchFrm dual" method="get" action="?">
 						<label class="select">
-							<input type="search" name="q2" placeholder="Search" ondblclick="this.value=''" autocorrect="off" spellcheck="false" autocapitalize="off">
+							<input type="search" name="q2" placeholder="Search" ondblclick="this.value=''" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off">
 							<input type="hidden" name="group" value=""><input type="hidden" name="app" value=""><input type="hidden" name="view" value="">
 							<svg viewbox="0 0 100 100" class="deskHid camIcon">
 								<path d="M10 80H90V30H70L60 20H40L30 30H10Z M50 38a15 15 0 1 0 0 30a15 15 0 1 0 0-30z M70 40h1" />
@@ -722,7 +722,8 @@
 			const listSec = $('#listSection');
 			const detSec = $('#detailSection');
 			const h1Txt = $('header div h1',listSec).innerText;
-			const bgCol = getComputedStyle(document.documentElement).getPropertyValue('--bg');
+			//const bgCol = getComputedStyle(document.documentElement).getPropertyValue('--bg');
+			const getColor = (color) => getComputedStyle(document.documentElement).getPropertyValue(color).trim();
 			const capitalize = (str) => str.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 			const toggleLayer = () => $('#layer').classList.toggle('layerToggle');
 			const display = (el) => {return window.getComputedStyle(el).display;}
@@ -857,7 +858,7 @@
 				const frm = $('#pop fieldset form');
 				if(frm) frm.parentNode.removeChild(frm);
 				const metaTheme = document.querySelector('meta[name="theme-color"]');
-				if(metaTheme) metaTheme.setAttribute('content', bgCol);
+				if(metaTheme) metaTheme.setAttribute('content', getColor('--bg'));
 				if(display(navSec) === 'none' && display(detSec) === 'none') {
 					target = listSec;
 				}
@@ -921,14 +922,17 @@
 				if(section.id==='pop') buttonCancel(input);
 				
 				if($('.entry', detSec) !== null && ((section.id === 'pop' && display(detSec) === 'block') || section === detSec)) {
+					lastSection.style.backgroundColor = isPhone?'black':getColor('--bck');
 					$('.entry').style.animation = "sending .5s forwards ease-in";
 					$('.entry').addEventListener('animationend', () => {
 						navClick($('.checked',navSec));
 					});
+					
 				}
 				else if((input.name === 'item' || input.name === 'copy') || input.dataset.btn === 'delete') {
 					if(selections.length > 0 && section !== 'navSection'){
 						const newSelections = selections.filter(label => label && label.parentNode && (isPhone || label.closest('section')?.id === section.id));
+						console.log(newSelections);
 						if(newSelections.length > 0 && confirm('Delete ' + newSelections.length + ' selected items')){
 							newSelections.forEach(label=>{
 								if(label && label.parentNode && (isPhone || (label.closest('section')?.id === section.id))) {
@@ -1383,9 +1387,10 @@
 									input.closest('fieldset').previousElementSibling
 								);
 								if(inputTarget) checkedFocus(inputTarget);
-								
+								selections = [];
 								const isHeader = (inputTarget)?.closest('div');
 								if(isHeader && display(isHeader) === 'none') {
+									
 									const labels = $$$('.hRight label', isHeader.closest('header'));
 									checkedFocus($('input', labels[0]));
 								}							
@@ -1626,6 +1631,7 @@
 			}
 			function buttonSave(input){
 				buttonCancel(input);
+				lastSection.style.backgroundColor = isPhone?'black':getColor('--bck');
 				$('.entry').style.animation = "sending .5s forwards ease-in";
 				$('.entry').addEventListener('animationend', () => {
 					navClick($('.checked',navSec));
