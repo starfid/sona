@@ -922,7 +922,7 @@
 				if(section.id==='pop') buttonCancel(input);
 				
 				if($('.entry', detSec) !== null && ((section.id === 'pop' && display(detSec) === 'block') || section === detSec)) {
-					lastSection.style.backgroundColor = isPhone?'black':getColor('--bck');
+					detSec.style.backgroundColor = getColor('--bck');
 					$('.entry').style.animation = "sending .5s forwards ease-in";
 					$('.entry').addEventListener('animationend', () => {
 						navClick($('.checked',navSec));
@@ -1631,7 +1631,7 @@
 			}
 			function buttonSave(input){
 				buttonCancel(input);
-				lastSection.style.backgroundColor = isPhone?'black':getColor('--bck');
+				detSec.style.backgroundColor = getColor('--bck');
 				$('.entry').style.animation = "sending .5s forwards ease-in";
 				$('.entry').addEventListener('animationend', () => {
 					navClick($('.checked',navSec));
