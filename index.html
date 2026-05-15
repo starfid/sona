@@ -283,6 +283,18 @@
 				@keyframes detailShowList { from {left:30vw;} to {left:100vw;} }
 				@keyframes listShowDetail { from {left:0;} to {left:-45px;} }
 				@keyframes listShowList { from {left:-100px;} to {left:0;} }
+				@keyframes sending {
+					0% {zoom:normal;margin:-60px var(--mg) var(--mg) var(--mg);background-color:var(--bg)}
+					10% {zoom:0.9848;margin:calc(var(--mg) * 2.111) calc(var(--mg) * 0.956) 0 calc(var(--mg) * 0.956);}
+					20% {zoom:0.9697;margin:calc(var(--mg) * 1.778) calc(var(--mg) * 1.024) 0 calc(var(--mg) * 1.024);}
+					30% {zoom:0.9545;margin:calc(var(--mg) * 1.556) calc(var(--mg) * 1.091) 0 calc(var(--mg) * 1.091);}
+					40% {zoom:0.9394;margin:calc(var(--mg) * 1.333) calc(var(--mg) * 1.158) 0 calc(var(--mg) * 1.158);}
+					50% {zoom:0.9242;margin:calc(var(--mg) * 1.111) calc(var(--mg) * 1.226) 0 calc(var(--mg) * 1.226);}
+					60% {zoom:0.9091;margin:calc(var(--mg) * 0.889) calc(var(--mg) * 1.293) 0 calc(var(--mg) * 1.293);}
+					66% {zoom:0.9;margin:calc(var(--mg) * 0.667) calc(var(--mg) * 1.333) 0 calc(var(--mg) * 1.333);}
+					67% {zoom:0.9;margin:calc(var(--mg) * -1.111) calc(var(--mg) * 1.333) 0 calc(var(--mg) * 1.333);}
+					100% {zoom:0.9;margin:calc(var(--mg) * -333.333) calc(var(--mg) * 1.333) 0 calc(var(--mg) * 1.333);background-color:var(--bg)}
+				}
 			}
 			@media (prefers-color-scheme: dark) {
 				:root {
@@ -922,7 +934,7 @@
 				if(section.id==='pop') buttonCancel(input);
 				
 				if($('.entry', detSec) !== null && ((section.id === 'pop' && display(detSec) === 'block') || section === detSec)) {
-					detSec.style.backgroundColor = getColor('--bck');
+					detSec.style.backgroundColor = getColor(isPhone?'--cl2':'--bck');
 					$('.entry').style.animation = "sending .5s forwards ease-in";
 					$('.entry').addEventListener('animationend', () => {
 						navClick($('.checked',navSec));
@@ -932,7 +944,6 @@
 				else if((input.name === 'item' || input.name === 'copy') || input.dataset.btn === 'delete') {
 					if(selections.length > 0 && section !== 'navSection'){
 						const newSelections = selections.filter(label => label && label.parentNode && (isPhone || label.closest('section')?.id === section.id));
-						console.log(newSelections);
 						if(newSelections.length > 0 && confirm('Delete ' + newSelections.length + ' selected items')){
 							newSelections.forEach(label=>{
 								if(label && label.parentNode && (isPhone || (label.closest('section')?.id === section.id))) {
@@ -1351,11 +1362,11 @@
 							if(!(parentForm && parentSection.id == 'pop')) e.preventDefault();
 							if(nextForm) {
 								if(nextForm.classList.contains('rows')){
-									const labels = $$$('label',nextForm);
-									checkedFocus($('input', labels[0]));
+									//const labels = $$$('label',nextForm);
+									checkedFocus($('input', $$$('label',nextForm)[0]));
 								}
 								else if(nextForm.classList.contains('filters')){
-									checkedFocus($('label.checked input',nextForm));
+									checkedFocus($('label.checked input', nextForm) || $('label input', nextForm));
 								}
 								else {
 									checkedFocus($('input', nextForm));
@@ -1631,7 +1642,7 @@
 			}
 			function buttonSave(input){
 				buttonCancel(input);
-				detSec.style.backgroundColor = getColor('--bck');
+				detSec.style.backgroundColor = getColor(isPhone?'--cl2':'--bck');
 				$('.entry').style.animation = "sending .5s forwards ease-in";
 				$('.entry').addEventListener('animationend', () => {
 					navClick($('.checked',navSec));
