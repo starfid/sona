@@ -103,7 +103,7 @@
 			fieldset .rows label.select > div:last-of-type > dl > dd {margin:0;padding:0;text-align:right;color:var(--fdC);}
 			fieldset .rows label.select > div:last-of-type > dl:nth-child(2) > dd {line-height:calc(var(--fn1)*0.99);}
 			fieldset .rows label.select > div:last-of-type > div {color:var(--fdC);display:-webkit-box;-webkit-line-clamp:2;min-height:calc(var(--fn1) * 2.3);-webkit-box-orient:vertical;overflow:hidden;}
-			
+
 			.btn input[type=checkbox], .btn [type=radio], .select input[type=checkbox], .select input[type=radio], .entry input{position: absolute;left: -9999px;}
 			.checked {background-color:var(--bck);color:var(--cck);}
 			
@@ -284,16 +284,16 @@
 				@keyframes listShowDetail { from {left:0;} to {left:-45px;} }
 				@keyframes listShowList { from {left:-100px;} to {left:0;} }
 				@keyframes sending {
-					0% {zoom:normal;margin:-60px var(--mg) var(--mg) var(--mg);background-color:var(--bg)}
-					10% {zoom:0.9848;margin:calc(var(--mg) * 2.111) calc(var(--mg) * 0.956) 0 calc(var(--mg) * 0.956);}
-					20% {zoom:0.9697;margin:calc(var(--mg) * 1.778) calc(var(--mg) * 1.024) 0 calc(var(--mg) * 1.024);}
-					30% {zoom:0.9545;margin:calc(var(--mg) * 1.556) calc(var(--mg) * 1.091) 0 calc(var(--mg) * 1.091);}
-					40% {zoom:0.9394;margin:calc(var(--mg) * 1.333) calc(var(--mg) * 1.158) 0 calc(var(--mg) * 1.158);}
-					50% {zoom:0.9242;margin:calc(var(--mg) * 1.111) calc(var(--mg) * 1.226) 0 calc(var(--mg) * 1.226);}
-					60% {zoom:0.9091;margin:calc(var(--mg) * 0.889) calc(var(--mg) * 1.293) 0 calc(var(--mg) * 1.293);}
-					66% {zoom:0.9;margin:calc(var(--mg) * 0.667) calc(var(--mg) * 1.333) 0 calc(var(--mg) * 1.333);}
-					67% {zoom:0.9;margin:calc(var(--mg) * -1.111) calc(var(--mg) * 1.333) 0 calc(var(--mg) * 1.333);}
-					100% {zoom:0.9;margin:calc(var(--mg) * -333.333) calc(var(--mg) * 1.333) 0 calc(var(--mg) * 1.333);background-color:var(--bg)}
+					0%  {zoom:normal; margin:-30px var(--mg) var(--mg) var(--mg); background-color:var(--bg)}
+					10% {zoom:0.9848; margin:calc(var(--mg) * 0.101 - 25.45px) calc(var(--mg) * 0.956) 0 calc(var(--mg) * 0.956);}
+					20% {zoom:0.9697; margin:calc(var(--mg) * 0.203 - 20.91px) calc(var(--mg) * 1.024) 0 calc(var(--mg) * 1.024);}
+					30% {zoom:0.9545; margin:calc(var(--mg) * 0.304 - 16.36px) calc(var(--mg) * 1.091) 0 calc(var(--mg) * 1.091);}
+					40% {zoom:0.9394; margin:calc(var(--mg) * 0.405 - 11.82px) calc(var(--mg) * 1.158) 0 calc(var(--mg) * 1.158);}
+					50% {zoom:0.9242; margin:calc(var(--mg) * 0.507 - 7.27px)  calc(var(--mg) * 1.226) 0 calc(var(--mg) * 1.226);}
+					60% {zoom:0.9091; margin:calc(var(--mg) * 0.608 - 2.73px)  calc(var(--mg) * 1.293) 0 calc(var(--mg) * 1.293);}
+					66% {zoom:0.9;    margin:calc(var(--mg) * 0.667) calc(var(--mg) * 1.333) 0 calc(var(--mg) * 1.333);}
+					67% {zoom:0.9;    margin:calc(var(--mg) * -1.111) calc(var(--mg) * 1.333) 0 calc(var(--mg) * 1.333);}
+					100%{zoom:0.9;    margin:calc(var(--mg) * -333.333) calc(var(--mg) * 1.333) 0 calc(var(--mg) * 1.333); background-color:var(--bg)}
 				}
 			}
 			@media (prefers-color-scheme: dark) {
@@ -1384,6 +1384,7 @@
 					break;
 					case 'ArrowUp':
 						if(parentForm) {
+							const pfpes = parentForm.previousElementSibling;
 							const isFirstChild = (input === $('input', parentForm)) || parentForm.classList.contains('filters');
 							if(isFirstChild && $$('.rows .select.focused',parentSection).length > 1) {
 								multiSelect = false;
@@ -1393,17 +1394,13 @@
 								e.preventDefault();
 								multiSelect = false;
 								
-								const inputTarget = $('input',
-									parentForm.previousElementSibling ||
-									input.closest('fieldset').previousElementSibling
+								const inputTarget = $('input', pfpes || input.closest('fieldset').previousElementSibling
 								);
 								if(inputTarget) checkedFocus(inputTarget);
 								selections = [];
 								const isHeader = (inputTarget)?.closest('div');
 								if(isHeader && display(isHeader) === 'none') {
-									
-									const labels = $$$('.hRight label', isHeader.closest('header'));
-									checkedFocus($('input', labels[0]));
+									checkedFocus($('input', $$$('.hRight label', isHeader.closest('header'))[0]));
 								}							
 							}
 							else if(parentSection.id === 'navSection'){
@@ -1444,7 +1441,7 @@
 									const prev = labels[index - 1];
 									if(index<1){
 										multiSelect = false;
-										checkedFocus($('label.checked input',parentForm.previousElementSibling));
+										checkedFocus($('label.checked input',pfpes) || $('label input',pfpes));
 									}
 									else {
 										checkedFocus($('input',prev));
@@ -1457,7 +1454,7 @@
 							else if(parentForm.classList.contains('rows')) {
 								e.preventDefault();
 								multiSelect = false;
-								checkedFocus($('label.checked input',parentForm.previousElementSibling));
+								checkedFocus($('label.checked input',pfpes) || $('label input',pfpes));
 							}
 						}
 						else if(input.name === 'iBtn') {
