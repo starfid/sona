@@ -162,7 +162,7 @@
 			#pop fieldset {padding:var(--mg)}
 
 			@keyframes popRising { from {top:51%;} to {top:50%;} }
-			@keyframes sending {
+			@keyframes zoomAndSend {
 				0% {zoom:normal;margin:var(--mg) var(--mg) var(--mg) var(--mg);background-color:var(--bg)}
 				10% {zoom:0.9848;margin:calc(var(--mg) * 2.111) calc(var(--mg) * 2.390) 0 calc(var(--mg) * 2.390);}
 				20% {zoom:0.9697;margin:calc(var(--mg) * 1.778) calc(var(--mg) * 2.559) 0 calc(var(--mg) * 2.559);}
@@ -175,6 +175,10 @@
 				100% {zoom:0.9;margin:calc(var(--mg) * -333.333) calc(var(--mg) * 3.333) 0 calc(var(--mg) * 3.333);background-color:var(--bg)}
 			}
 
+			@keyframes selecting {
+				from {zoom:normal;margin:var(--mg) var(--mg) var(--mg) var(--mg);background-color:var(--bg)}
+				to {zoom:0.9;margin:calc(var(--mg) * 3.333) calc(var(--mg) * 3.333) 0 calc(var(--mg) * 3.333);background-color:var(--bg)}
+			}
 
 			@media screen and (max-width: 1281px), screen and (pointer: coarse), screen and (hover: none) {
 				:root {
@@ -283,7 +287,7 @@
 				@keyframes detailShowList { from {left:30vw;} to {left:100vw;} }
 				@keyframes listShowDetail { from {left:0;} to {left:-45px;} }
 				@keyframes listShowList { from {left:-100px;} to {left:0;} }
-				@keyframes sending {
+				@keyframes zoomAndSend {
 					0%  {zoom:normal; margin:-30px var(--mg) var(--mg) var(--mg); background-color:var(--bg)}
 					10% {zoom:0.9848; margin:calc(var(--mg) * 0.101 - 25.45px) calc(var(--mg) * 0.956) 0 calc(var(--mg) * 0.956);}
 					20% {zoom:0.9697; margin:calc(var(--mg) * 0.203 - 20.91px) calc(var(--mg) * 1.024) 0 calc(var(--mg) * 1.024);}
@@ -935,11 +939,10 @@
 				
 				if($('.entry', detSec) !== null && ((section.id === 'pop' && display(detSec) === 'block') || section === detSec)) {
 					detSec.style.backgroundColor = getColor(isPhone?'--cl2':'--bck');
-					$('.entry').style.animation = "sending .5s forwards ease-in";
+					$('.entry').style.animation = "zoomAndSend .5s forwards ease-in";
 					$('.entry').addEventListener('animationend', () => {
 						navClick($('.checked',navSec));
 					});
-					
 				}
 				else if((input.name === 'item' || input.name === 'copy') || input.dataset.btn === 'delete') {
 					if(selections.length > 0 && section !== 'navSection'){
@@ -1065,6 +1068,8 @@
 				});
 			}
 			function clearbyArrow(section) {
+				resetZoomSelecting();
+
 				const selection = $$('.rows .focused',section);
 				const totSelection = selection.length;
 				selection.forEach((label,index)=>{
@@ -1145,8 +1150,18 @@
 				}
 				$('h1',section).innerText = h1;
 			}
+			function resetZoomSelecting(){
+				if($('.entry') !== null && !isPhone){
+					detSec.style.backgroundColor = getColor('--bg');
+					$('.entry').style.cssText = 'zoom:normal;margin:0 var(--mg) var(--mg) var(--mg);background-color:var(--bg)';
+					[...$$('header .hRight label input',detSec)].forEach((el)=>{
+						if(el.dataset.btn !== 'dots') el.closest('label').style.display = 'flex';
+					});
+				}
+			}
 			function clearbyClick(section, input){
 				if(!input) return;
+				resetZoomSelecting();
 				const selection = $$('.rows .focused,.rows .checked',section);
 				const totSelection = selection.length;	
 				selection.forEach(label=>{
@@ -1172,6 +1187,14 @@
 				const totLen = totSelection.length;
 				selections = totSelection;
 				$('h1',section).innerText = (totLen>0)?totLen + ' Selected':'Please Select';
+				
+				if(totLen>1 && $('.entry') !== null && !isPhone && $('.entry',detSec).style.animation.length < 1){
+					detSec.style.backgroundColor = getColor(isPhone?'--cl2':'--bck');
+					$('.entry').style.animation = "selecting .2s forwards ease-out";
+					[...$$('header .hRight label input',detSec)].forEach((el)=>{
+						if(el.dataset.btn !== 'dots') el.closest('label').style.display = 'none';
+					});
+				}
 			}			
 			function cancelMulti(input) {
 				const section = input.closest('section') || lastSection;
@@ -1640,7 +1663,7 @@
 			function buttonSave(input){
 				buttonCancel(input);
 				detSec.style.backgroundColor = getColor(isPhone?'--cl2':'--bck');
-				$('.entry').style.animation = "sending .5s forwards ease-in";
+				$('.entry').style.animation = "zoomAndSend .5s forwards ease-in";
 				$('.entry').addEventListener('animationend', () => {
 					navClick($('.checked',navSec));
 				});
@@ -1709,7 +1732,13 @@
 						setDetailTitle(input);
 					}
 					else if(!multiSelect && section != 'navSection' && !label.classList.contains("checked")) {
-						clearCheck();
+						if(section === 'listSection' && $('header h1',listSec).innerText.slice(-9)===' Selected'){
+							clearbyClick(input.closest('section'),input);
+							label.classList.add('focused');
+						}
+						else {
+							clearCheck();
+						}
 					}
 				}
 				else if(input.name==='filter') {
