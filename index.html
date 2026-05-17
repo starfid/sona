@@ -177,7 +177,7 @@
 
 			@keyframes selecting {
 				from {zoom:normal;margin:var(--mg) var(--mg) var(--mg) var(--mg);background-color:var(--bg)}
-				to {zoom:0.9;margin:calc(var(--mg) * 3.333) calc(var(--mg) * 3.333) 0 calc(var(--mg) * 3.333);background-color:var(--bg)}
+				to {zoom:0.9;margin:calc(var(--mg) * 3.333) calc(var(--mg) * 3.333) 0 calc(var(--mg) * 3.333);background-color:var(--bg);border-radius:0}
 			}
 
 			@media screen and (max-width: 1281px), screen and (pointer: coarse), screen and (hover: none) {
@@ -1194,6 +1194,15 @@
 					[...$$('header .hRight label input',detSec)].forEach((el)=>{
 						if(el.dataset.btn !== 'dots') el.closest('label').style.display = 'none';
 					});
+					function setStacked(el, isStacked) {//add stacked
+						if(isStacked) {
+							el.style.boxShadow = '0 -18px 0 -11px var(--brC), 0 -18px 0 -10px var(--bck), 0 12px 24px rgba(0, 0, 0, 0.08)';
+						}
+						else {
+							el.style.boxShadow = 'none';
+						}
+					}					
+					setStacked(document.querySelector('.entry'), true);
 				}
 			}			
 			function cancelMulti(input) {
