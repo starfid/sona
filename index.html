@@ -195,7 +195,10 @@
 				#navSection form div.head, #navSection form label.select {color:var(--cl)}
 				#navSection .h1Hid {display: flex;margin: 0 auto;}
 				#navSection header {grid-template-columns: 15% auto 15%;}
+
 				#listSection header {grid-template-columns: 10% auto 46%;}
+				#listSection header:has(.hRight > :nth-child(2):last-child) {grid-template-columns: 10% auto 10%;}
+				
 				#listSection header .h1Hid label {margin:0 auto;text-align:center}
 				#listSection header .h1Hid label h1 {margin:0 auto;text-align:center}
 				#listSection header div:last-child label:not(.deskHid):not(.tabHid).last svg,
@@ -391,10 +394,9 @@
 							</svg>
 						</label>
 						<label class="btn mobHid">
-							<input type="radio" name="iBtn" data-btn="change view">
-							<svg viewbox="0 0 100 100">
-								<path id="pathTile" d="M10 10 H40 V40 H10 Z M60 10 H90 V40 H60 Z M10 60 H40 V90 H10 Z M60 60 H90 V90 H60 Z" />
-								<path id="pathList" d="M10 20H30V40H10Z M40 20H90V25H40Z M40 35H90V40H40Z M10 60H30V80H10Z M40 60H90V65H40Z M40 75H90V80H40Z"/>
+							<input type="radio" name="iBtn" data-btn="delete">
+							<svg viewbox="0 0 100 100" class="delBtn">
+								<path d="M33 10 H68 V20 H33 Z M20 20 H80 L75 90 H25 Z M10 20 H90 M33 30 L39 80 M50 30 V80 M67 30 L62 80" />
 							</svg>
 						</label>
 						<label class="btn selIcon mobHid">
@@ -404,9 +406,11 @@
 							</svg>
 						</label>
 						<label class="btn mobHid secondLast">
-							<input type="radio" name="iBtn" data-btn="delete">
-							<svg viewbox="0 0 100 100" class="delBtn">
-								<path d="M33 10 H68 V20 H33 Z M20 20 H80 L75 90 H25 Z M10 20 H90 M33 30 L39 80 M50 30 V80 M67 30 L62 80" />
+							
+							<input type="radio" name="iBtn" data-btn="change view">
+							<svg viewbox="0 0 100 100">
+								<path id="pathTile" d="M10 10 H40 V40 H10 Z M60 10 H90 V40 H60 Z M10 60 H40 V90 H10 Z M60 60 H90 V90 H60 Z" />
+								<path id="pathList" d="M10 20H30V40H10Z M40 20H90V25H40Z M40 35H90V40H40Z M10 60H30V80H10Z M40 60H90V65H40Z M40 75H90V80H40Z"/>
 							</svg>
 						</label>
 
@@ -422,7 +426,7 @@
 					<form class="searchFrm" method="get" action="?">
 						<label class="select">
 							<input type="search" name="q" placeholder="Search" ondblclick="this.placeholder='Search'" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off">
-							<input type="hidden" name="group" value=""><input type="hidden" name="app" value=""><input type="hidden" name="view" value="">
+							<input type="hidden" name="group" value=""><input type="hidden" name="app" value=""><input type="hidden" value="">
 							<svg viewbox="0 0 100 100" class="deskHid camIcon">
 								<path d="M10 80H90V30H70L60 20H40L30 30H10Z M50 38a15 15 0 1 0 0 30a15 15 0 1 0 0-30z M70 40h1" />
 							</svg>
@@ -611,7 +615,7 @@
 					<form class="searchFrm dual" method="get" action="?">
 						<label class="select">
 							<input type="search" name="q2" placeholder="Search" ondblclick="this.value=''" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off">
-							<input type="hidden" name="group" value=""><input type="hidden" name="app" value=""><input type="hidden" name="view" value="">
+							<input type="hidden" name="group" value=""><input type="hidden" name="app" value=""><input type="hidden" value="">
 							<svg viewbox="0 0 100 100" class="deskHid camIcon">
 								<path d="M10 80H90V30H70L60 20H40L30 30H10Z M50 38a15 15 0 1 0 0 30a15 15 0 1 0 0-30z M70 40h1" />
 							</svg>
@@ -1194,25 +1198,29 @@
 					[...$$('header .hRight label input',detSec)].forEach((el)=>{
 						if(el.dataset.btn !== 'dots') el.closest('label').style.display = 'none';
 					});
-					function setStacked(el, isStacked) {//add stacked
+					function setStacked(el, isStacked) {
 						if(isStacked) {
-							el.style.boxShadow = '0 -18px 0 -11px var(--brC), 0 -18px 0 -10px var(--bck), 0 12px 24px rgba(0, 0, 0, 0.08)';
+							el.style.boxShadow = '0 -18px 0 -11px var(--brC), 0 -18px 0 -10px var(--bck), 0 12px 24px transparent';
 						}
 						else {
 							el.style.boxShadow = 'none';
 						}
-					}					
-					setStacked(document.querySelector('.entry'), true);
+					}
+					setTimeout(()=>{				
+					setStacked(document.querySelector('.entry'), true);},150);
 				}
 			}			
 			function cancelMulti(input) {
 				const section = input.closest('section') || lastSection;
 				if(section) {
 					focusMulti(section,false);
-					const lbl = $('.selIcon',section);
-					$('svg',lbl).classList.remove('iconOn');
 					multiSelect = false;
-					lbl.classList.remove('focused');
+
+					const lbl = $('.selIcon',section);
+					if(lbl!==null){
+						$('svg',lbl).classList.remove('iconOn');
+						lbl.classList.remove('focused');
+					}
 					clearbyClick(section,input);
 				}
 				else {
@@ -1351,6 +1359,7 @@
 				const parentSection = input.closest('section');
 				const holding = parentForm && (parentForm.classList.contains('rows') && input.type !== 'radio' && multiSelect);
 				const toggleMulti = () => $('header .selIcon svg',parentSection).classList.toggle('iconOn');
+				const allowDel = $('header .hRight input[data-btn="delete"]',parentSection)===null?false:true;
 				switch (e.key) {
 					case 'F3':
 						if(parentSection.id !== 'navSection'){
@@ -1360,7 +1369,7 @@
 					break;
 					case 'ArrowDown':
 						if(!parentForm) {
-							if(!holding && !multiSelect && $$('.iconOn',parentSection).length > 0){
+							if(!holding && !multiSelect && $$('.iconOn',parentSection).length > 0 && allowDel){
 								toggleMulti();
 							}
 							e.preventDefault();
@@ -1547,7 +1556,7 @@
 							multiSelect = false;
 							clearbyArrow(parentSection);
 						}
-						else if(!holding && !multiSelect && $$('.iconOn',parentSection).length > 0){
+						else if(!holding && !multiSelect && $$('.iconOn',parentSection).length > 0 && allowDel){
 							toggleMulti();
 						}
 						else if(input.name === 'nav'){
@@ -1586,13 +1595,15 @@
 							e.preventDefault();
 							multiSelect = false;
 							clearbyArrow(parentSection);
-							if(parentSection === listSec && rowLabels.length<1 && display($('form.entry',detSec)) === 'block'){
+							
+							if(parentSection === listSec && rowLabels.length<1 && $('form.entry',detSec) !== null){
 								e.preventDefault();
 								$('form.entry textarea',detSec).focus();
 							}
 							else {
 								checkedFocus($('input',rowLabels[0]));
 							}
+							
 						}
 					break;
 					case 'Backspace':
@@ -1608,7 +1619,7 @@
 					break;
 					case 'Shift':
 					//case 'Control':
-						if(input.type==='checkbox') {
+						if(input.type==='checkbox' && allowDel) {
 							multiSelect = true;
 							toggleMulti();
 						}
@@ -1650,7 +1661,7 @@
 						}
 					break;
 					case 'Delete':
-						if(!(input.type==='text'||input.type==='search')) buttonDelete(input);
+						if(!(input.type==='text'||input.type==='search') && allowDel) buttonDelete(input);
 					break;
 				}
 			}
@@ -1828,15 +1839,18 @@
 				});
 
 				//dummy dual mode (showing copies)
-				if(['torquent','aptent','scelerisque'].includes(envApp)){
+				if(['torquent','aptent','scelerisque'].includes(envApp)){//dual
 					$('.filters.dual').style.display = "flex";
 					$('.searchFrm.dual').style.display = "block";
 					$('.rows.dual').style.display = "grid";
 					$('input[data-btn="save"]',detSec).closest('label').style.display = 'none';
-					$('input[data-btn="new item"]',listSec).closest('label').style.display = 'none';
+					[...$$('input[data-btn="new item"],input[data-btn="delete"],input[data-btn="select"]',listSec)].forEach((el)=>{
+						el.closest('label').parentNode.removeChild(el.closest('label'));
+					});
 					$('.entry').parentNode.removeChild($('.entry'));
+					//$('header',listSec).style.gridTemplateColumns = '10% auto 10%';
 				}
-				else {
+				else {//entry
 					$$('.filters.dual,.searchFrm.dual,.rows.dual',detSec).forEach(el=>{
 						el.parentNode.removeChild(el);
 					});
