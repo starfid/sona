@@ -54,7 +54,7 @@
 
 			section header {
 				position:sticky;z-index:1;
-				padding:var(--mg);grid-template-columns:auto 48%;background-color:var(--bg);xopacity:.97;
+				padding:var(--mg);grid-template-columns:auto 48%;background-color:var(--bg);opacity:.99;
 			}
 			section header div label h1 {color:var(--cl2);margin:0 0 0 var(--mg);padding:0;font-size:calc(var(--fn2) * 0.94);height:var(--fn2);line-height: calc(var(--fn2) - 1px);}
 			section header div, .filters {display:flex;}
@@ -68,7 +68,7 @@
 			section header .hRight label.last svg, section header .hRight label.thirdLast svg {margin-right:var(--mg);}
 			section header .hRight label.secondLast svg {margin-right: var(--mg);}	
 			section header .hRight {justify-content: flex-end;}
-			section header .deskHid, section header .tabHid {display:none}
+			section header .deskHid, section header .tabHid, section header .delHid {display:none}
 			section header h1 {word-break:break-all;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;}
 
 			.searchFrm, .searchFrm label, fieldset form.filters label, .rows label.checked, 
@@ -196,9 +196,7 @@
 				#navSection .h1Hid {display: flex;margin: 0 auto;}
 				#navSection header {grid-template-columns: 15% auto 15%;}
 
-				#listSection header {grid-template-columns: 10% auto 46%;}
-				#listSection header:has(.hRight > :nth-child(2):last-child) {grid-template-columns: 10% auto 10%;}
-				
+				#listSection header {grid-template-columns: auto 1fr auto;}
 				#listSection header .h1Hid label {margin:0 auto;text-align:center}
 				#listSection header .h1Hid label h1 {margin:0 auto;text-align:center}
 				#listSection header div:last-child label:not(.deskHid):not(.tabHid).last svg,
@@ -387,16 +385,16 @@
 						<label><h1>Starfid</h1></label>						
 					</div>
 					<div class="hRight">
+						<label class="btn mobHid delHid">
+							<input type="radio" name="iBtn" data-btn="delete">
+							<svg viewbox="0 0 100 100" class="delBtn">
+								<path d="M33 10 H68 V20 H33 Z M20 20 H80 L75 90 H25 Z M10 20 H90 M33 30 L39 80 M50 30 V80 M67 30 L62 80" />
+							</svg>
+						</label>
 						<label class="btn mobHid">
 							<input type="radio" name="iBtn" data-btn="new item">
 							<svg viewbox="0 0 100 100">
 								<path d="M50 10 A40 40 0 1 1 50 90 A40 40 0 1 1 50 10 M50 25 V75 M25 50 H75" />
-							</svg>
-						</label>
-						<label class="btn mobHid">
-							<input type="radio" name="iBtn" data-btn="delete">
-							<svg viewbox="0 0 100 100" class="delBtn">
-								<path d="M33 10 H68 V20 H33 Z M20 20 H80 L75 90 H25 Z M10 20 H90 M33 30 L39 80 M50 30 V80 M67 30 L62 80" />
 							</svg>
 						</label>
 						<label class="btn selIcon mobHid">
@@ -405,15 +403,13 @@
 								<path d="M10 20H80V90H10ZM20 60L35 75L70 30M20 20V10H90V80H80"/>
 							</svg>
 						</label>
-						<label class="btn mobHid secondLast">
-							
+						<label class="btn mobHid secondLast">							
 							<input type="radio" name="iBtn" data-btn="change view">
 							<svg viewbox="0 0 100 100">
 								<path id="pathTile" d="M10 10 H40 V40 H10 Z M60 10 H90 V40 H60 Z M10 60 H40 V90 H10 Z M60 60 H90 V90 H60 Z" />
 								<path id="pathList" d="M10 20H30V40H10Z M40 20H90V25H40Z M40 35H90V40H40Z M10 60H30V80H10Z M40 60H90V65H40Z M40 75H90V80H40Z"/>
 							</svg>
 						</label>
-
 						<label class="btn tabHid last">
 							<input type="radio" name="iBtn" data-btn="dots">
 							<svg viewbox="0 0 100 100">
@@ -1058,6 +1054,13 @@
 					}
 				}
 			}
+			function ctrS(input){
+				const label = $('header .hRight input[data-btn=save]',detSec).closest('label');
+				const svg = $('svg',label);
+				svg.classList.add('iconOn');
+				setTimeout(()=>{svg.classList.remove('iconOn')},150);
+				buttonSave(input);
+			}
 			function viewFinder(lense,section){
 				camAPI.decodeFromVideoDevice(lense, 'viewFinder', (result, err) => {
 					if(result) {
@@ -1161,6 +1164,7 @@
 					[...$$('header .hRight label input',detSec)].forEach((el)=>{
 						if(el.dataset.btn !== 'dots') el.closest('label').style.display = 'flex';
 					});
+					$('header .hRight label:has(input[data-btn=delete])',listSec).classList.add('delHid');
 				}
 			}
 			function clearbyClick(section, input){
@@ -1198,16 +1202,11 @@
 					[...$$('header .hRight label input',detSec)].forEach((el)=>{
 						if(el.dataset.btn !== 'dots') el.closest('label').style.display = 'none';
 					});
-					function setStacked(el, isStacked) {
-						if(isStacked) {
-							el.style.boxShadow = '0 -18px 0 -11px var(--brC), 0 -18px 0 -10px var(--bck), 0 12px 24px transparent';
-						}
-						else {
-							el.style.boxShadow = 'none';
-						}
+					function setStacked(el,stacked) {
+						if(stacked) $('header .hRight label:has(input[data-btn=delete])',listSec).classList.remove('delHid');
+						el.style.boxShadow = stacked?'0 -18px 0 -11px var(--brC), 0 -18px 0 -10px var(--bck), 0 12px 24px transparent':'none';
 					}
-					setTimeout(()=>{				
-					setStacked(document.querySelector('.entry'), true);},150);
+					setTimeout(()=>{setStacked(document.querySelector('.entry'), true);},150);
 				}
 			}			
 			function cancelMulti(input) {
@@ -1361,6 +1360,12 @@
 				const toggleMulti = () => $('header .selIcon svg',parentSection).classList.toggle('iconOn');
 				const allowDel = $('header .hRight input[data-btn="delete"]',parentSection)===null?false:true;
 				switch (e.key) {
+					case 's':
+						if(e.ctrlKey||e.metaKey){
+							e.preventDefault();
+							if($('form.entry',detSec)!== null) ctrS(input);
+						}
+					break;
 					case 'F3':
 						if(parentSection.id !== 'navSection'){
 							e.preventDefault();
@@ -1369,9 +1374,7 @@
 					break;
 					case 'ArrowDown':
 						if(!parentForm) {
-							if(!holding && !multiSelect && $$('.iconOn',parentSection).length > 0 && allowDel){
-								toggleMulti();
-							}
+							if(!holding && !multiSelect && $$('.iconOn',parentSection).length > 0 && allowDel) toggleMulti();
 							e.preventDefault();
 							checkedFocus($('form input', parentSection));
 						}
@@ -1403,7 +1406,6 @@
 							if(!(parentForm && parentSection.id == 'pop')) e.preventDefault();
 							if(nextForm) {
 								if(nextForm.classList.contains('rows')){
-									//const labels = $$$('label',nextForm);
 									checkedFocus($('input', $$$('label',nextForm)[0]));
 								}
 								else if(nextForm.classList.contains('filters')){
@@ -1435,14 +1437,13 @@
 								e.preventDefault();
 								multiSelect = false;
 								
-								const inputTarget = $('input', pfpes || input.closest('fieldset').previousElementSibling
-								);
+								const inputTarget = $('input', pfpes || input.closest('fieldset').previousElementSibling);
 								if(inputTarget) checkedFocus(inputTarget);
 								selections = [];
 								const isHeader = (inputTarget)?.closest('div');
 								if(isHeader && display(isHeader) === 'none') {
 									checkedFocus($('input', $$$('.hRight label', isHeader.closest('header'))[0]));
-								}							
+								}
 							}
 							else if(parentSection.id === 'navSection'){
 								e.preventDefault();
@@ -1531,8 +1532,8 @@
 							else if(e.key === 'ArrowRight' && (labels.length-1 === index)){
 								if(rowLabels[0]){
 									checkedFocus($('input',rowLabels[0]));
-									return;
 								}
+								return;
 							}							
 							else if(e.key === 'ArrowRight' && rightEdge) {
 								if(parentLabel.nextElementSibling){
@@ -1661,7 +1662,21 @@
 						}
 					break;
 					case 'Delete':
-						if(!(input.type==='text'||input.type==='search') && allowDel) buttonDelete(input);
+						if(!(input.type==='text'||input.type==='search') && allowDel){
+							let label = $('header .hRight label:has(input[data-btn=delete])',detSec);
+							if($('.entry')!==null && display(label)==='none'){
+								label = $('header .hRight label:has(input[data-btn=delete])',listSec);
+							}
+							const svg = $('svg',label);
+							svg.style.stroke = 'red'
+							svg.style.strokeWidth = 8;
+							setTimeout(()=>{
+								svg.style.stroke = 'var(--cl2)';
+								svg.style.strokeWidth = 4;
+								buttonDelete(input);
+							},150);
+							
+						}
 					break;
 				}
 			}
@@ -1848,9 +1863,8 @@
 						el.closest('label').parentNode.removeChild(el.closest('label'));
 					});
 					$('.entry').parentNode.removeChild($('.entry'));
-					//$('header',listSec).style.gridTemplateColumns = '10% auto 10%';
 				}
-				else {//entry
+				else {	//entry
 					$$('.filters.dual,.searchFrm.dual,.rows.dual',detSec).forEach(el=>{
 						el.parentNode.removeChild(el);
 					});
@@ -1914,6 +1928,9 @@
 							[...$$('.rows label.checked',listSec)].forEach(el=>{el.classList.remove('checked');});
 							const labels = $$$('.rows label',listSec);
 							checkedFocus(labels[0]); $('input',labels[0]).checked = true;
+						}
+						else if(e.key === 's' && (e.ctrlKey || e.metaKey)){
+							e.preventDefault(); ctrS(el);
 						}
 					});
 				});
