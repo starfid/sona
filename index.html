@@ -174,10 +174,15 @@
 				67% {zoom:0.9;margin:calc(var(--mg) * -1.111) calc(var(--mg) * 3.333) 0 calc(var(--mg) * 3.333);}
 				100% {zoom:0.9;margin:calc(var(--mg) * -333.333) calc(var(--mg) * 3.333) 0 calc(var(--mg) * 3.333);background-color:var(--bg)}
 			}
-
 			@keyframes selecting {
 				from {zoom:normal;margin:var(--mg) var(--mg) var(--mg) var(--mg);background-color:var(--bg)}
 				to {zoom:0.9;margin:calc(var(--mg) * 3.333) calc(var(--mg) * 3.333) 0 calc(var(--mg) * 3.333);background-color:var(--bg);border-radius:0}
+			}
+			@keyframes sending {
+				0% {zoom:0.9;margin:calc(var(--mg) * 3.333) calc(var(--mg) * 3.333) 0 calc(var(--mg) * 3.333);background-color:var(--bg)}
+				20% {zoom:0.92;margin:calc(var(--mg) * 4.333) calc(var(--mg) * 3.333) 0 calc(var(--mg) * 3.333);background-color:var(--bg)}
+				80% {zoom:0.94;margin:calc(var(--mg) * 5.333) calc(var(--mg) * 3.333) 0 calc(var(--mg) * 3.333);background-color:var(--bg)}
+				100% {zoom:0.94;margin:-150vh calc(var(--mg) * 3.333) 0 calc(var(--mg) * 3.333);background-color:var(--bg)}
 			}
 
 			@media screen and (max-width: 1281px), screen and (pointer: coarse), screen and (hover: none) {
@@ -391,18 +396,18 @@
 								<path d="M33 10 H68 V20 H33 Z M20 20 H80 L75 90 H25 Z M10 20 H90 M33 30 L39 80 M50 30 V80 M67 30 L62 80" />
 							</svg>
 						</label>
-						<label class="btn mobHid">
-							<input type="radio" name="iBtn" data-btn="new item">
-							<svg viewbox="0 0 100 100">
-								<path d="M50 10 A40 40 0 1 1 50 90 A40 40 0 1 1 50 10 M50 25 V75 M25 50 H75" />
-							</svg>
-						</label>
 						<label class="btn selIcon mobHid">
 							<input type="radio" name="iBtn" data-btn="select">
 							<svg viewbox="0 0 100 100">
 								<path d="M10 20H80V90H10ZM20 60L35 75L70 30M20 20V10H90V80H80"/>
 							</svg>
 						</label>
+						<label class="btn mobHid">
+							<input type="radio" name="iBtn" data-btn="new item">
+							<svg viewbox="0 0 100 100">
+								<path d="M50 10 A40 40 0 1 1 50 90 A40 40 0 1 1 50 10 M50 25 V75 M25 50 H75" />
+							</svg>
+						</label>						
 						<label class="btn mobHid secondLast">							
 							<input type="radio" name="iBtn" data-btn="change view">
 							<svg viewbox="0 0 100 100">
@@ -538,18 +543,18 @@
 								<path d="M10,90 H90 V25 L75,10 H10Z M30,10 V35 H70 V10Z M20,90 V50 H80 V90Z M59,17 h3 v11 h-3Z" />
 							</svg>
 						</label>
-						<label class="btn mobHid">
-							<input type="radio" name="iBtn" data-btn="new item">
-							<svg viewbox="0 0 100 100">
-								<path d="M50 10 A40 40 0 1 1 50 90 A40 40 0 1 1 50 10 M50 25 V75 M25 50 H75" />
-							</svg>
-						</label>						
 						<label class="btn selIcon mobHid">
 							<input type="radio" name="iBtn" data-btn="select">
 							<svg viewbox="0 0 100 100">
 								<path d="M10 20H80V90H10ZM20 60L35 75L70 30M20 20V10H90V80H80"/>
 							</svg>
 						</label>
+						<label class="btn mobHid">
+							<input type="radio" name="iBtn" data-btn="new item">
+							<svg viewbox="0 0 100 100">
+								<path d="M50 10 A40 40 0 1 1 50 90 A40 40 0 1 1 50 10 M50 25 V75 M25 50 H75" />
+							</svg>
+						</label>						
 						<label class="btn tabHid secondLast">
 							<input type="radio" name="iBtn" data-btn="dots">
 							<svg viewbox="0 0 100 100">
@@ -944,10 +949,17 @@
 						navClick($('.checked',navSec));
 					});
 				}
+				else if($('.entry', detSec) !== null && !isPhone) {
+					$('.entry').style.animation = "sending .5s forwards ease-out";
+					$('.entry').addEventListener('animationend', () => {
+						navClick($('.checked',navSec));
+					});
+				}
 				else if((input.name === 'item' || input.name === 'copy') || input.dataset.btn === 'delete') {
 					if(selections.length > 0 && section !== 'navSection'){
 						const newSelections = selections.filter(label => label && label.parentNode && (isPhone || label.closest('section')?.id === section.id));
-						if(newSelections.length > 0 && confirm('Delete ' + newSelections.length + ' selected items')){
+						//if(newSelections.length > 0 && confirm('Delete ' + newSelections.length + ' selected items')){
+						if(newSelections.length > 0){
 							newSelections.forEach(label=>{
 								if(label && label.parentNode && (isPhone || (label.closest('section')?.id === section.id))) {
 									label.parentNode.removeChild(label);
@@ -1673,6 +1685,7 @@
 							setTimeout(()=>{
 								svg.style.stroke = 'var(--cl2)';
 								svg.style.strokeWidth = 4;
+								//
 								buttonDelete(input);
 							},150);
 							
