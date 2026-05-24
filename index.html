@@ -942,16 +942,18 @@
 				const section = input.closest('section');
 				if(section.id==='pop') buttonCancel(input);
 				
-				if($('.entry', detSec) !== null && ((section.id === 'pop' && display(detSec) === 'block') || section === detSec)) {
+				//if($('.entry', detSec) !== null && confirm('Delete selected items')){
+				if($('.entry', detSec) !== null){
 					detSec.style.backgroundColor = getColor(isPhone?'--cl2':'--bck');
-					$('.entry').style.animation = "zoomAndSend .5s forwards ease-in";
+					if((section.id === 'pop' && display(detSec) === 'block') || section === detSec){
+						$('.entry').style.animation = "zoomAndSend .5s forwards ease-in";
+					}
+					else if(!isPhone){
+						$('.entry').style.animation = "sending .5s forwards ease-out";						
+					}
 					$('.entry').addEventListener('animationend', () => {
-						navClick($('.checked',navSec));
-					});
-				}
-				else if($('.entry', detSec) !== null && !isPhone) {
-					$('.entry').style.animation = "sending .5s forwards ease-out";
-					$('.entry').addEventListener('animationend', () => {
+						const newSelections = selections.filter(label => label && label.parentNode && (isPhone || label.closest('section')?.id === section.id));
+						//console.log(newSelections);
 						navClick($('.checked',navSec));
 					});
 				}
@@ -1685,7 +1687,6 @@
 							setTimeout(()=>{
 								svg.style.stroke = 'var(--cl2)';
 								svg.style.strokeWidth = 4;
-								//
 								buttonDelete(input);
 							},150);
 							
