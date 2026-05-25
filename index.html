@@ -1243,6 +1243,14 @@
 			function sectionUp(section) {
 				$('fieldset',section).scrollTo(0,0,);
 			}
+			function updateDet(input,multiSelect){
+				if(!multiSelect) $('#detailSection header h1').innerText = $('div:nth-child(3) dl dt',input.closest('label')).innerText;
+				if($('div',input.closest('label')).style.backgroundImage){
+					if($('.entry .tilesDetail div',detSec)){
+						$('.entry .tilesDetail div',detSec).style.backgroundImage = $('div',input.closest('label')).style.backgroundImage;
+					}
+				}
+			}
 			function handleChange(e) {
 				if(!e.target.matches(selector)) return;
 				const input = e.target;
@@ -1332,17 +1340,13 @@
 						}
 						$('#detailSection header h1').innerText = "";
 						totTextSel(section);
+						updateDet(input,true);
 					}
 					else if(!(multiSelect && !rows)){
 						input.closest('label')?.classList.add('focused');
 						if(rows) selections.push(input.closest('label'));
 						if(section === listSec && rows){
-							$('#detailSection header h1').innerText = $('div:nth-child(3) dl dt',input.closest('label')).innerText;
-							if($('div',input.closest('label')).style.backgroundImage){
-								if($('.entry .tilesDetail div',detSec)){
-									$('.entry .tilesDetail div',detSec).style.backgroundImage = $('div',input.closest('label')).style.backgroundImage;
-								}
-							}
+							updateDet(input,false);
 							setTimeout(()=>{$('fieldset',detSec).scrollTop = 0;}, 0);
 						}
 					}
