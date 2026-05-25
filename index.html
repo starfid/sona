@@ -942,8 +942,7 @@
 				const section = input.closest('section');
 				if(section.id==='pop') buttonCancel(input);
 				
-				//if($('.entry', detSec) !== null && confirm('Delete selected items')){
-				if($('.entry', detSec) !== null){
+				if($('.entry', detSec) !== null && section.id !== 'pop'){
 					detSec.style.backgroundColor = getColor(isPhone?'--cl2':'--bck');
 					if((section.id === 'pop' && display(detSec) === 'block') || section === detSec){
 						$('.entry').style.animation = "zoomAndSend .5s forwards ease-in";
@@ -953,7 +952,6 @@
 					}
 					$('.entry').addEventListener('animationend', () => {
 						const newSelections = selections.filter(label => label && label.parentNode && (isPhone || label.closest('section')?.id === section.id));
-						//console.log(newSelections);
 						navClick($('.checked',navSec));
 					});
 				}
@@ -1069,6 +1067,8 @@
 				}
 			}
 			function ctrS(input){
+				if(input.nodeName.toLowerCase()==='textarea') input.blur();
+				if($('header h1',listSec).innerText.slice(-9)===' Selected') return;
 				const label = $('header .hRight input[data-btn=save]',detSec).closest('label');
 				const svg = $('svg',label);
 				svg.classList.add('iconOn');
