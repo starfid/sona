@@ -103,7 +103,7 @@
 			fieldset .rows label.select > div:last-of-type > dl > dd {margin:0;padding:0;text-align:right;color:var(--fdC);}
 			fieldset .rows label.select > div:last-of-type > dl:nth-child(2) > dd {line-height:calc(var(--fn1)*0.99);}
 			fieldset .rows label.select > div:last-of-type > div {color:var(--fdC);display:-webkit-box;-webkit-line-clamp:2;min-height:calc(var(--fn1) * 2.3);-webkit-box-orient:vertical;overflow:hidden;}
-
+			
 			.btn input[type=checkbox], .btn [type=radio], .select input[type=checkbox], .select input[type=radio], .entry input{position: absolute;left: -9999px;}
 			.checked {background-color:var(--bck);color:var(--cck);}
 			
@@ -941,19 +941,56 @@
 			function buttonDelete(input){
 				const section = input.closest('section');
 				if(section.id==='pop') buttonCancel(input);
-				
-				if($('.entry', detSec) !== null && section.id !== 'pop'){
-					detSec.style.backgroundColor = getColor(isPhone?'--cl2':'--bck');
-					if((section.id === 'pop' && display(detSec) === 'block') || section === detSec){
+				if($('.entry', detSec) !== null) {
+					const isPopBlock = section.id === 'pop' && display(detSec) === 'block';
+					const bgColor = getColor(isPhone ? '--cl2' : '--bck');
+					const removeSelections = () => {
+						if(!selections.length) selections = $$$('.rows .checked', listSec);
+						selections.forEach(el => el?.parentNode.removeChild(el));
+						selections = [];
+						const labelDel = $('header .hRight label:has(input[data-btn=select])',listSec);
+						if(labelDel!==null){
+							$('svg',labelDel).classList.remove('iconOn');
+							$('header h1',listSec).innerText = capitalize(getEnv().app);
+							$('header .hRight label:has(input[data-btn=delete])',listSec).classList.add('delHid');
+							if(!isPhone){
+								$('header .hRight label:has(input[data-btn=save])',detSec).style.display = 'flex';
+								$('header .hRight label:has(input[data-btn=delete])',detSec).style.display = 'flex';
+							}
+							cancelMulti(input);
+						}
+					};
+					if(isPopBlock || section === detSec) {
+						detSec.style.backgroundColor = bgColor;
 						$('.entry').style.animation = "zoomAndSend .5s forwards ease-in";
 					}
-					else if(!isPhone){
-						$('.entry').style.animation = "sending .5s forwards ease-out";						
+					else if(!isPhone) {
+						detSec.style.backgroundColor = bgColor;
+						$('.entry').style.animation = "sending .5s forwards ease-out";
 					}
-					$('.entry').addEventListener('animationend', () => {
-						const newSelections = selections.filter(label => label && label.parentNode && (isPhone || label.closest('section')?.id === section.id));
-						navClick($('.checked',navSec));
-					});
+					else {
+						removeSelections();
+					}
+					setTimeout(()=>{
+					//$('.entry').addEventListener('animationend', () => {
+						removeSelections();
+						setTimeout(() => {
+							detSec.style.backgroundColor = 'var(--bg)';
+							$('.entry').style.animation = '';
+							if(isPopBlock && isPhone) {
+								buttonBack(input, false);
+								$('label', $$$('.rows', listSec)[0]).classList.add('checked');
+								setTimeout(() => {
+									detSec.style.backgroundColor = 'var(--bg)';
+									$('.entry').style.animation = '';
+								}, 500);
+							}
+							else if(!isPhone){
+								checkedFocus($('input', $$$('.rows', listSec)[0]));
+							}
+						}, 100);
+					//}, { once: true });
+					},(isPhone && lastSection === listSec)?0:500);
 				}
 				else if((input.name === 'item' || input.name === 'copy') || input.dataset.btn === 'delete') {
 					if(selections.length > 0 && section !== 'navSection'){
@@ -982,6 +1019,9 @@
 							selections = [labels[0]];
 						}
 					}
+				}
+				else {
+					console.log(3);
 				}
 			}
 			function buttonSide(focused = true) {
@@ -1717,9 +1757,21 @@
 				buttonCancel(input);
 				detSec.style.backgroundColor = getColor(isPhone?'--cl2':'--bck');
 				$('.entry').style.animation = "zoomAndSend .5s forwards ease-in";
-				$('.entry').addEventListener('animationend', () => {
-					navClick($('.checked',navSec));
-				});
+				//$('.entry').addEventListener('animationend', () => {
+				
+				setTimeout(()=>{
+					//navClick($('.checked',navSec));
+					//selections = [];
+					multiSelect = false;
+					setTimeout(()=>{
+						$('.entry',detSec).style.animation = '';
+						detSec.style.backgroundColor = 'var(--bg)';
+						//console.log($$$('.rows',listSec));
+						checkedFocus($('input',$$$('.rows',listSec)[0]));
+					},100);
+				},550);
+				
+				//}, { once: true });
 			}
 			function handleClick(e) {
 				const input = e.target;
