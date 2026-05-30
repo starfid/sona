@@ -973,12 +973,7 @@
 						detSec.style.backgroundColor = bgColor;
 						$('.entry').style.animation = "sending .5s forwards ease-out";
 					}
-					else if(isPhone) {
-						removeSelections();
-						//$('.rows label',listSec).classList.add('checked');
-					}
 					setTimeout(()=>{
-					//$('.entry').addEventListener('animationend', () => {
 						removeSelections();
 						setTimeout(() => {
 							detSec.style.backgroundColor = 'var(--bg)';
@@ -995,8 +990,7 @@
 								checkedFocus($('input', $$$('.rows', listSec)[0]));
 							}
 						}, 100);
-					//}, { once: true });
-					},(isPhone && lastSection === listSec)?0:500);
+					},(isPhone && display(detSec) === 'none')?0:500);
 				}
 				else if((input.name === 'item' || input.name === 'copy') || input.dataset.btn === 'delete') {
 					if(selections.length > 0 && section !== 'navSection'){
