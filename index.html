@@ -25,7 +25,7 @@
 			:root {
 				--cl:#000000;	--cl2:#858584;	--fn1:1.1vw;	--fn2:1.7vw;	--brC:#f3f3f2;		--nvB:#E1E0E1;
 				--wdt:39vw;	--cck:#000000;	--mg:.9vw;	--mg2:calc(var(--fn2) / 2);		--cir:3.1vw;
-				--fdC:#6a6a6a; 	--cir2:calc(var(--cir) * 1.96);	--base:#E3E3E3;
+				--fdC:#6a6a6a; 	--cir2:calc(var(--cir) * 1.96);
 			}
 			html {-webkit-tap-highlight-color: transparent;}
 			body {margin:0;padding:0;font-family:arial;color:var(--cl);background:var(--bg)}
@@ -312,7 +312,7 @@
 				}
 				:root {
 					--bg:#1E1E1E;	--cl:#929292;	--cl2:#575858;	--brC:#191919;		--nvB:#141414;
-					--cck:#929293;	--bck:#29292a;	--base:#000000;
+					--cck:#929293;	--bck:#29292a;
 					/*
 					--fdC:color-mix(in srgb, var(--cl) 50%, black);
 					--thg:color-mix(in srgb, var(--bhg) 20%, black);*/
@@ -793,6 +793,7 @@
 				[...$$('header input[data-btn="new item"],header input[data-btn="change view"],header input[data-btn=save],header input[data-btn=login]')].forEach(el=>{
 					el.disabled = val;
 				});
+				//x
 			}
 			function buttonMulti(e){
 				e.preventDefault();
@@ -948,7 +949,7 @@
 				
 				if($('.entry', detSec) !== null) {
 					const isPopBlock = section.id === 'pop' && display(detSec) === 'block';
-					const bgColor = getColor(isPhone ? '--cl2' : '--base');
+					const bgColor = getColor(isPhone?'--cl2':'--bck');
 					const removeSelections = () => {
 						if(!selections.length) selections = $$$('.rows .checked', listSec);
 						selections.forEach(el => el?.parentNode.removeChild(el));
@@ -1246,11 +1247,13 @@
 				if(section !== lastSection) return;
 				const totSelection = $$('.rows .focused',section);
 				const totLen = totSelection.length;
+				const delBut = $('header .hRight input[data-btn=delete]',detSec);
 				selections = totSelection;
 				$('h1',section).innerText = (totLen>0)?totLen + ' Selected':'Please Select';
 				
 				if(totLen>1 && $('.entry') !== null && !isPhone && $('.entry',detSec).style.animation.length < 1){
-					detSec.style.backgroundColor = getColor(isPhone?'--cl2':'--base');
+					delBut.disabled = true;
+					detSec.style.backgroundColor = getColor(isPhone?'--cl2':'--bck');
 					$('.entry').style.animation = "selecting .2s forwards ease-out";
 					[...$$('header .hRight label input',detSec)].forEach((el)=>{
 						if(el.dataset.btn !== 'dots') el.closest('label').style.display = 'none';
@@ -1260,6 +1263,9 @@
 						el.style.boxShadow = stacked?'0 -18px 0 -11px var(--brC), 0 -18px 0 -10px var(--bck), 0 12px 24px transparent':'none';
 					}
 					setTimeout(()=>{setStacked(document.querySelector('.entry'), true);},150);
+				}
+				else if(totLen===1 && $('.entry') !== null && !isPhone && $('.entry',detSec).style.animation.length < 1 && delBut !== null && delBut.disabled){
+					delBut.disabled = false;
 				}
 			}			
 			function cancelMulti(input) {
@@ -1754,7 +1760,7 @@
 			}
 			function buttonSave(input){
 				buttonCancel(input);
-				detSec.style.backgroundColor = getColor(isPhone?'--cl2':'--base');
+				detSec.style.backgroundColor = getColor(isPhone?'--cl2':'--bck');
 				$('.entry').style.animation = "zoomAndSend .5s forwards ease-in";
 				//$('.entry').addEventListener('animationend', () => {
 				
