@@ -25,7 +25,7 @@
 			:root {
 				--cl:#000000;	--cl2:#858584;	--fn1:1.1vw;	--fn2:1.7vw;	--brC:#f3f3f2;		--nvB:#E1E0E1;
 				--wdt:39vw;	--cck:#000000;	--mg:.9vw;	--mg2:calc(var(--fn2) / 2);		--cir:3.1vw;
-				--fdC:#6a6a6a; 	--cir2:calc(var(--cir) * 1.96);
+				--fdC:#6a6a6a; 	--cir2:calc(var(--cir) * 1.96);	--base:#E3E3E3;
 			}
 			html {-webkit-tap-highlight-color: transparent;}
 			body {margin:0;padding:0;font-family:arial;color:var(--cl);background:var(--bg)}
@@ -312,7 +312,7 @@
 				}
 				:root {
 					--bg:#1E1E1E;	--cl:#929292;	--cl2:#575858;	--brC:#191919;		--nvB:#141414;
-					--cck:#929293;	--bck:#29292a;
+					--cck:#929293;	--bck:#29292a;	--base:#000000;
 					/*
 					--fdC:color-mix(in srgb, var(--cl) 50%, black);
 					--thg:color-mix(in srgb, var(--bhg) 20%, black);*/
@@ -948,7 +948,7 @@
 				
 				if($('.entry', detSec) !== null) {
 					const isPopBlock = section.id === 'pop' && display(detSec) === 'block';
-					const bgColor = getColor(isPhone ? '--cl2' : '--bck');
+					const bgColor = getColor(isPhone ? '--cl2' : '--base');
 					const removeSelections = () => {
 						if(!selections.length) selections = $$$('.rows .checked', listSec);
 						selections.forEach(el => el?.parentNode.removeChild(el));
@@ -1250,7 +1250,7 @@
 				$('h1',section).innerText = (totLen>0)?totLen + ' Selected':'Please Select';
 				
 				if(totLen>1 && $('.entry') !== null && !isPhone && $('.entry',detSec).style.animation.length < 1){
-					detSec.style.backgroundColor = getColor(isPhone?'--cl2':'--bck');
+					detSec.style.backgroundColor = getColor(isPhone?'--cl2':'--base');
 					$('.entry').style.animation = "selecting .2s forwards ease-out";
 					[...$$('header .hRight label input',detSec)].forEach((el)=>{
 						if(el.dataset.btn !== 'dots') el.closest('label').style.display = 'none';
@@ -1754,7 +1754,7 @@
 			}
 			function buttonSave(input){
 				buttonCancel(input);
-				detSec.style.backgroundColor = getColor(isPhone?'--cl2':'--bck');
+				detSec.style.backgroundColor = getColor(isPhone?'--cl2':'--base');
 				$('.entry').style.animation = "zoomAndSend .5s forwards ease-in";
 				//$('.entry').addEventListener('animationend', () => {
 				
