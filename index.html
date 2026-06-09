@@ -978,21 +978,25 @@
 					setTimeout(()=>{
 						removeSelections();
 						setTimeout(() => {
-							detSec.style.backgroundColor = 'var(--bg)';
-							$('.entry').style.animation = '';
+							function resetEntry(){
+								detSec.style.backgroundColor = 'var(--bg)';
+								$('.entry').style.animation = '';
+							}
 							if(isPopBlock && isPhone) {
 								buttonBack(input, false);
 								$('label', $$$('.rows', listSec)[0]).classList.add('checked');
 								setTimeout(() => {
-									detSec.style.backgroundColor = 'var(--bg)';
-									$('.entry').style.animation = '';
+									resetEntry();
 								}, 500);
+								
 							}
 							else if(!isPhone){
+								resetEntry();
 								checkedFocus($('input', $$$('.rows', listSec)[0]));
 							}
 						}, 100);
-					},(isPhone && display(detSec) === 'none')?0:900);
+						
+					},(isPhone && display(detSec) === 'none')?0:650);
 				}
 				else if((input.name === 'item' || input.name === 'copy') || input.dataset.btn === 'delete') {
 					if(selections.length > 0 && section !== 'navSection'){
