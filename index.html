@@ -984,11 +984,13 @@
 							}
 							if(isPopBlock && isPhone) {
 								buttonBack(input, false);
-								$('label', $$$('.rows', listSec)[0]).classList.add('checked');
-								setTimeout(() => {
-									resetEntry();
-								}, 500);
-								
+								const firstRow = $('label', $$$('.rows', listSec)[0]);
+								if(firstRow!==null){
+									$('label', $$$('.rows', listSec)[0]).classList.add('checked');
+									setTimeout(() => {
+										resetEntry();
+									}, 500);
+								}								
 							}
 							else if(!isPhone){
 								resetEntry();
@@ -1134,7 +1136,6 @@
 			}
 			function clearbyArrow(section) {
 				resetZoomSelecting();
-
 				const selection = $$('.rows .focused',section);
 				const totSelection = selection.length;
 				selection.forEach((label,index)=>{
@@ -1238,7 +1239,7 @@
 				clrTextSel(section);
 				if(multiSelect) {lastSection = null;}
 				if(input.name == 'iBtn'){
-					const labels = $$$('.rows label',section);
+					const labels = $$$('.rows label',lastSection);
 					if(labels.length>0){
 						labels[0].classList.add('checked');
 					}
@@ -1768,19 +1769,14 @@
 				detSec.style.backgroundColor = getColor(isPhone?'--cl2':'--bck');
 				$('.entry').style.animation = "zoomAndSend .5s forwards ease-in";
 				//$('.entry').addEventListener('animationend', () => {
-				
 				setTimeout(()=>{
-					//navClick($('.checked',navSec));
-					//selections = [];
 					multiSelect = false;
 					setTimeout(()=>{
 						$('.entry',detSec).style.animation = '';
 						detSec.style.backgroundColor = 'var(--bg)';
-						//console.log($$$('.rows',listSec));
 						checkedFocus($('input',$$$('.rows',listSec)[0]));
 					},100);
 				},550);
-				
 				//}, { once: true });
 			}
 			function handleClick(e) {
