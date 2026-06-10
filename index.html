@@ -1435,6 +1435,22 @@
 							if($('form.entry',detSec)!== null) ctrS(input);
 						}
 					break;
+					case 'Tab':
+						if(localStorage.getItem('sonaView')==='tiles' && parentSection == listSec && 
+							parentForm.classList.contains('rows') && !isPhone
+						){
+							e.preventDefault();
+							const index = $$$('label',parentForm).indexOf(parentLabel);
+							if((index % 3 === 0) || (index+2) % 3 === 0){
+								if($('.entry textarea',detSec)!==null){
+									$('.entry textarea',detSec).focus();
+								}
+								else {
+									$('.rows input',detSec).focus();
+								}
+							}
+						}
+					break;
 					case 'F3':
 						if(parentSection.id !== 'navSection'){
 							e.preventDefault();
