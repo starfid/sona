@@ -750,6 +750,7 @@
 			const toggleLayer = () => $('#layer').classList.toggle('layerToggle');
 			const display = (el) => {return window.getComputedStyle(el).display;}
 			const leftPos = (el) => {return window.getComputedStyle(el).left;}
+			let tabPressed = false;
 			let multiSelect = false;
 			let selections = [];
 			let camAPI = {}; let camLenses = {};
@@ -977,6 +978,8 @@
 					}
 					setTimeout(()=>{
 						removeSelections();
+						const listEmpty = $$$('.rows label.select',listSec).length>0?false:true;
+						
 						setTimeout(() => {
 							function resetEntry(){
 								detSec.style.backgroundColor = 'var(--bg)';
@@ -992,10 +995,10 @@
 									}, 500);
 								}								
 							}
-							else if(!isPhone){
+							else if(!isPhone && $$$('.rows label.select',listSec).length>0){
 								resetEntry();
-								checkedFocus($('input', $$$('.rows', listSec)[0]));
-							}
+								checkedFocus($$$('input', $('.rows', listSec))[0]);
+							}							
 						}, 100);
 						
 					},(isPhone && display(detSec) === 'none')?0:650);
@@ -1218,13 +1221,14 @@
 				$('h1',section).innerText = h1;
 			}
 			function resetZoomSelecting(){
-				if($('.entry') !== null && !isPhone){
+				if($('.entry') !== null && !isPhone && $$$('.rows label.select',listSec).length > 0){
 					detSec.style.backgroundColor = getColor('--bg');
 					$('.entry').style.cssText = 'zoom:normal;margin:0 var(--mg) var(--mg) var(--mg);background-color:var(--bg)';
 					[...$$('header .hRight label input',detSec)].forEach((el)=>{
 						if(el.dataset.btn !== 'dots') el.closest('label').style.display = 'flex';
 					});
 					$('header .hRight label:has(input[data-btn=delete])',listSec).classList.add('delHid');
+					console.log(Math.random());
 				}
 			}
 			function clearbyClick(section, input){
@@ -1410,9 +1414,16 @@
 						const lbl = input.closest('label');
 						lbl.classList.remove('focused');
 						input.checked = false;
+
 						if(input.closest('form') !== null){
 							if(lbl.classList.contains('select') && input.closest('form').classList.contains('rows')){
-								lbl.classList.add('checked');
+								if(tabPressed){
+									lbl.classList.remove('checked');
+									tabPressed = false;
+								}
+								else {
+									lbl.classList.add('checked');
+								}
 							}
 						}
 					}
@@ -1436,19 +1447,17 @@
 						}
 					break;
 					case 'Tab':
-						if(localStorage.getItem('sonaView')==='tiles' && parentSection == listSec && 
-							parentForm.classList.contains('rows') && !isPhone
-						){
+						if(!isPhone && localStorage.getItem('sonaView')==='tiles' && parentSection == listSec && parentForm.classList.contains('rows')){
 							e.preventDefault();
-							const index = $$$('label',parentForm).indexOf(parentLabel);
-							if((index % 3 === 0) || (index+2) % 3 === 0){
-								if($('.entry textarea',detSec)!==null){
-									$('.entry textarea',detSec).focus();
-								}
-								else {
-									$('.rows input',detSec).focus();
-								}
-							}
+							if($('.entry textarea',detSec)!==null) $('.entry textarea',detSec).focus();
+							else $('.rows input',detSec).focus();
+						}
+						else if(localStorage.getItem('sonaView')==='list' && parentForm.classList.contains('rows') && !isPhone){
+							tabPressed = true;
+						}
+						else if(!isPhone && parentSection === navSec) {
+							e.preventDefault();
+							checkedFocus($$$('input', $('.rows', listSec))[0]);
 						}
 					break;
 					case 'F3':
