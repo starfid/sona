@@ -953,17 +953,19 @@
 					const isPopBlock = section.id === 'pop' && display(detSec) === 'block';
 					const bgColor = getColor(isPhone?'--cl2':'--bck');
 					const removeSelections = () => {
-						if(!selections.length) selections = $$$('.rows .checked', listSec);
+						if(!selections.length){
+							selections = $$$('.rows .checked', listSec);
+						}
 						selections.forEach(el => el?.parentNode.removeChild(el));
 						selections = [];
-						const labelDel = $('header .hRight label:has(input[data-btn=select])',listSec);
+						const labelDel = $('header input[data-btn=select]',listSec).closest('label');
 						if(labelDel!==null){
 							$('svg',labelDel).classList.remove('iconOn');
 							$('header h1',listSec).innerText = capitalize(getEnv().app);
-							$('header .hRight label:has(input[data-btn=delete])',listSec).classList.add('delHid');
+							$('header input[data-btn=delete]',listSec).closest('label').classList.add('delHid');
 							if(!isPhone){
-								$('header .hRight label:has(input[data-btn=save])',detSec).style.display = 'flex';
-								$('header .hRight label:has(input[data-btn=delete])',detSec).style.display = 'flex';
+								$('header input[data-btn=save]',detSec).closest('label').style.display = 'flex';								
+								$('header input[data-btn=delete]',detSec).closest('label').style.display = 'flex';
 							}
 							cancelMulti(input);
 						}
@@ -979,7 +981,6 @@
 					setTimeout(()=>{
 						removeSelections();
 						const listEmpty = $$$('.rows label.select',listSec).length>0?false:true;
-						
 						setTimeout(() => {
 							function resetEntry(){
 								detSec.style.backgroundColor = 'var(--bg)';
@@ -1227,8 +1228,7 @@
 					[...$$('header .hRight label input',detSec)].forEach((el)=>{
 						if(el.dataset.btn !== 'dots') el.closest('label').style.display = 'flex';
 					});
-					$('header .hRight label:has(input[data-btn=delete])',listSec).classList.add('delHid');
-					console.log(Math.random());
+					$('header input[data-btn=delete]',listSec).closest('label').classList.add('delHid');
 				}
 			}
 			function clearbyClick(section, input){
@@ -1242,7 +1242,7 @@
 				});
 				clrTextSel(section);
 				if(multiSelect) {lastSection = null;}
-				if(input.name == 'iBtn'){
+				if(input.name == 'iBtn' && lastSection !==null){
 					const labels = $$$('.rows label',lastSection);
 					if(labels.length>0){
 						labels[0].classList.add('checked');
