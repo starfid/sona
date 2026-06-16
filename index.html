@@ -922,17 +922,12 @@
 			}
 			function buttonBack(input,focused = true){
 				if(backAnimating) return;
-				multiSelect = false; selections = [];
-				
+				multiSelect = false; selections = [];				
 				listSec.style.display = 'block';
 				listSec.classList.remove('listShowDetail');
-				
 				listSec.classList.add('listShowList');
-				
-				
 				detSec.classList.remove('detailShowDetail');
 				detSec.classList.add('detailShowList');
-				
 				focused && checkedFocus($('header input[data-btn=side]',listSec));
 				listSec.addEventListener('animationend', () => {
 					listSec.classList.remove('listShowList');
@@ -946,7 +941,6 @@
 			}
 			function buttonDelete(input){
 				const section = input.closest('section');
-				
 				if($('.entry', detSec) !== null) {
 					const isPopBlock = section.id === 'pop' && display(detSec) === 'block';
 					const bgColor = getColor(isPhone?'--cl2':'--bck');
@@ -989,12 +983,17 @@
 								const firstRow = $('label', $$$('.rows', listSec)[0]);
 								if(firstRow!==null){
 									$('label', $$$('.rows', listSec)[0]).classList.add('checked');
-									setTimeout(() => {
-										resetEntry();
-									}, 500);
+									setTimeout(() => {resetEntry();},500);
 								}								
 							}
-							else if(!isPhone && $$$('.rows label.select',listSec).length>0){
+							else if(!isPhone && listEmpty){
+								['save','delete'].forEach(btn=>{
+									$('header .hRight input[data-btn='+btn+']',detSec).closest('label').style.display = 'none';
+								});
+								$('h1',detSec).innerText = '';
+								checkedFocus($('header .hRight .secondLast input',listSec),true);
+							}
+							else if(!isPhone && !listEmpty){
 								resetEntry();
 								checkedFocus($$$('input', $('.rows', listSec))[0]);
 							}							
@@ -1109,7 +1108,8 @@
 				);
 				if(el.checked && notSearch) {
 					parentLabel.classList.add('checked');
-					if(!multiSelect && parentLabel.closest('section').id != "navSection"){
+					const isRows = ['item','copy'].includes(el.name);
+					if(!multiSelect && parentLabel.closest('section').id != "navSection"  && isRows){
 						selections = [parentLabel];
 					}
 				}
@@ -1267,10 +1267,7 @@
 						if(el.dataset.btn !== 'dots') el.closest('label').style.display = 'none';
 					});
 					function setStacked(el,stacked) {
-						//if(stacked) $('header .hRight label:has(input[data-btn=delete])',listSec).classList.remove('delHid');
-						
 						if(stacked) $('header input[data-btn=delete]',listSec).closest('label').classList.remove('delHid');
-
 						el.style.boxShadow = stacked?'0 -18px 0 -11px var(--brC), 0 -18px 0 -10px var(--bck), 0 12px 24px transparent':'none';
 					}
 					setTimeout(()=>{setStacked(document.querySelector('.entry'), true);},150);
@@ -1284,7 +1281,6 @@
 				if(section) {
 					focusMulti(section,false);
 					multiSelect = false;
-
 					const lbl = $('.selIcon',section);
 					if(lbl!==null){
 						$('svg',lbl).classList.remove('iconOn');
@@ -1300,6 +1296,14 @@
 				$('fieldset',section).scrollTo(0,0,);
 			}
 			function updateDet(input,multiSelect){
+				if($('.entry',detSec)!==null){
+					$('.entry',detSec).style.animation = '';
+					$('.entry',detSec).style.display = 'block';
+					detSec.style.backgroundColor = 'var(--bg)';
+					['save','delete'].forEach(btn=>{
+						$('header .hRight input[data-btn='+btn+']',detSec).closest('label').style.display = 'block';
+					});
+				}
 				if(!multiSelect) $('#detailSection header h1').innerText = $('div:nth-child(3) dl dt',input.closest('label')).innerText;
 				if($('div',input.closest('label')).style.backgroundImage){
 					if($('.entry .tilesDetail div',detSec)){
@@ -1345,12 +1349,13 @@
 						const isTiles = display($('#pathList'))==='block';
 						const filterName = input.closest('label').innerText.toLowerCase();
 						const firstFilter = $('.filters label input',section) === input;
-						let gotFirst = false;
+						const labels = [...$$('.rows label',section)];
+						let gotFirst = false; let labelsFound = 0;
 						cancelMulti(input);
-						[...$$('.rows label',section)].forEach(el=>{
+						labels.forEach(el=>{
 							el.classList.remove('checked');
 						});
-						[...$$('.rows label',section)].forEach(el=>{
+						labels.forEach(el=>{
 							if(isTiles){
 								if(el.dataset.filter === filterName || firstFilter){
 									el.style.display = "block";
@@ -1360,6 +1365,7 @@
 										updateDet($('input',el),false);
 										gotFirst = true;
 									}
+									labelsFound++;
 								}
 								else {
 									el.style.display = "none";
@@ -1375,12 +1381,21 @@
 										updateDet($('input',el),false);
 										gotFirst = true;
 									}
+									labelsFound++;
 								}
 								else {
 									el.style.display = "none";
 								}
 							}
 						});
+						if($('form.entry',detSec)!== null && labelsFound < 1){
+							['save','delete'].forEach(btn=>{
+								$('header .hRight input[data-btn='+btn+']',detSec).closest('label').style.display = 'none';
+							});
+							$('h1',detSec).innerText = '';
+							detSec.style.backgroundColor = getColor(isPhone?'--cl2':'--bck');
+							$('.entry',detSec).style.display = 'none';
+						}
 					}
 					if(multiSelect && rows) {
 						$$('.iconOn').forEach(m=>{
@@ -1402,7 +1417,6 @@
 					}
 					else if(!(multiSelect && !rows)){
 						input.closest('label')?.classList.add('focused');
-						//if(rows) selections.push(input.closest('label'));
 						if(rows) selections = [input.closest('label')];
 						if(section === listSec && rows){
 							updateDet(input,false);
@@ -1430,7 +1444,6 @@
 						const lbl = input.closest('label');
 						lbl.classList.remove('focused');
 						input.checked = false;
-
 						if(input.closest('form') !== null && input.closest('section') === navSec){
 							if( lbl.classList.contains('select') && input.closest('form').classList.contains('rows')){
 								if(tabPressed){
@@ -1711,20 +1724,15 @@
 							}
 							else {
 								checkedFocus($('input',rowLabels[0]));
-							}
-							
+							}							
 						}
 					break;
 					case 'Backspace':
 						if(input.type==='search') input.placeholder = "Search";
 					break;
 					case 'Escape':
-						if(input.type==='search'){
-							input.placeholder = "Search";
-						}
-						else {
-							buttonCancel(input);
-						}
+						if(input.type==='search') input.placeholder = "Search";
+						else buttonCancel(input);
 					break;
 					case 'Shift':
 					//case 'Control':
@@ -1770,11 +1778,9 @@
 						}
 					break;
 					case 'Delete':
-						if(!(input.type==='text'||input.type==='search') && allowDel){
-							//let label = $('header .hRight label:has(input[data-btn=delete])',detSec);
+						if(!(input.type==='text'||input.type==='search'||input.type==='radio'||input.name==='filter') && allowDel){
 							let label = $('header input[data-btn=delete]',detSec).closest('label');
 							if($('.entry')!==null && display(label)==='none'){
-								//label = $('header .hRight label:has(input[data-btn=delete])',listSec);
 								label = $('header input[data-btn=delete]',listSec).closest('label');
 							}
 							const svg = $('svg',label);
