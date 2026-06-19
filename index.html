@@ -212,6 +212,7 @@
 				#listSection {border-left:none;}
 				.tilesDetail {margin: 3vw auto}
 				.tilesDetail, .tilesDetail div {width:var(--cir2);height:var(--cir2);}
+				
 				#pop {width:60vw}
 				#pop fieldset {padding: calc((2 * var(--mg)) + var(--fn2)) 0 0 0;}
 				@keyframes navToggle {
@@ -343,7 +344,7 @@
 						</label>
 					</div>
 					<div class="h1Hid">
-						<label><h1>Aliquam</h1></label>						
+						<label><h1></h1></label>						
 					</div>
 					<div class="hRight">
 						<label class="btn last">
@@ -535,7 +536,7 @@
 						</label>
 					</div>
 					<div>
-						<label><h1></h1></label>
+						<label><h1>Dapimus</h1></label>
 					</div>
 					<div class="hRight">
 						<label class="btn mobHid">
@@ -983,7 +984,7 @@
 								const firstRow = $('label', $$$('.rows', listSec)[0]);
 								if(firstRow!==null){
 									$('label', $$$('.rows', listSec)[0]).classList.add('checked');
-									setTimeout(() => {resetEntry();},500);
+									setTimeout(() => {resetEntry();}, 500);
 								}								
 							}
 							else if(!isPhone && listEmpty){
@@ -1258,7 +1259,6 @@
 				const delBut = $('header .hRight input[data-btn=delete]',detSec);
 				selections = totSelection;
 				$('h1',section).innerText = (totLen>0)?totLen + ' Selected':'Please Select';
-				
 				if(totLen>1 && $('.entry') !== null && !isPhone && $('.entry',detSec).style.animation.length < 1){
 					delBut.disabled = true;
 					detSec.style.backgroundColor = getColor(isPhone?'--cl2':'--bck');
@@ -1296,15 +1296,17 @@
 				$('fieldset',section).scrollTo(0,0,);
 			}
 			function updateDet(input,multiSelect){
-				if($('.entry',detSec)!==null){
+				if(!multiSelect && $('.entry',detSec)!==null && !isPhone){
 					$('.entry',detSec).style.animation = '';
 					$('.entry',detSec).style.display = 'block';
 					detSec.style.backgroundColor = 'var(--bg)';
 					['save','delete'].forEach(btn=>{
-						$('header .hRight input[data-btn='+btn+']',detSec).closest('label').style.display = 'block';
+						$('header .hRight input[data-btn='+btn+']',detSec).closest('label').style.display = 'flex';
 					});
 				}
-				if(!multiSelect) $('#detailSection header h1').innerText = $('div:nth-child(3) dl dt',input.closest('label')).innerText;
+				if(!multiSelect){
+					$('#detailSection header h1').innerText = $('div:nth-child(3) dl dt',input.closest('label')).innerText;
+				}
 				if($('div',input.closest('label')).style.backgroundImage){
 					if($('.entry .tilesDetail div',detSec)){
 						$('.entry .tilesDetail div',detSec).style.backgroundImage = $('div',input.closest('label')).style.backgroundImage;
@@ -1485,12 +1487,15 @@
 						}
 					break;
 					case 'Tab':
-						if(!isPhone && localStorage.getItem('sonaView')==='tiles' && parentSection == listSec && parentForm.classList.contains('rows')){
+						if(!isPhone && localStorage.getItem('sonaView')==='tiles' && parentSection == listSec && (parentForm && parentForm.classList.contains('rows'))){
 							e.preventDefault();
 							if($('.entry textarea',detSec)!==null) $('.entry textarea',detSec).focus();
 							else $('.rows input',detSec).focus();
 						}
-						else if(parentForm.classList.contains('rows') && !isPhone){
+						else if(input.closest('header')!==null){
+							e.preventDefault();
+						}
+						else if(parentForm && parentForm.classList.contains('rows') && !isPhone){
 							tabPressed = true;
 						}
 						else if(!isPhone && parentSection === navSec) {
