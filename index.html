@@ -342,7 +342,7 @@
 						</label>
 					</div>
 					<div class="h1Hid">
-						<label><h1></h1></label>						
+						<label><h1>Aliquam</h1></label>						
 					</div>
 					<div class="hRight">
 						<label class="btn last">
@@ -387,7 +387,7 @@
 						</label>
 					</div>
 					<div class="h1Hid">
-						<label><h1>Starfid</h1></label>						
+						<label><h1></h1></label>						
 					</div>
 					<div class="hRight">
 						<label class="btn mobHid delHid">
@@ -534,7 +534,7 @@
 						</label>
 					</div>
 					<div>
-						<label><h1>Dapimus</h1></label>
+						<label><h1></h1></label>
 					</div>
 					<div class="hRight">
 						<label class="btn mobHid">
@@ -1491,6 +1491,10 @@
 							else $('.rows input',detSec).focus();
 						}
 						else if(input.closest('header')!==null){
+							const labels = $$$('label');
+							const nextLabel = labels[labels.indexOf(parentLabel)+1];
+							const nextInput = nextLabel?$('input',nextLabel):$('input',labels[0]);
+							checkedFocus(nextInput);
 							e.preventDefault();
 						}
 						else if(parentForm && parentForm.classList.contains('rows') && !isPhone){
@@ -2018,7 +2022,7 @@
 					})
         			});
 			}
-			if(!isPhone) {
+			if(!isPhone) {//entry interactivity
 				const entry = [...$$('form.entry textarea, form.entry input')];
 				entry.forEach((el, index) => {
 					let justFocused = false;
