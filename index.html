@@ -1252,7 +1252,7 @@
 			}
 			function totTextSel(section) {
 				if(section !== lastSection) return;
-				const totSelection = $$('.rows .focused',section);
+				const totSelection = $$$('.rows .focused',section);
 				const totLen = totSelection.length;
 				const delBut = $('header .hRight input[data-btn=delete]',detSec);
 				selections = totSelection;
@@ -1411,7 +1411,7 @@
 						) {
 							input.closest('label')?.classList.add('checked','focused');
 						}
-						$('#detailSection header h1').innerText = "";
+						if($$$('.rows .focused',section).length > 1) $('#detailSection header h1').innerText = '';
 						totTextSel(section);
 						updateDet(input,true);
 					}
@@ -1790,15 +1790,11 @@
 							if($('.entry')!==null && display(label)==='none'){
 								label = $('header input[data-btn=delete]',listSec).closest('label');
 							}
-							const svg = $('svg',label);
-							svg.style.stroke = 'red'
-							svg.style.strokeWidth = 8;
+							label.classList.add('focused');
 							setTimeout(()=>{
-								svg.style.stroke = 'var(--cl2)';
-								svg.style.strokeWidth = 4;
+								label.classList.remove('focused');
 								buttonDelete(input);
 							},150);
-							
 						}
 					break;
 				}
