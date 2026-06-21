@@ -2,6 +2,7 @@
 <html lang="en">
 	<head>
 		<title>App</title>
+		<meta content="Starfid all purpose UI kit. Keyboard-first operation" name="description">
 		<meta content="notranslate" name="google">
 		<meta content="yes" name="mobile-web-app-capable">
 		<meta content="yes" name="apple-mobile-web-app-capable">
@@ -12,7 +13,7 @@
 		<meta content="white" name="apple-mobile-web-app-status-bar-style">
 		<meta content="light" name="color-scheme">
 		<meta content="Starfid Sona. All-purpose UI kit built for keyboard-first operation" name="description">
-		<meta content="width=device-width,initial-scale=1,maximum-scale=1,shrink-to-fit=no,user-scalabl	e=0,viewport-fit=cover" name="viewport">
+		<meta content="width=device-width,initial-scale=1,maximum-scale=1,shrink-to-fit=no,user-scalable=0,viewport-fit=cover" name="viewport">
 		<link rel="icon" href="./favicon.png">
 		<link rel="manifest" href="./manifest.json">
 		<style>
@@ -182,9 +183,9 @@
 				0% {zoom:0.9;margin:calc(var(--mg) * 3.333) calc(var(--mg) * 3.333) 0 calc(var(--mg) * 3.333);background-color:var(--bg)}
 				20% {zoom:0.92;margin:calc(var(--mg) * 4.333) calc(var(--mg) * 3.333) 0 calc(var(--mg) * 3.333);background-color:var(--bg)}
 				80% {zoom:0.94;margin:calc(var(--mg) * 5.333) calc(var(--mg) * 3.333) 0 calc(var(--mg) * 3.333);background-color:var(--bg)}
-				100% {zoom:0.94;margin:-150vh calc(var(--mg) * 3.333) 0 calc(var(--mg) * 3.333);background-color:var(--bg)}
+				99% {zoom:0.94;margin:-150vh calc(var(--mg) * 3.333) 0 calc(var(--mg) * 3.333);background-color:var(--bg)}
+				100% {zoom:0.95;margin:-190vh calc(var(--mg) * 3.333) 0 calc(var(--mg) * 3.333);background-color:var(--bg)}
 			}
-
 			@media screen and (max-width: 1281px), screen and (pointer: coarse), screen and (hover: none) {
 				:root {
 					--fn1:2vw; 	--fn2:2.5vw;	--brC:#FAF9F7;	/*--bg:#FFFFFF;*/
@@ -944,9 +945,7 @@
 					const isPopBlock = section.id === 'pop' && display(detSec) === 'block';
 					const bgColor = getColor(isPhone?'--cl2':'--bck');
 					const removeSelections = () => {
-						if(!selections.length){
-							selections = $$$('.rows .checked', listSec);
-						}
+						if(!selections.length) selections = $$$('.rows .checked', listSec);
 						selections.forEach(el => el?.parentNode.removeChild(el));
 						selections = [];
 						const labelDel = $('header input[data-btn=select]',listSec).closest('label');
@@ -961,12 +960,11 @@
 							cancelMulti(input);
 						}
 					};
-					if(isPopBlock || section === detSec) {
-						detSec.style.backgroundColor = bgColor;
+					detSec.style.backgroundColor = bgColor;
+					if(isPopBlock || section === detSec || $('.entry').style.animation === '') {
 						$('.entry').style.animation = "zoomAndSend .5s forwards ease-in";
 					}
-					else if(!isPhone) {
-						detSec.style.backgroundColor = bgColor;
+					else if(!isPhone) {//stacked
 						$('.entry').style.animation = "sending .5s forwards ease-out";
 					}
 					setTimeout(()=>{
@@ -1007,11 +1005,22 @@
 						if(newSelections.length > 0){
 							newSelections.forEach(label=>{
 								if(label && label.parentNode && (isPhone || (label.closest('section')?.id === section.id))) {
-									label.parentNode.removeChild(label);
+									$$('div',label).forEach(lbl=>{
+										lbl.style.visibility = 'hidden';
+									});
+									label.classList.remove('checked','focused');
+									label.style.border = 'none';									
 								}
 							});
-							multiSelect = false;
-							cancelMulti(input);
+							setTimeout(()=>{
+								newSelections.forEach(label=>{
+									if(label && label.parentNode && (isPhone || (label.closest('section')?.id === section.id))) {
+										label.parentNode.removeChild(label);
+									}
+								});
+								multiSelect = false;
+								cancelMulti(input);
+							},200);
 						}
 					}
 					else if(isPhone){
