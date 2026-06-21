@@ -1005,22 +1005,11 @@
 						if(newSelections.length > 0){
 							newSelections.forEach(label=>{
 								if(label && label.parentNode && (isPhone || (label.closest('section')?.id === section.id))) {
-									$$('div',label).forEach(lbl=>{
-										lbl.style.visibility = 'hidden';
-									});
-									label.classList.remove('checked','focused');
-									label.style.border = 'none';									
+									label.parentNode.removeChild(label);
 								}
 							});
-							setTimeout(()=>{
-								newSelections.forEach(label=>{
-									if(label && label.parentNode && (isPhone || (label.closest('section')?.id === section.id))) {
-										label.parentNode.removeChild(label);
-									}
-								});
-								multiSelect = false;
-								cancelMulti(input);
-							},200);
+							multiSelect = false;
+							cancelMulti(input);
 						}
 					}
 					else if(isPhone){
@@ -1944,7 +1933,7 @@
 			document.addEventListener('keyup', handleKeyUp);
 			document.addEventListener('click', handleClick);
 			document.addEventListener('visibilitychange', () => {if(document.hidden) multiSelect = false;});
-			if(window.visualViewport) {
+			if($('.entry',detSec) !== null && sideExist && window.visualViewport) {
 				function adjustHeader() {
 					const offsetTop = window.visualViewport.offsetTop;
 					document.querySelectorAll('section header').forEach(header => {
@@ -1953,10 +1942,8 @@
 				}
 				window.visualViewport.addEventListener('resize', adjustHeader);
 				window.visualViewport.addEventListener('scroll', adjustHeader);
-			}
-			
+			}			
 			if(localStorage.getItem('sonaView') === 'tiles') buttonView();
-
 			$('#layer').addEventListener('click', function (e) {
 				if(!e.target.closest('#pop')) buttonCancel($('#pop input'));
 			});
@@ -2012,21 +1999,6 @@
 					});
 				}
 			}
-			if(sideExist){
-				import('./cam.js').then(module => {
-					camAPI = new ZXing.BrowserMultiFormatReader();
-					camAPI.listVideoInputDevices().then((videoInputDevices) => {
-						if(videoInputDevices.length >= 1) {
-							videoInputDevices.forEach((el) => {
-								camLenses[el.deviceId] = el.label;
-							});
-						}
-					})
-					.catch((err) => {
-						console.error(err);
-					})
-        			});
-			}
 			if(!isPhone) {//entry interactivity
 				const entry = [...$$('form.entry textarea, form.entry input')];
 				entry.forEach((el, index) => {
@@ -2074,7 +2046,23 @@
 				});
 			}
 			loaded = true;
-
+			setTimeout(()=>{
+				if(sideExist){
+					import('./cam.js').then(module => {
+						camAPI = new ZXing.BrowserMultiFormatReader();
+						camAPI.listVideoInputDevices().then((videoInputDevices) => {
+							if(videoInputDevices.length >= 1) {
+								videoInputDevices.forEach((el) => {
+									camLenses[el.deviceId] = el.label;
+								});
+							}
+						})
+						.catch((err) => {
+							console.error(err);
+						})
+					});
+				}
+			},500);
 			//quality assurance
 			window.onerror = function(msg, src, line, col, err){alert(msg + '. ' + 'Line: ' + line + '. Col: ' + col);};
 			window.onunhandledrejection = function(e){alert(e.reason);};
