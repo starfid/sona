@@ -752,7 +752,7 @@
 			let tabPressed = false;
 			let multiSelect = false;
 			let selections = [];
-			let camAPI = {}; let camLenses = {};
+			let camImported = false; let camAPI = {}; let camLenses = {};
 			let selDown = true;
 			let lastSection = null;
 			let backAnimating = false;
@@ -1100,9 +1100,7 @@
 				const parentLabel = el.closest('label');
 				const notSearch = el.closest('form') && !el.closest('form').classList.contains('searchFrm');
 				if(!parentLabel) return;
-				$$('input[name='+el.name+']', el.closest('form, header')).forEach(
-					el => el.closest('label').classList.remove('checked')
-				);
+				$$('input[name='+el.name+']', el.closest('form, header')).forEach(el => el.closest('label').classList.remove('checked'));
 				if(el.checked && notSearch) {
 					parentLabel.classList.add('checked');
 					const isRows = ['item','copy'].includes(el.name);
@@ -1483,6 +1481,11 @@
 						}
 					break;
 					case 'Tab':
+						if(!tabPressed && parentSection === listSec && $('.entry',detSec) === null){
+							$$('.rows label',detSec).forEach(chk=>{
+								chk.classList.remove('checked','focused');
+							});
+						}
 						if(!isPhone && localStorage.getItem('sonaView')==='tiles' && parentSection == listSec && (parentForm && parentForm.classList.contains('rows'))){
 							e.preventDefault();
 							if($('.entry textarea',detSec)!==null) $('.entry textarea',detSec).focus();
@@ -1829,11 +1832,32 @@
 				},550);
 				//}, { once: true });
 			}
+			function importCam(){
+				import('./cam.js').then(module => {
+					camAPI = new ZXing.BrowserMultiFormatReader();
+					camAPI.listVideoInputDevices().then((videoInputDevices) => {
+						if(videoInputDevices.length >= 1) {
+							videoInputDevices.forEach((el) => {
+								camLenses[el.deviceId] = el.label;
+							});
+						}
+						camImported = true;
+					})
+					.catch((err) => {
+						console.error(err);
+					})
+				});
+			}
 			function handleClick(e) {
 				const input = e.target;
 				if(input.closest('section')===null) return;
 				const section = input.closest('section').id;
-				if(e.target.closest('.camIcon')) {e.preventDefault(); e.stopPropagation(); buttonCam(input.closest('section')); return;}
+				if(e.target.closest('.camIcon')) {
+					e.preventDefault(); e.stopPropagation(); 
+					if(!camImported){importCam();setTimeout(()=>buttonCam(input.closest('section')),500);}
+					else {buttonCam(input.closest('section'));}
+					return;
+				}
 				if(['header', 'h1'].includes(e.target.nodeName.toLowerCase())) sectionUp(input.closest('section'));
 				if(!input.matches(selector)) return;
 				if(e.clientX === 0 && e.clientY === 0) return;
@@ -1900,6 +1924,7 @@
 						}
 						else {
 							clearCheck();
+							label.classList.add('checked');
 						}
 					}
 				}
@@ -2046,23 +2071,7 @@
 				});
 			}
 			loaded = true;
-			setTimeout(()=>{
-				if(sideExist){
-					import('./cam.js').then(module => {
-						camAPI = new ZXing.BrowserMultiFormatReader();
-						camAPI.listVideoInputDevices().then((videoInputDevices) => {
-							if(videoInputDevices.length >= 1) {
-								videoInputDevices.forEach((el) => {
-									camLenses[el.deviceId] = el.label;
-								});
-							}
-						})
-						.catch((err) => {
-							console.error(err);
-						})
-					});
-				}
-			},500);
+
 			//quality assurance
 			window.onerror = function(msg, src, line, col, err){alert(msg + '. ' + 'Line: ' + line + '. Col: ' + col);};
 			window.onunhandledrejection = function(e){alert(e.reason);};
