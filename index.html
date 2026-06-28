@@ -1387,13 +1387,16 @@
 								}
 							}
 						});
-						if($('form.entry',detSec)!== null && labelsFound < 1){
-							['save','delete'].forEach(btn=>{
-								$('header .hRight input[data-btn='+btn+']',detSec).closest('label').style.display = 'none';
-							});
-							$('h1',detSec).innerText = '';
-							detSec.style.backgroundColor = getColor(isPhone?'--cl2':'--bck');
-							$('.entry',detSec).style.display = 'none';
+						if ($('form.entry', detSec) !== null) {
+							const hasLabels = labelsFound > 0;
+							if (!isPhone) {
+								['save','delete'].forEach(btn => {
+									$('header .hRight input[data-btn='+btn+']', detSec).closest('label').style.display = hasLabels?'flex':'none';
+								});
+								if(!hasLabels) $('h1', detSec).innerText = '';
+							}
+							detSec.style.backgroundColor = getColor(hasLabels?'--bg':(isPhone?'--cl2':'--bck'));
+							$('.entry', detSec).style.display = hasLabels?'block':'none';
 						}
 					}
 					if(multiSelect && rows) {
