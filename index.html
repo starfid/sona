@@ -959,12 +959,13 @@
 							}
 							cancelMulti(input);
 						}
-					};
-					detSec.style.backgroundColor = bgColor;
-					if(isPopBlock || section === detSec || $('.entry').style.animation === '') {
+					};					
+					if(isPopBlock || section === detSec) {// || $('.entry').style.animation === '') {
+						detSec.style.backgroundColor = bgColor;
 						$('.entry').style.animation = "zoomAndSend .5s forwards ease-in";
 					}
 					else if(!isPhone) {//stacked
+						detSec.style.backgroundColor = bgColor;
 						$('.entry').style.animation = "sending .5s forwards ease-out";
 					}
 					setTimeout(()=>{
@@ -1026,7 +1027,9 @@
 						}
 					}
 				}
-				if(section.id==='pop') buttonCancel(input);
+				if(section.id==='pop'){
+					buttonCancel(input);
+				}
 			}
 			function buttonSide(focused = true) {
 				const navDis = display(navSec);
@@ -1895,7 +1898,7 @@
 						navClick(label);
 					}
 					else if(!multiSelect && (display(detSec) === 'none' || leftPos(detSec) > '200px')) {
-						if(display(listSec)==='block') clearCheck();
+						if(display(listSec)==='block' && !isPhone) clearCheck();
 						listSec.classList.remove('listShowList');
 						listSec.classList.add('listShowDetail');
 						detSec.classList.remove('detailShowList');
