@@ -100,12 +100,12 @@
 			}
 			fieldset .rows label.select > div:first-of-type {border-radius:50%;}
 			fieldset .rows label.select > div:last-of-type {display:flex;flex-direction:column;gap:2px;flex:1;min-width:0;}
-			fieldset .rows label.select > div:last-of-type > dl {margin:0;padding:0;display:grid;grid-template-columns:auto auto;}
+			fieldset .rows label.select > div:last-of-type > dl {margin:0;padding:0;display:grid;grid-template-columns:auto auto;}			
 			fieldset .rows label.select > div:last-of-type > dl > dt {margin:0;padding:0;word-break:break-all;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;}
 			fieldset .rows label.select > div:last-of-type > dl > dd {margin:0;padding:0;text-align:right;color:var(--fdC);}
 			fieldset .rows label.select > div:last-of-type > dl:nth-child(2) > dd {line-height:calc(var(--fn1)*0.99);}
 			fieldset .rows label.select > div:last-of-type > div {color:var(--fdC);display:-webkit-box;-webkit-line-clamp:2;min-height:calc(var(--fn1) * 2.3);-webkit-box-orient:vertical;overflow:hidden;}
-			
+			/*fieldset .rows label.select.tilesLabel > div:last-of-type > dl:nth-child(1) > dt {-webkit-line-clamp:2;}*/
 			.btn input[type=checkbox], .btn [type=radio], .select input[type=checkbox], .select input[type=radio], .entry input{position: absolute;left: -9999px;}
 			.checked {background-color:var(--bck);color:var(--cck);}
 			
@@ -160,7 +160,9 @@
 			}
 			#pop header .focused {background-color:var(--bg);color:var(--bhg);font-weight:bolder}
 			#pop header {padding: calc(var(--mg)*1.5) calc(var(--mg)*2) 0 calc(var(--mg)*2);}
+			#pop .btn {cursor:pointer}
 			#pop fieldset {padding:var(--mg)}
+			#pop fieldset form.entry {margin:calc(var(--mg)*3) var(--mg) var(--mg) var(--mg);}
 
 			@keyframes popRising { from {top:51%;} to {top:50%;} }
 			@keyframes zoomAndSend {
@@ -215,6 +217,7 @@
 				
 				#pop {width:60vw}
 				#pop fieldset {padding: calc((2 * var(--mg)) + var(--fn2)) 0 0 0;}
+				#pop fieldset form.entry {margin:0 var(--mg) var(--mg) var(--mg);}
 				@keyframes navToggle {
 					from {margin-top:calc(var(--mg) * 2)}
 					to {margin-top:calc((var(--mg) * 2) + (var(--mg) / 2));}
@@ -740,9 +743,7 @@
 			const $$ = (s, c = document) => [...c.querySelectorAll(s)];
 			const $ = (s, c = document) => c.querySelector(s);
 			const selector = '.rows label > input[type=checkbox], form label > input[type=radio], .searchFrm label > input[type=search], header label > input[type=radio]';
-			const navSec = $('#navSection');
-			const listSec = $('#listSection');
-			const detSec = $('#detailSection');
+			const navSec = $('#navSection'); const listSec = $('#listSection'); const detSec = $('#detailSection'); const popSec = $('#pop');
 			const h1Txt = $('header div h1',listSec).innerText;
 			const getColor = (color) => getComputedStyle(document.documentElement).getPropertyValue(color).trim();
 			const capitalize = (str) => str.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
@@ -752,7 +753,7 @@
 			let tabPressed = false;
 			let multiSelect = false;
 			let selections = [];
-			let camImported = false; let camAPI = {}; let camLenses = {};
+			let camReadyPromise = null; let camAPI = {}; let camLenses = {};
 			let selDown = true;
 			let lastSection = null;
 			let backAnimating = false;
@@ -832,6 +833,7 @@
 			}
 			function buttonCompose(input){
 				const cancelFocus = () => checkedFocus($('#pop input'));
+				let source = $('.entry',detSec);
 				if(input.closest('section').id==='pop'){
 					buttonCancel(input);
 					setTimeout(()=>{
@@ -852,6 +854,10 @@
 						toggleLayer();
 						cancelFocus();
 					}
+				}
+				if(source!==null){
+					const clone = source.cloneNode(true);
+					$('fieldset',popSec).appendChild(clone);
 				}
 			}
 			function setPop(percent,cancelBut){
@@ -960,7 +966,7 @@
 							cancelMulti(input);
 						}
 					};					
-					if(isPopBlock || section === detSec) {// || $('.entry').style.animation === '') {
+					if(isPopBlock || section === detSec) {
 						detSec.style.backgroundColor = bgColor;
 						$('.entry').style.animation = "zoomAndSend .5s forwards ease-in";
 					}
@@ -997,7 +1003,7 @@
 							}							
 						}, 100);
 						
-					},(isPhone && display(detSec) === 'none')?0:650);
+					},(isPhone && display(detSec) === 'none')?0:750);
 				}
 				else if((input.name === 'item' || input.name === 'copy') || input.dataset.btn === 'delete') {
 					if(selections.length > 0 && section !== 'navSection'){
@@ -1838,30 +1844,27 @@
 				},550);
 				//}, { once: true });
 			}
-			function importCam(){
-				import('./cam.js').then(module => {
+			function importCam() {
+				if(camReadyPromise) return camReadyPromise;
+				camReadyPromise = import('./cam.js').then(() => {
 					camAPI = new ZXing.BrowserMultiFormatReader();
-					camAPI.listVideoInputDevices().then((videoInputDevices) => {
-						if(videoInputDevices.length >= 1) {
-							videoInputDevices.forEach((el) => {
-								camLenses[el.deviceId] = el.label;
-							});
-						}
-						camImported = true;
-					})
-					.catch((err) => {
-						console.error(err);
-					})
+					return camAPI.listVideoInputDevices();
+				})
+				.then((videoInputDevices) => {
+					if(videoInputDevices.length >= 1) {videoInputDevices.forEach((el) => {camLenses[el.deviceId] = el.label;});}
+				})
+				.catch((err) => {
+					console.error(err); camReadyPromise = null; throw err;
 				});
+				return camReadyPromise;
 			}
 			function handleClick(e) {
 				const input = e.target;
 				if(input.closest('section')===null) return;
 				const section = input.closest('section').id;
 				if(e.target.closest('.camIcon')) {
-					e.preventDefault(); e.stopPropagation(); 
-					if(!camImported){importCam();setTimeout(()=>buttonCam(input.closest('section')),500);}
-					else {buttonCam(input.closest('section'));}
+					e.preventDefault(); e.stopPropagation();
+					importCam().then(() => buttonCam(input.closest('section'))).catch((err) => console.error('Camera init failed', err));
 					return;
 				}
 				if(['header', 'h1'].includes(e.target.nodeName.toLowerCase())) sectionUp(input.closest('section'));
