@@ -95,7 +95,7 @@
 			fieldset form.rows label {border-bottom:solid 1px var(--nvB)}
 			fieldset .rows label.select {display:flex;align-items:stretch;gap:var(--mg);}
 			fieldset .rows label.select > div:first-of-type, .tilesDetail div {
-				width:var(--cir);height:var(--cir);display:flex;align-items:center;justify-content:center;background-color:var(--brC)/*var(--cl2)*/;color:var(--bg);flex-shrink:0;
+				width:var(--cir);height:var(--cir);display:flex;align-items:center;justify-content:center;background-color:var(--nvB)/*var(--cl2)*/;color:var(--bg);flex-shrink:0;
 				background-size: cover !important;background-repeat: no-repeat;background-position: center;
 			}
 			fieldset .rows label.select > div:first-of-type {border-radius:50%;}
@@ -163,6 +163,7 @@
 			#pop .btn {cursor:pointer}
 			#pop fieldset {padding:var(--mg)}
 			#pop fieldset form.entry {margin:calc(var(--mg)*3) var(--mg) var(--mg) var(--mg);}
+			#pop .wrap {border-color:var(--bck)}
 
 			@keyframes popRising { from {top:51%;} to {top:50%;} }
 			@keyframes zoomAndSend {
@@ -330,6 +331,8 @@
 				#layer {background-color: rgba(0,0,0,0.7);}
 				#pop, #pop header, #pop header .focused {background-color:var(--bck)}
 				#pop header .focused, #pop .focused {color:#FFFFFF}
+				#pop .entry {border-color:var(--bck)}
+				#pop .wrap {border-color:var(--fDC)}
 			}
 		</style>
 	</head>
@@ -857,6 +860,10 @@
 				}
 				if(source!==null){
 					const clone = source.cloneNode(true);
+					clone.style.cssText = '';
+					$('.tilesDetail div',clone).style.backgroundImage = 'none';
+					$$('.wrap',clone).forEach(wrap=>{wrap.dataset.clone = '';});
+					$$('textarea',clone).forEach(textarea=>{textarea.value = '';});
 					$('fieldset',popSec).appendChild(clone);
 				}
 			}
@@ -968,11 +975,11 @@
 					};					
 					if(isPopBlock || section === detSec) {
 						detSec.style.backgroundColor = bgColor;
-						$('.entry').style.animation = "zoomAndSend .5s forwards ease-in";
+						$('.entry',detSec).style.animation = "zoomAndSend .5s forwards ease-in";
 					}
 					else if(!isPhone) {//stacked
 						detSec.style.backgroundColor = bgColor;
-						$('.entry').style.animation = "sending .5s forwards ease-out";
+						$('.entry',detSec).style.animation = "sending .5s forwards ease-out";
 					}
 					setTimeout(()=>{
 						removeSelections();
@@ -980,7 +987,7 @@
 						setTimeout(() => {
 							function resetEntry(){
 								detSec.style.backgroundColor = 'var(--bg)';
-								$('.entry').style.animation = '';
+								$('.entry',detSec).style.animation = '';
 							}
 							if(isPopBlock && isPhone) {
 								buttonBack(input, false);
@@ -1224,9 +1231,9 @@
 				$('h1',section).innerText = h1;
 			}
 			function resetZoomSelecting(){
-				if($('.entry') !== null && !isPhone && $$$('.rows label.select',listSec).length > 0){
+				if($('.entry',detSec) !== null && !isPhone && $$$('.rows label.select',listSec).length > 0){
 					detSec.style.backgroundColor = getColor('--bg');
-					$('.entry').style.cssText = 'zoom:normal;margin:0 var(--mg) var(--mg) var(--mg);background-color:var(--bg)';
+					$('.entry',detSec).style.cssText = 'zoom:normal;margin:0 var(--mg) var(--mg) var(--mg);background-color:var(--bg)';
 					[...$$('header .hRight label input',detSec)].forEach((el)=>{
 						if(el.dataset.btn !== 'dots') el.closest('label').style.display = 'flex';
 					});
@@ -1262,10 +1269,10 @@
 				const delBut = $('header .hRight input[data-btn=delete]',detSec);
 				selections = totSelection;
 				$('h1',section).innerText = (totLen>0)?totLen + ' Selected':'Please Select';
-				if(totLen>1 && $('.entry') !== null && !isPhone && $('.entry',detSec).style.animation.length < 1){
+				if(totLen>1 && $('.entry',detSec) !== null && !isPhone && $('.entry',detSec).style.animation.length < 1){
 					delBut.disabled = true;
 					detSec.style.backgroundColor = getColor(isPhone?'--cl2':'--bck');
-					$('.entry').style.animation = "selecting .2s forwards ease-out";
+					$('.entry',detSec).style.animation = "selecting .2s forwards ease-out";
 					[...$$('header .hRight label input',detSec)].forEach((el)=>{
 						if(el.dataset.btn !== 'dots') el.closest('label').style.display = 'none';
 					});
@@ -1275,7 +1282,7 @@
 					}
 					setTimeout(()=>{setStacked(document.querySelector('.entry'), true);},150);
 				}
-				else if(totLen===1 && $('.entry') !== null && !isPhone && $('.entry',detSec).style.animation.length < 1 && delBut !== null && delBut.disabled){
+				else if(totLen===1 && $('.entry',detSec) !== null && !isPhone && $('.entry',detSec).style.animation.length < 1 && delBut !== null && delBut.disabled){
 					delBut.disabled = false;
 				}
 			}			
@@ -1800,7 +1807,7 @@
 					case 'Delete':
 						if(!(input.type==='text'||input.type==='search'||input.type==='radio'||input.name==='filter') && allowDel){
 							let label = $('header input[data-btn=delete]',detSec).closest('label');
-							if($('.entry')!==null && display(label)==='none'){
+							if($('.entry',detSec)!==null && display(label)==='none'){
 								label = $('header input[data-btn=delete]',listSec).closest('label');
 							}
 							label.classList.add('focused');
@@ -1830,7 +1837,7 @@
 			function buttonSave(input){
 				buttonCancel(input);
 				detSec.style.backgroundColor = getColor(isPhone?'--cl2':'--bck');
-				$('.entry').style.animation = "zoomAndSend .5s forwards ease-in";
+				$('.entry',detSec).style.animation = "zoomAndSend .5s forwards ease-in";
 				//$('.entry').addEventListener('animationend', () => {
 				setTimeout(()=>{
 					multiSelect = false;
@@ -2021,7 +2028,7 @@
 					[...$$('input[data-btn="new item"],input[data-btn="delete"],input[data-btn="select"]',listSec)].forEach((el)=>{
 						el.closest('label').parentNode.removeChild(el.closest('label'));
 					});
-					$('.entry').parentNode.removeChild($('.entry'));
+					$('.entry',detSec).parentNode.removeChild($('.entry',detSec));
 				}
 				else {	//entry
 					$$('.filters.dual,.searchFrm.dual,.rows.dual',detSec).forEach(el=>{
