@@ -74,9 +74,8 @@
 			section header h1 {word-break:break-all;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;}
 
 			.searchFrm, .searchFrm label, fieldset form.filters label, .rows label.checked, 
-				.rows label.focused, #navSection form label.select, #pop, video, .tilesDetail div,
-				.entry {border-radius:1vh;}
-			.searchFrm, .wrap, .entry {border:solid 1px var(--brC)/*var(--nvB)*/;}
+				.rows label.focused, #navSection form label.select, #pop, video, .tilesDetail div {border-radius:1vh;}
+			.searchFrm, .wrap {border:solid 1px var(--brC)/*var(--nvB)*/;}
 			.searchFrm .deskHid {visibility:hidden}
 			.searchFrm label {padding:calc(var(--mg) * .68) var(--mg);display: flex;justify-content: space-between;}
 			.searchFrm label input {
@@ -135,6 +134,7 @@
 			.tilesDetail, .tilesDetail div {width:var(--cir2);height:var(--cir2);border-radius:50%}			
 			.tilesDetail input[type="file"]:focus + div {box-shadow: 0 0 10px var(--bhg);}
 
+			#detailSection .entry {margin:0}
 			.wrap {padding:var(--mg);border-radius:1vh;display:grid;word-break:break-word;}
 			.wrap > textarea {word-break:break-word;border:none;margin:0;padding:0;background-color:transparent;resize:none;overflow:hidden;}
 			.wrap::after {content:attr(data-clone) " ";white-space:pre-wrap;visibility:hidden;}
@@ -162,7 +162,8 @@
 			#pop header {padding: calc(var(--mg)*1.5) calc(var(--mg)*2) 0 calc(var(--mg)*2);}
 			#pop .btn {cursor:pointer}
 			#pop fieldset {padding:var(--mg)}
-			#pop fieldset form.entry {margin:calc(var(--mg)*3) var(--mg) var(--mg) var(--mg);}
+			#pop fieldset form.entry {margin:calc(var(--mg)*3) 0 var(--mg) 0;border-color:none}
+			#pop .entry label {padding: var(--mg) 0}
 			#pop .wrap {border-color:var(--bck)}
 
 			@keyframes popRising { from {top:51%;} to {top:50%;} }
@@ -219,6 +220,7 @@
 				#pop {width:60vw}
 				#pop fieldset {padding: calc((2 * var(--mg)) + var(--fn2)) 0 0 0;}
 				#pop fieldset form.entry {margin:0 var(--mg) var(--mg) var(--mg);}
+				#pop fieldset form label {padding:var(--mg) 0}
 				@keyframes navToggle {
 					from {margin-top:calc(var(--mg) * 2)}
 					to {margin-top:calc((var(--mg) * 2) + (var(--mg) / 2));}
@@ -1233,7 +1235,8 @@
 			function resetZoomSelecting(){
 				if($('.entry',detSec) !== null && !isPhone && $$$('.rows label.select',listSec).length > 0){
 					detSec.style.backgroundColor = getColor('--bg');
-					$('.entry',detSec).style.cssText = 'zoom:normal;margin:0 var(--mg) var(--mg) var(--mg);background-color:var(--bg)';
+					$('header',detSec).style.visibility = 'visible';
+					$('.entry',detSec).style.cssText = 'zoom:normal;margin:0;background-color:var(--bg)';
 					[...$$('header .hRight label input',detSec)].forEach((el)=>{
 						if(el.dataset.btn !== 'dots') el.closest('label').style.display = 'flex';
 					});
@@ -1272,6 +1275,7 @@
 				if(totLen>1 && $('.entry',detSec) !== null && !isPhone && $('.entry',detSec).style.animation.length < 1){
 					delBut.disabled = true;
 					detSec.style.backgroundColor = getColor(isPhone?'--cl2':'--bck');
+					$('header',detSec).style.visibility = 'hidden';
 					$('.entry',detSec).style.animation = "selecting .2s forwards ease-out";
 					[...$$('header .hRight label input',detSec)].forEach((el)=>{
 						if(el.dataset.btn !== 'dots') el.closest('label').style.display = 'none';
