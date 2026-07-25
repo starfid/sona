@@ -166,7 +166,9 @@
 			#pop .entry label {padding: var(--mg) 0}
 			#pop .wrap {border-color:var(--bck)}
 
-			@keyframes popRising { from {top:51%;} to {top:50%;} }
+			@keyframes popRising { from {top:52%;} to {top:50%;} }
+			@keyframes popDowning { from {top:50%;} to {top:59%;} }
+			@keyframes popSending { from {top:50%;} to {top:35%;} }
 			@keyframes zoomAndSend {
 				0% {zoom:normal;margin:var(--mg) var(--mg) var(--mg) var(--mg);background-color:var(--bg)}
 				10% {zoom:0.9848;margin:calc(var(--mg) * 2.111) calc(var(--mg) * 2.390) 0 calc(var(--mg) * 2.390);}
@@ -231,7 +233,7 @@
 					--fn1:6vw; 	--fn2:7vw;	--dmy:25vw;	--cir:17vw;
 					--mg:3.2vw;	--mg2:calc(var(--fn2) / 2);	--tTop:50%;	--wdt:100vw;
 				}
-				main {display:block;background-color:#000000!important;min-height:60vh}
+				main {display:block;background-color:#000000!important;min-height:100vh}
 				main .tilesRow {grid-template-columns:repeat(2, 1fr)!important;}
 				/*main:has(#detailSection:not(:empty)) .tilesRow {grid-template-columns:repeat(2, 1fr)!important;}*/
 				#listSection header div:last-child label:not(.deskHid):not(.tabHid).last svg
@@ -290,13 +292,14 @@
                 			background-color:white;width:100%;left:0;border-radius:2vh;border-width:0;
 					border-bottom-left-radius:0;border-bottom-right-radius:0;
 				}
-				.sectionZoom {height:80vh;border-radius:var(--mg);animation:zooming .3s forwards}
+				.sectionZoom {height:100vh;border-radius:var(--mg);animation:zooming .3s forwards}
 				.tilesPreview {width: 100% !important; aspect-ratio: 1 / 1 !important; height: auto !important; object-fit: cover;}
 				.tilesDetail {margin: 10vw auto}
 				.tilesDetail, .tilesDetail div {width:var(--cir2);height:var(--cir2);}
 				
 				@keyframes zooming { from {transform:scale(1);} to {transform:scale(.94);} }
 				@keyframes popRising { from {height:25%;} to {height:var(--tTop);} }
+				@keyframes popDowning { from {height:var(--tTop);} to {height:25%;} }
 				@keyframes detailShowDetail { from {left:150px;} to {left:0;} }
 				@keyframes detailShowList { from {left:30vw;} to {left:100vw;} }
 				@keyframes listShowDetail { from {left:0;} to {left:-45px;} }
@@ -926,14 +929,30 @@
 				}
 			}
 			function buttonSend(input,focused = true) {
-				toggleLayer();
-				cancelPop(true);
+				function defCallback(){
+					toggleLayer();
+					cancelPop(true);
+					popSec.style.animation = "popRising .3s forwards";
+				}
+				if(!isPhone){
+					popSec.style.animation = "popSending .1s forwards";
+					setTimeout(()=>{
+						defCallback();
+					},100);
+				}
+				else {
+					defCallback()
+				}
 			}
 			function buttonCancel(input,focused = true) {
 				if(display($('#layer'))==='none') return;
 				if('reset' in camAPI) camAPI.reset();
-				toggleLayer();
+				popSec.style.animation = "popDowning .1s forwards";
 				cancelPop(true);
+				setTimeout(()=>{
+					toggleLayer();					
+					popSec.style.animation = "popRising .3s forwards";
+				},100);
 			}
 			function buttonBack(input,focused = true){
 				if(backAnimating) return;
@@ -1840,20 +1859,6 @@
 			}
 			function buttonSave(input){
 				buttonCancel(input);
-				detSec.style.backgroundColor = getColor(isPhone?'--cl2':'--bck');
-				$('.entry',detSec).style.animation = "zoomAndSend .5s forwards ease-in";
-				//$('.entry').addEventListener('animationend', () => {
-				setTimeout(()=>{
-					multiSelect = false;
-					setTimeout(()=>{
-						$('.entry',detSec).style.animation = '';
-						detSec.style.backgroundColor = 'var(--bg)';
-						if(input.name==='item') checkedFocus(input);
-						else if(selections.length==1) checkedFocus($('input',selections[0]));
-						else checkedFocus($('input',$$$('.rows label',listSec)[0]));
-					},100);
-				},550);
-				//}, { once: true });
 			}
 			function importCam() {
 				if(camReadyPromise) return camReadyPromise;
