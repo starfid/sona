@@ -166,10 +166,11 @@
 			#pop .entry label {padding: var(--mg) 0}
 			#pop .wrap {border-color:var(--bck)}
 
+			.deskZoomAndSend {animation:deskZoomAndSend .5s forwards ease-in}
 			@keyframes popRising { from {top:52%;} to {top:50%;} }
 			@keyframes popDowning { from {top:50%;} to {top:59%;} }
 			@keyframes popSending { from {top:50%;} to {top:35%;} }
-			@keyframes zoomAndSend {
+			@keyframes deskZoomAndSend {
 				0% {zoom:normal;margin:var(--mg) var(--mg) var(--mg) var(--mg);background-color:var(--bg)}
 				10% {zoom:0.9848;margin:calc(var(--mg) * 2.111) calc(var(--mg) * 2.390) 0 calc(var(--mg) * 2.390);}
 				20% {zoom:0.9697;margin:calc(var(--mg) * 1.778) calc(var(--mg) * 2.559) 0 calc(var(--mg) * 2.559);}
@@ -296,15 +297,24 @@
 				.tilesPreview {width: 100% !important; aspect-ratio: 1 / 1 !important; height: auto !important; object-fit: cover;}
 				.tilesDetail {margin: 10vw auto}
 				.tilesDetail, .tilesDetail div {width:var(--cir2);height:var(--cir2);}
+				.phoneZoomAndSend {animation:phoneZoomAndSend .25s forwards ease-in}
 				
 				@keyframes zooming { from {transform:scale(1);} to {transform:scale(.94);} }
 				@keyframes popRising { from {height:25%;} to {height:var(--tTop);} }
 				@keyframes popDowning { from {height:var(--tTop);} to {height:25%;} }
+				@keyframes popDowningDel { from {height:var(--tTop);} to {height:0;} }
 				@keyframes detailShowDetail { from {left:150px;} to {left:0;} }
 				@keyframes detailShowList { from {left:30vw;} to {left:100vw;} }
 				@keyframes listShowDetail { from {left:0;} to {left:-45px;} }
 				@keyframes listShowList { from {left:-100px;} to {left:0;} }
-				@keyframes zoomAndSend {
+				@keyframes phoneZoomAndSend {
+					0% {transform:scale(.94);margin-top:0vh}
+					10% {transform:scale(.94);margin-top:2vh}
+					40% {transform:scale(.94);margin-top:4vh}
+					60% {transform:scale(.94);margin-top:6vh}
+					100% {transform:scale(.94);margin-top:-100vh}
+				}
+				@keyframes deskZoomAndSend {
 					0%  {zoom:normal; margin:-30px var(--mg) var(--mg) var(--mg); background-color:var(--bg)}
 					10% {zoom:0.9848; margin:calc(var(--mg) * 0.101 - 25.45px) calc(var(--mg) * 0.956) 0 calc(var(--mg) * 0.956);}
 					20% {zoom:0.9697; margin:calc(var(--mg) * 0.203 - 20.91px) calc(var(--mg) * 1.024) 0 calc(var(--mg) * 1.024);}
@@ -947,12 +957,25 @@
 			function buttonCancel(input,focused = true) {
 				if(display($('#layer'))==='none') return;
 				if('reset' in camAPI) camAPI.reset();
-				popSec.style.animation = "popDowning .1s forwards";
-				cancelPop(true);
-				setTimeout(()=>{
-					toggleLayer();					
-					popSec.style.animation = "popRising .3s forwards";
-				},100);
+				function defCallback(){
+					lastSection = listSec;
+					popSec.style.animation = "popDowning .1s forwards";
+					cancelPop(true);
+					setTimeout(()=>{
+						toggleLayer();					
+						popSec.style.animation = "popRising .3s forwards";
+					},100);
+				}
+				if(input === undefined){
+					defCallback();
+				}
+				else if(isPhone && input.dataset.btn === 'delete'){
+					popSec.style.animation = "popDowningDel .1s forwards";
+					lastSection = display(detSec)=='none'?listSec:detSec;
+				}
+				else {
+					defCallback();
+				}
 			}
 			function buttonBack(input,focused = true){
 				if(backAnimating) return;
@@ -972,11 +995,13 @@
 					detSec.style.display = 'none';
 				}, { once: true });
 				clearbyClick(detSec, $('fieldset .rows input',detSec));
+				lastSection = listSec;
 			}
 			function buttonDelete(input){
 				const section = input.closest('section');
 				if($('.entry', detSec) !== null) {
-					const isPopBlock = section.id === 'pop' && display(detSec) === 'block';
+					const popFromDetail = section.id === 'pop' && display(detSec) === 'block';
+					const popFromList = section.id === 'pop' && display(listSec) === 'block';
 					const bgColor = getColor(isPhone?'--cl2':'--bck');
 					const removeSelections = () => {
 						if(!selections.length) selections = $$$('.rows .checked', listSec);
@@ -993,16 +1018,43 @@
 							}
 							cancelMulti(input);
 						}
-					};					
-					if(isPopBlock || section === detSec) {
-						detSec.style.backgroundColor = bgColor;
-						$('.entry',detSec).style.animation = "zoomAndSend .5s forwards ease-in";
+					};
+					let timeOut;
+					if(popFromDetail) {//del button phone
+						//detSec.style.backgroundColor = bgColor;
+						//$('.entry',detSec).style.animation = "deskZoomAndSend .5s forwards ease-in";
+						//detSec.style.animation = "phoneZoomAndSend .25s forwards ease-in";
+						detSec.classList.add('phoneZoomAndSend');
+						timeOut = 250;
 					}
-					else if(!isPhone) {//stacked
+					else if(popFromList){
+						toggleLayer();
+						cancelPop(true);
+					}
+					else if(section === detSec) {//del button desktop
+						detSec.style.backgroundColor = bgColor;
+						//$('.entry',detSec).style.animation = "deskZoomAndSend .5s forwards ease-in";
+						$('.entry',detSec).classList.add('deskZoomAndSend');
+						timeOut = 500;
+					}
+					else if(!isPhone) {//stacked desktop
 						detSec.style.backgroundColor = bgColor;
 						$('.entry',detSec).style.animation = "sending .5s forwards ease-out";
+						timeOut = 500;
 					}
 					setTimeout(()=>{
+						if(timeOut === 250){
+							cancelPop(true);
+							toggleLayer();					
+							popSec.style.animation = "popRising .3s forwards";
+							//detSec.style.display = 'none';
+							detSec.classList.remove('phoneZoomAndSend');
+							detSec.classList.remove('detailShowList');			
+						}
+						else {
+							$('.entry',detSec).classList.remove('deskZoomAndSend');
+						}
+						
 						removeSelections();
 						const listEmpty = $$$('.rows label.select',listSec).length>0?false:true;
 						setTimeout(() => {
@@ -1010,7 +1062,7 @@
 								detSec.style.backgroundColor = 'var(--bg)';
 								$('.entry',detSec).style.animation = '';
 							}
-							if(isPopBlock && isPhone) {
+							if(popFromDetail && isPhone) {
 								buttonBack(input, false);
 								const firstRow = $('label', $$$('.rows', listSec)[0]);
 								if(firstRow!==null){
@@ -1029,9 +1081,9 @@
 								resetEntry();
 								checkedFocus($$$('input', $('.rows', listSec))[0]);
 							}							
-						}, 100);
-						
-					},(isPhone && display(detSec) === 'none')?0:750);
+						}, 100);						
+					},timeOut);
+					//},(isPhone && display(detSec) === 'none')?0:750);
 				}
 				else if((input.name === 'item' || input.name === 'copy') || input.dataset.btn === 'delete') {
 					if(selections.length > 0 && section !== 'navSection'){
