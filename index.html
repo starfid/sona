@@ -1047,9 +1047,12 @@
 							cancelPop(true);
 							toggleLayer();					
 							popSec.style.animation = "popRising .3s forwards";
-							//detSec.style.display = 'none';
+							detSec.style.backgroundColor = 'black';
+							$('header',detSec).style.display = 'none';
+							$('fieldset',detSec).style.display = 'none';
+
 							detSec.classList.remove('phoneZoomAndSend');
-							detSec.classList.remove('detailShowList');			
+							detSec.classList.remove('detailShowList');		
 						}
 						else {
 							$('.entry',detSec).classList.remove('deskZoomAndSend');
@@ -1067,8 +1070,13 @@
 								const firstRow = $('label', $$$('.rows', listSec)[0]);
 								if(firstRow!==null){
 									$('label', $$$('.rows', listSec)[0]).classList.add('checked');
-									setTimeout(() => {resetEntry();}, 500);
-								}								
+									setTimeout(() => {
+										resetEntry();
+										detSec.style.backgroundColor = 'white';
+										$('header',detSec).style.display = 'grid';
+										$('fieldset',detSec).style.display = 'block';
+									}, 500);
+								}
 							}
 							else if(!isPhone && listEmpty){
 								['save','delete'].forEach(btn=>{
@@ -1081,7 +1089,8 @@
 								resetEntry();
 								checkedFocus($$$('input', $('.rows', listSec))[0]);
 							}							
-						}, 100);						
+						}, 100);
+						
 					},timeOut);
 					//},(isPhone && display(detSec) === 'none')?0:750);
 				}
@@ -1978,7 +1987,6 @@
 						detSec.classList.remove('detailShowList');
 						detSec.classList.add('detailShowDetail');
 						detSec.style.display = 'block';
-
 						checkedFocus($('.rows input',detSec));
 						listSec.addEventListener('animationstart', () => {
 							backAnimating = true;
