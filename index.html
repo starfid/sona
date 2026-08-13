@@ -1043,7 +1043,7 @@
 						timeOut = 500;
 					}
 					setTimeout(()=>{
-						if(timeOut === 250){
+						if(timeOut === 250){//phone
 							cancelPop(true);
 							toggleLayer();					
 							popSec.style.animation = "popRising .3s forwards";
@@ -1055,6 +1055,9 @@
 							detSec.classList.remove('detailShowList');		
 						}
 						else {
+							//detSec.style.backgroundColor = 'black';
+							//$('header',detSec).style.display = 'none';
+							$('fieldset',detSec).style.display = 'none';
 							$('.entry',detSec).classList.remove('deskZoomAndSend');
 						}
 						
@@ -1072,7 +1075,6 @@
 									$('label', $$$('.rows', listSec)[0]).classList.add('checked');
 									setTimeout(() => {
 										resetEntry();
-										detSec.style.backgroundColor = 'white';
 										$('header',detSec).style.display = 'grid';
 										$('fieldset',detSec).style.display = 'block';
 									}, 500);
@@ -1086,6 +1088,7 @@
 								checkedFocus($('header .hRight .secondLast input',listSec),true);
 							}
 							else if(!isPhone && !listEmpty){
+								$('fieldset',detSec).style.display = 'block';
 								resetEntry();
 								checkedFocus($$$('input', $('.rows', listSec))[0]);
 							}							
@@ -1981,7 +1984,8 @@
 						navClick(label);
 					}
 					else if(!multiSelect && (display(detSec) === 'none' || leftPos(detSec) > '200px')) {
-						if(display(listSec)==='block' && !isPhone) clearCheck();
+						//if(display(listSec)==='block' && !isPhone) clearCheck();
+						clearCheck();
 						listSec.classList.remove('listShowList');
 						listSec.classList.add('listShowDetail');
 						detSec.classList.remove('detailShowList');
