@@ -1080,6 +1080,9 @@
 									}, 500);
 								}
 							}
+							else if(!popFromDetail && isPhone) {
+								$('fieldset',detSec).style.display = 'block';
+							}
 							else if(!isPhone && listEmpty){
 								['save','delete'].forEach(btn=>{
 									$('header .hRight input[data-btn='+btn+']',detSec).closest('label').style.display = 'none';
