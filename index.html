@@ -223,7 +223,7 @@
 				#pop {width:60vw}
 				#pop fieldset {padding: calc((2 * var(--mg)) + var(--fn2)) 0 0 0;}
 				#pop fieldset form.entry {margin:0 var(--mg) var(--mg) var(--mg);}
-				#pop fieldset form label {padding:var(--mg) 0}
+				#pop fieldset form label {padding:var(--mg)/* 0*/}
 				@keyframes navToggle {
 					from {margin-top:calc(var(--mg) * 2)}
 					to {margin-top:calc((var(--mg) * 2) + (var(--mg) / 2));}
@@ -785,8 +785,11 @@
 				setPop('50%',true);
 				checkedFocus($('#pop input'));
 				$('#pop fieldset').innerHTML = "<form class=\"icons\"></form>";
+				
 				$$('header .hRight .mobHid',section).forEach(lbl=>{
-					if(!($('input',lbl).dataset.btn==='delete' && !multiSelect && $('.rows',section)!==null)){
+					if(
+						!($('input',lbl).dataset.btn==='delete' && !multiSelect && $('.rows',section)!==null && display(detSec)==='none') 
+					){
 						$('#pop fieldset form').appendChild(lbl.cloneNode(true));
 					}
 				});
@@ -958,7 +961,14 @@
 				if(display($('#layer'))==='none') return;
 				if('reset' in camAPI) camAPI.reset();
 				function defCallback(){
-					lastSection = listSec;
+					if(isPhone){
+						if(display(navSec)){
+							lastSection = navSec;
+						}
+						else {
+							lastSection = listSec;
+						}
+					}
 					popSec.style.animation = "popDowning .1s forwards";
 					cancelPop(true);
 					setTimeout(()=>{
@@ -1112,6 +1122,10 @@
 							});
 							multiSelect = false;
 							cancelMulti(input);
+						}
+						if(isPhone){
+							cancelPop(true);
+							toggleLayer();
 						}
 					}
 					else if(isPhone){
