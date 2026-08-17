@@ -1330,6 +1330,7 @@
 						h1 = $("fieldset .rows .select.checked div:nth-child(3) dl dt",listSec).innerText;
 					}
 				}
+				//if(h1.length > 0) $('h1',section).innerText = h1;
 				$('h1',section).innerText = h1;
 			}
 			function resetZoomSelecting(){
@@ -2001,8 +2002,7 @@
 						navClick(label);
 					}
 					else if(!multiSelect && (display(detSec) === 'none' || leftPos(detSec) > '200px')) {
-						//if(display(listSec)==='block' && !isPhone) clearCheck();
-						clearCheck();
+						if($('.rows',detSec)===null) clearCheck();
 						listSec.classList.remove('listShowList');
 						listSec.classList.add('listShowDetail');
 						detSec.classList.remove('detailShowList');
