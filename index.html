@@ -1009,9 +1009,13 @@
 			}
 			function buttonDelete(input){
 				const section = input.closest('section');
+				const popFromDetail = section.id === 'pop' && display(detSec) === 'block';
+				const popFromList = section.id === 'pop' && display(listSec) === 'block';
+				
+				if(popFromDetail) lastSection = detSec;
+				else if(popFromList) lastSection = listSec;
+				
 				if($('.entry', detSec) !== null) {
-					const popFromDetail = section.id === 'pop' && display(detSec) === 'block';
-					const popFromList = section.id === 'pop' && display(listSec) === 'block';
 					const bgColor = getColor(isPhone?'--cl2':'--bck');
 					const removeSelections = () => {
 						if(!selections.length) selections = $$$('.rows .checked', listSec);
@@ -1030,10 +1034,7 @@
 						}
 					};
 					let timeOut;
-					if(popFromDetail) {//del button phone
-						//detSec.style.backgroundColor = bgColor;
-						//$('.entry',detSec).style.animation = "deskZoomAndSend .5s forwards ease-in";
-						//detSec.style.animation = "phoneZoomAndSend .25s forwards ease-in";
+					if(popFromDetail) {
 						detSec.classList.add('phoneZoomAndSend');
 						timeOut = 250;
 					}
@@ -1043,7 +1044,6 @@
 					}
 					else if(section === detSec) {//del button desktop
 						detSec.style.backgroundColor = bgColor;
-						//$('.entry',detSec).style.animation = "deskZoomAndSend .5s forwards ease-in";
 						$('.entry',detSec).classList.add('deskZoomAndSend');
 						timeOut = 500;
 					}
@@ -1065,8 +1065,6 @@
 							detSec.classList.remove('detailShowList');		
 						}
 						else {
-							//detSec.style.backgroundColor = 'black';
-							//$('header',detSec).style.display = 'none';
 							$('fieldset',detSec).style.display = 'none';
 							$('.entry',detSec).classList.remove('deskZoomAndSend');
 						}
@@ -1112,8 +1110,6 @@
 				}
 				else if((input.name === 'item' || input.name === 'copy') || input.dataset.btn === 'delete') {
 					if(selections.length > 0 && section !== 'navSection'){
-						//console.log(selections[0].closest('section'));
-						//console.log(selections[0]);
 						const newSelections = selections.filter(label => label && label.parentNode && (isPhone || label.closest('section')?.id === section.id));
 						//if(newSelections.length > 0 && confirm('Delete ' + newSelections.length + ' selected items')){
 						if(newSelections.length > 0 && lastSection === selections[0].closest('section')){
@@ -1141,11 +1137,7 @@
 					if(labels.length>0){						
 						checkedFocus($('input',labels[0]));
 						selections = [labels[0]];
-						if(isPhone){
-							//console.log(newSection);
-							$('.rows label',newSection).classList.remove('focused');
-							//$('input',labels[0]).classList.remove('focused');
-						}
+						if(isPhone) $('.rows label',newSection).classList.remove('focused');
 					}
 				}
 				if(section.id==='pop'){
@@ -1227,13 +1219,8 @@
 				$$('input[name='+el.name+']', el.closest('form, header')).forEach(el => el.closest('label').classList.remove('checked'));
 				if(el.checked && notSearch) {
 					parentLabel.classList.add('checked');
-					//console.log(parentLabel);
 					const isRows = ['item','copy'].includes(el.name);
-					if(!multiSelect && parentLabel.closest('section').id != "navSection"  && isRows){
-						
-						//problem
-						//console.log(parentLabel.closest('section'));
-						
+					if(!multiSelect && parentLabel.closest('section').id != "navSection"  && isRows){						
 						selections = [parentLabel];
 					}
 				}
@@ -1341,7 +1328,6 @@
 						h1 = $("fieldset .rows .select.checked div:nth-child(3) dl dt",listSec).innerText;
 					}
 				}
-				//if(h1.length > 0) $('h1',section).innerText = h1;
 				$('h1',section).innerText = h1;
 			}
 			function resetZoomSelecting(){
@@ -1550,12 +1536,7 @@
 						lastSection = section;
 						input.closest('label')?.classList.add('focused');
 						if(rows) selections = [input.closest('label')];
-						//if(selections.length>0){
-							//console.log(section.id);
-							//console.log(selections[0].closest('section'));
-						//}
 						if(section === listSec && rows){
-							//console.log('y');
 							updateDet(input,false);
 							setTimeout(()=>{$('fieldset',detSec).scrollTop = 0;}, 0);
 						}
@@ -2019,7 +2000,6 @@
 						navClick(label);
 					}
 					else if(!multiSelect && (display(detSec) === 'none' || leftPos(detSec) > '200px')) {
-						//if($('.rows',detSec)===null) clearCheck();
 						clearCheck();
 						input.closest('label').classList.add('checked');
 						listSec.classList.remove('listShowList');
