@@ -153,7 +153,7 @@
 			.slider.round:before {border-radius: 50%;}
 
 			.layerToggle {display:block!important}
-			#layer {position:absolute;z-index:1;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,0.6);display:none;}
+			#layer {position:absolute;z-index:1;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,0.5);display:none;}
 			#pop {
 				position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);animation:popRising .3s forwards;
 				background-color:var(--bg);width:38.2vw;height:80vh;box-sizing:border-box;
@@ -343,7 +343,7 @@
 				}
 				fieldset .rows label.select > div:first-of-type, textarea {color:var(--cl)}
 				.btn.focused svg, .btn svg:hover, .btn.checked, .btn.checked, .iconOn {stroke:var(--cl);}
-				#layer {background-color: rgba(0,0,0,0.7);}
+				#layer {background-color: rgba(0,0,0,0.5);}
 				#pop, #pop header, #pop header .focused {background-color:var(--bck)}
 				#pop header .focused, #pop .focused {color:#FFFFFF}
 				#pop .entry {border-color:var(--bck)}
@@ -858,7 +858,7 @@
 				if(input.closest('section').id==='pop'){
 					buttonCancel(input);
 					setTimeout(()=>{
-						setPop('96%',false);
+						setPop('95.4%',false);
 						cancelFocus();
 						multiSelect = false;
 						clearbyClick(lastSection, $('fieldset .rows input',lastSection));
@@ -867,7 +867,7 @@
 				else {
 					lastSection = input.closest('section');
 					if(input.closest('section')===navSec){
-						setPop('96%',true);
+						setPop('95.4%',true);
 						checkedFocus($('#pop input'));
 					}
 					else {
@@ -1112,9 +1112,12 @@
 				}
 				else if((input.name === 'item' || input.name === 'copy') || input.dataset.btn === 'delete') {
 					if(selections.length > 0 && section !== 'navSection'){
+						//console.log(lastSection);
+						//console.log(selections[0].closest('section'));
+						//console.log(selections[0]);
 						const newSelections = selections.filter(label => label && label.parentNode && (isPhone || label.closest('section')?.id === section.id));
 						//if(newSelections.length > 0 && confirm('Delete ' + newSelections.length + ' selected items')){
-						if(newSelections.length > 0){
+						if(newSelections.length > 0 && lastSection === selections[0].closest('section')){
 							newSelections.forEach(label=>{
 								if(label && label.parentNode && (isPhone || (label.closest('section')?.id === section.id))) {
 									label.parentNode.removeChild(label);
@@ -1134,11 +1137,15 @@
 					if(input.name==='iBtn') {
 						cancelMulti(input);
 					}
-					else if(input.name==='item') {
-						const labels = $$$('.rows label',section);
-						if(labels.length>0){
-							checkedFocus($('input',labels[0]));
-							selections = [labels[0]];
+					let newSection = (section===popSec && isPhone && display(detSec)==='block')?detSec:section;
+					const labels = $$$('.rows label',newSection);
+					if(labels.length>0){						
+						checkedFocus($('input',labels[0]));
+						selections = [labels[0]];
+						if(isPhone){
+							//console.log(newSection);
+							$('.rows label',newSection).classList.remove('focused');
+							//$('input',labels[0]).classList.remove('focused');
 						}
 					}
 				}
@@ -1196,7 +1203,7 @@
 				});
 			}
 			function buttonCam(section){
-				setPop('96%',true);
+				setPop('95.4%',true);
 				let tmp = "<form class=\"cams filters\">";		
 				Object.keys(camLenses).forEach((key, index) => {
 					let checked = index == 0?"checked":"";
@@ -1221,8 +1228,13 @@
 				$$('input[name='+el.name+']', el.closest('form, header')).forEach(el => el.closest('label').classList.remove('checked'));
 				if(el.checked && notSearch) {
 					parentLabel.classList.add('checked');
+					//console.log(parentLabel);
 					const isRows = ['item','copy'].includes(el.name);
 					if(!multiSelect && parentLabel.closest('section').id != "navSection"  && isRows){
+						
+						//problem
+						//console.log(parentLabel.closest('section'));
+						
 						selections = [parentLabel];
 					}
 				}
@@ -1536,9 +1548,15 @@
 						updateDet(input,true);
 					}
 					else if(!(multiSelect && !rows)){
+						//console.log(lastSection);
 						input.closest('label')?.classList.add('focused');
 						if(rows) selections = [input.closest('label')];
+						//if(selections.length>0){
+							//console.log(section.id);
+							//console.log(selections[0].closest('section'));
+						//}
 						if(section === listSec && rows){
+							//console.log('y');
 							updateDet(input,false);
 							setTimeout(()=>{$('fieldset',detSec).scrollTop = 0;}, 0);
 						}
@@ -2002,7 +2020,9 @@
 						navClick(label);
 					}
 					else if(!multiSelect && (display(detSec) === 'none' || leftPos(detSec) > '200px')) {
-						if($('.rows',detSec)===null) clearCheck();
+						//if($('.rows',detSec)===null) clearCheck();
+						clearCheck();
+						input.closest('label').classList.add('checked');
 						listSec.classList.remove('listShowList');
 						listSec.classList.add('listShowDetail');
 						detSec.classList.remove('detailShowList');
@@ -2022,6 +2042,13 @@
 						}, { once: true });
 						updateDet(input,false);
 						setDetailTitle(input);
+						if(display(detSec)==='block'){
+							if($('.rows label',detSec)!==null){
+								selections = Array();
+								selections[0] = $('.rows label',detSec);
+								$('.rows label',detSec).classList.remove('focused');
+							}
+						}
 					}
 					else if(!multiSelect && section != 'navSection' && !label.classList.contains("checked")) {
 						if(section === 'listSection' && $('header h1',listSec).innerText.slice(-9)===' Selected'){
@@ -2176,6 +2203,7 @@
 					});
 				});
 			}
+			lastSection = listSec;
 			loaded = true;
 
 			//quality assurance
