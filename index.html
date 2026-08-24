@@ -962,14 +962,16 @@
 				if('reset' in camAPI) camAPI.reset();
 				function defCallback(){
 					if(isPhone){
-						if(display(navSec)){
-							lastSection = navSec;
-						}
-						else {
-							lastSection = listSec;
-						}
+						if(display(navSec)) lastSection = navSec;
+						else lastSection = listSec;
 					}
+					else {
+						if($('.rows',detSec)) lastSection = detSec;
+						else lastSection = listSec;
+					}
+					//console.log(lastSection);
 					popSec.style.animation = "popDowning .1s forwards";
+					//console.log(1);
 					cancelPop(true);
 					setTimeout(()=>{
 						toggleLayer();					
@@ -1257,7 +1259,7 @@
 						$('input', label).checked = false;
 					}
 				});
-				lastSection = null;
+				//lastSection = null;
 				selDown = true; clrTextSel(section);
 			}
 			function previewImage(event) {
