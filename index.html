@@ -969,9 +969,7 @@
 						if($('.rows',detSec)) lastSection = detSec;
 						else lastSection = listSec;
 					}
-					//console.log(lastSection);
 					popSec.style.animation = "popDowning .1s forwards";
-					//console.log(1);
 					cancelPop(true);
 					setTimeout(()=>{
 						toggleLayer();					
@@ -1430,18 +1428,23 @@
 			function handleChange(e) {
 				if(!e.target.matches(selector)) return;
 				const input = e.target;
+				/*
 				if(input.matches('.rows label > input[type=checkbox]') && lastSection && !multiSelect) {
+				//if(input.matches('.rows label > input[type=checkbox]') && !multiSelect) {
 					if(!input.closest('label').classList.contains('focused') && !isPhone){
+						console.log('handlechange');
 						clearbyClick(lastSection,input);
 						clrTextSel(lastSection);
 					}
 				}
 				else {
+				*/
+					//should be rest here
 					checkedFocus(e.target);
 					if(input.name=='iBtn'){
 						e.preventDefault();
 					}
-				}
+				//}
 			}
 			function handleFocusIn(e) {
 				if(!e.target.matches(selector)) return;
