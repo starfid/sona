@@ -153,7 +153,7 @@
 			.slider.round:before {border-radius: 50%;}
 
 			.layerToggle {display:block!important}
-			#layer {position:absolute;z-index:1;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,0.5);display:none;}
+			#layer {position:absolute;z-index:1;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,0.7);display:none;}
 			#pop {
 				position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);animation:popRising .3s forwards;
 				background-color:var(--bg);width:38.2vw;height:80vh;box-sizing:border-box;
@@ -267,32 +267,33 @@
 				.listShowDetail {animation:listShowDetail .7s forwards}
 				.listShowList {animation:listShowList .3s forwards}
 				.mobHid {display:none}
-
-				#pop header {padding: var(--mg) var(--mg) 0 var(--mg);}
-				#pop header div {padding:0 3vw}
-				#pop fieldset form.filters {display:flex}
-				#pop fieldset form.icons {display:block}
-				#pop fieldset form.icons label {
-					border-top:solid 1px var(--nvB);border-bottom:0;
-					border-left:solid 1px var(--nvB);border-right:solid 1px var(--nvB);
-					padding:var(--mg);border-radius:0;flex-direction: row-reverse;
-				}
-				#pop fieldset form.icons label:first-child {
-					border-top-left-radius:1vh;border-top-right-radius:1vh;
-				}
-				#pop fieldset form.icons label:last-child {
-					border-bottom:solid 1px var(--nvB);
-					border-bottom-left-radius:1vh;border-bottom-right-radius:1vh;
-				}
-				#pop fieldset form.icons label span {text-transform: capitalize;}
-				#pop .mobHid {display:flex;align-items:center;justify-content:space-between;}
-				section header .tabHid {display:flex}
-				#dots {position:absolute;z-index:1;top:100px;left:100px;}
 				#pop {
 					position:absolute;bottom:0;min-width:auto;transform:none;top:auto;left:auto;
                 			background-color:white;width:100%;left:0;border-radius:2vh;border-width:0;
 					border-bottom-left-radius:0;border-bottom-right-radius:0;
 				}
+				#pop header {padding: var(--mg) var(--mg) 0 var(--mg);}
+				#pop header div {padding:0 3vw}
+				#pop fieldset form.filters {display:flex}
+				#pop fieldset form.icons {display:block;}
+				#pop fieldset form.icons label {
+					background-color:var(--brC);
+					border-top:solid 1px var(--nvB);border-bottom:0;
+					border-left:solid 1px var(--nvB);border-right:solid 1px var(--nvB);
+					padding:var(--mg);border-radius:0;flex-direction: row-reverse;
+				}
+				#pop fieldset form.icons label svg {stroke:var(--cl)}
+				#pop fieldset form.icons label:first-child, #popTopBorder {
+					border-top-left-radius:1vh!important;border-top-right-radius:1vh!important;
+				}
+				#pop fieldset form.icons label:last-child, #popBottomBorder {
+					border-bottom:solid 1px var(--nvB)!important;
+					border-bottom-left-radius:1vh!important;border-bottom-right-radius:1vh!important;
+				}
+				#pop fieldset form.icons label span {text-transform: capitalize;}
+				#pop .mobHid {display:flex;align-items:center;justify-content:space-between;}
+				section header .tabHid {display:flex}
+				#dots {position:absolute;z-index:1;top:100px;left:100px;}
 				.sectionZoom {height:100vh;border-radius:var(--mg);animation:zooming .3s forwards}
 				.tilesPreview {width: 100% !important; aspect-ratio: 1 / 1 !important; height: auto !important; object-fit: cover;}
 				.tilesDetail {margin: 10vw auto}
@@ -343,11 +344,14 @@
 				}
 				fieldset .rows label.select > div:first-of-type, textarea {color:var(--cl)}
 				.btn.focused svg, .btn svg:hover, .btn.checked, .btn.checked, .iconOn {stroke:var(--cl);}
-				#layer {background-color: rgba(0,0,0,0.5);}
+				#layer {background-color: rgba(0,0,0,0.6);}
 				#pop, #pop header, #pop header .focused {background-color:var(--bck)}
 				#pop header .focused, #pop .focused {color:#FFFFFF}
 				#pop .entry {border-color:var(--bck)}
+				#pop .icons span {color:var(--thg)}
+				#pop fieldset form.icons label svg {stroke:var(--thg)}
 				#pop .wrap {border-color:var(--fDC)}
+				#pop fieldset form.icons label {background-color:var(--cl2);border-color:var(--bhg)}
 			}
 		</style>
 	</head>
@@ -796,12 +800,17 @@
 				$$('#pop fieldset form label').forEach(lbl=>{
 					const label = document.createElement('span');
 					label.innerText = $('input',lbl).dataset.btn;
-					if(label.innerText==='select' && multiSelect){
-						label.innerText = 'Unselect'
-					}
 					if(label.innerText==='select' && multiSelect) label.innerText = 'Unselect';
-					lbl.appendChild(label);
+					if(label.innerText==='new item' && multiSelect){lbl.style.display = 'none';}
+					else if(label.innerText==='change view' && multiSelect){lbl.style.display = 'none';}
+					else {
+						lbl.appendChild(label);
+					}
 				});
+				const labels = $$$('#pop fieldset form label');
+				
+				labels[0].setAttribute('id','popTopBorder');
+				labels.pop().setAttribute('id','popBottomBorder');
 				if(multiSelect){
 					[...$$('input[data-btn="new item"],input[data-btn="change view"],input[data-btn=save]',$('#pop'))].forEach(el=>{
 						el.disabled = true;
@@ -1428,23 +1437,8 @@
 			function handleChange(e) {
 				if(!e.target.matches(selector)) return;
 				const input = e.target;
-				/*
-				if(input.matches('.rows label > input[type=checkbox]') && lastSection && !multiSelect) {
-				//if(input.matches('.rows label > input[type=checkbox]') && !multiSelect) {
-					if(!input.closest('label').classList.contains('focused') && !isPhone){
-						console.log('handlechange');
-						clearbyClick(lastSection,input);
-						clrTextSel(lastSection);
-					}
-				}
-				else {
-				*/
-					//should be rest here
-					checkedFocus(e.target);
-					if(input.name=='iBtn'){
-						e.preventDefault();
-					}
-				//}
+				checkedFocus(input);
+				if(input.name=='iBtn') e.preventDefault();
 			}
 			function handleFocusIn(e) {
 				if(!e.target.matches(selector)) return;
