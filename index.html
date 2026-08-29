@@ -969,6 +969,14 @@
 			function buttonCancel(input,focused = true) {
 				if(display($('#layer'))==='none') return;
 				if('reset' in camAPI) camAPI.reset();
+				function popDowning() {
+					popSec.style.animation = "popDowning .1s forwards";
+					cancelPop(true);
+					setTimeout(()=>{
+						toggleLayer();
+						popSec.style.animation = "popRising .3s forwards";
+					},100);
+				}
 				function defCallback(){
 					if(isPhone){
 						if(display(navSec)) lastSection = navSec;
@@ -978,19 +986,20 @@
 						if($('.rows',detSec)) lastSection = detSec;
 						else lastSection = listSec;
 					}
-					popSec.style.animation = "popDowning .1s forwards";
-					cancelPop(true);
-					setTimeout(()=>{
-						toggleLayer();					
-						popSec.style.animation = "popRising .3s forwards";
-					},100);
+					popDowning();
 				}
 				if(input === undefined){
 					defCallback();
 				}
+				
 				else if(isPhone && input.dataset.btn === 'delete'){
-					popSec.style.animation = "popDowningDel .1s forwards";
 					lastSection = display(detSec)=='none'?listSec:detSec;
+					if($('.entry',detSec)!==null && display(detSec) === 'block'){
+						popSec.style.animation = "popDowningDel .15s forwards";
+					}
+					else {
+						popDowning();
+					}
 				}
 				else {
 					defCallback();
@@ -1048,7 +1057,7 @@
 						timeOut = 250;
 					}
 					else if(popFromList){
-						toggleLayer();
+						if(!isPhone)toggleLayer();
 						cancelPop(true);
 					}
 					else if(section === detSec) {//del button desktop
@@ -1132,7 +1141,7 @@
 						}
 						if(isPhone){
 							cancelPop(true);
-							toggleLayer();
+							//toggleLayer();
 						}
 					}
 					else if(isPhone){
@@ -1172,6 +1181,19 @@
 				listSec.style.display = showNav ? 'none' : 'block';
 				focused && checkedFocus($(`${showNav ? '#navSection' : '#listSection'} header input`));
 			}
+			function calledFrom(...targetFunctions) {
+				const stack = new Error().stack || "";
+				const stackArray = stack.split("\n").map(line => {
+					const match = line.match(/(?:at\s+)?([a-zA-Z0-9_$]+)[\s@\(]/);
+					return match ? match[1] : null;
+				})
+				.filter(name => name && name !== "Error" && name !== "calledFrom");
+				if (targetFunctions.length === 0) {
+					return { isMatch: false, callers: stackArray };
+				}
+				const isMatch = targetFunctions.some(fn => stackArray.includes(fn));
+				return { isMatch, callers: stackArray };
+			}
 			function buttonView(){
 				[...$$('#listSection .rows, #detailSection .rows')].forEach(el=>{
 					el.classList.toggle('tilesRow');
@@ -1187,7 +1209,7 @@
 				});
 				$('#pathTile').classList.toggle('tilesNone');
 				$('#pathList').classList.toggle('tilesBlock');
-				if(isPhone) buttonCancel();
+				if(isPhone && calledFrom("handleClick").isMatch) buttonCancel();
 				const isTiles = display($('#pathList'))==='block';
 				localStorage.setItem('sonaView', isTiles?'tiles':'list');
 				if(!isTiles){
